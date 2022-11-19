@@ -1,0 +1,77 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# fcwtr
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The R package fcwtr is a simple wrapper invoking the [fcwt
+library](https://github.com/fastlib/fCWT), a library implementing a
+[continuous wavelet transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform) with a Morlet wavelet, utilizing the power of [fftw](https://www.fftw.org/),
+a fast fourier transform implementation.
+
+## Runtime Dependencies
+* R >= 4.1 (due to the use of native pipes)
+* [fftw](https://www.fftw.org/) library (used by fcwt)
+
+
+## Installation
+
+You can install the development version of fcwtr like so (requiring installed
+[devtools](https://devtools.r-lib.org/) package):
+
+``` r
+devtools::install_github("lschneiderbauer/fcwtr")
+```
+
+## Example
+
+This is a basic example which shows how to invoke the fcwt library to calculate
+the continuous wavelet transform and plot the result.
+
+```{r example}
+library(fcwtr)
+
+# You are given some signal encoded in a numeric vector.
+# In this example we use some superimposed sin signals.
+input <- time_series_sin
+
+# One possibility is to use the fcwt library (almost) directly through
+# a thin wrapper:
+output <- fcwt(input)
+
+# In this case the result is a tensor of rank 3,
+# which can be used for further processing.
+# No additional sugar is provided here.
+dim(output)
+
+# A little more convenience is provided by `fcwt_df` which returns
+# a data frame, already establishes a connection to physical units, and
+# allows for pooling, and other small quality-of-live improvements:
+df <- fcwt_df(
+  time_series_sin,
+  sampling_rate = 44100,
+  time_resolution = 0.001
+)
+
+df
+
+# This data frame can be directly plotted.
+plot(df)
+```
+
+
+<!-- regenerate with devtools::build_readme() -->
