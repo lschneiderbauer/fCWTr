@@ -12,7 +12,7 @@ fcwt_df(
   nsuboctaves = 12L,
   time_resolution = NULL,
   sigma = 1,
-  nthreads = 8,
+  nthreads = 8L,
   pooling = mean,
   rm.coi = TRUE,
   optplan = FALSE
