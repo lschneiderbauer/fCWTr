@@ -34,7 +34,7 @@ fcwt <- function(input,
 
 
 #' Performs a fast continuous wavelet transform and
-#' returns the result in a data.frame.
+#' returns the result in a data frame.
 #'
 #' Performs pooling to accommodate for `time_resolution`.
 #' The maximal frequency resolved is determined by the sampling rate
