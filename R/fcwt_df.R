@@ -10,6 +10,9 @@
 #' @param time_series     Time series as numeric vector.
 #' @param sampling_rate   Sampling rate of input time series in Hz.
 #'                        (to establish a connection to physical units.)
+#'                        The sampling rate also defines the highest possible
+#'                        frequency resolution of the CWT: half of the sampling
+#'                        rate.
 #' @param min_freq        Sets the minimal frequency (>0!) in Hz that should be
 #'                        contained in the output. Computation time increases
 #'                        when lowering the minimal frequency.
@@ -54,7 +57,7 @@
 #' @export
 fcwt_df <- function(time_series,
                     sampling_rate,
-                    min_freq = 22,
+                    min_freq = sampling_rate / 2000,
                     nsuboctaves = 12L,
                     time_resolution = NULL,
                     sigma = 1,

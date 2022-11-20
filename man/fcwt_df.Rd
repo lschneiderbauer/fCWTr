@@ -8,7 +8,7 @@ returns the result in a data frame.}
 fcwt_df(
   time_series,
   sampling_rate,
-  min_freq = 22,
+  min_freq = sampling_rate/2000,
   nsuboctaves = 12L,
   time_resolution = NULL,
   sigma = 1,
@@ -22,7 +22,10 @@ fcwt_df(
 \item{time_series}{Time series as numeric vector.}
 
 \item{sampling_rate}{Sampling rate of input time series in Hz.
-(to establish a connection to physical units.)}
+(to establish a connection to physical units.)
+The sampling rate also defines the highest possible
+frequency resolution of the CWT: half of the sampling
+rate.}
 
 \item{min_freq}{Sets the minimal frequency (>0!) in Hz that should be
 contained in the output. Computation time increases
