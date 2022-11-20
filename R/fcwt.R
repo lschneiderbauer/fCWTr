@@ -16,6 +16,7 @@ fcwt <- function(input,
                  noctave = 8L,
                  nsuboctaves = 12L,
                  sigma = 1,
+                 nthreads = 8,
                  optplan = FALSE) {
   stopifnot(is.numeric(startoctave), startoctave >= 1)
   stopifnot(is.numeric(noctave), noctave >= 1)
@@ -25,7 +26,7 @@ fcwt <- function(input,
 
   output <- fcwt_raw(
     input, startoctave, noctave,
-    nsuboctaves, 2 * pi * sigma, optplan
+    nsuboctaves, 2 * pi * sigma, nthreads, optplan
   )
   dim(output) <- c(2, length(input), noctave * nsuboctaves)
 
@@ -92,6 +93,7 @@ fcwt_df <- function(time_series,
                     nsuboctaves = 12L,
                     time_resolution = NULL,
                     sigma = 1,
+                    nthreads = 8,
                     pooling = mean,
                     rm.coi = TRUE,
                     optplan = FALSE) {
@@ -112,6 +114,7 @@ fcwt_df <- function(time_series,
     noctave = noctave,
     nsuboctaves = nsuboctaves,
     sigma = sigma,
+    nthreads = nthreads,
     optplan = optplan
   )
 

@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // fcwt_raw
-std::vector<float> fcwt_raw(std::vector<float> input, int startoctave, int noctaves, int nsuboctaves, float sigma, bool optplans);
-RcppExport SEXP _fcwtr_fcwt_raw(SEXP inputSEXP, SEXP startoctaveSEXP, SEXP noctavesSEXP, SEXP nsuboctavesSEXP, SEXP sigmaSEXP, SEXP optplansSEXP) {
+std::vector<float> fcwt_raw(std::vector<float> input, int startoctave, int noctaves, int nsuboctaves, float sigma, int nthreads, bool optplans);
+RcppExport SEXP _fcwtr_fcwt_raw(SEXP inputSEXP, SEXP startoctaveSEXP, SEXP noctavesSEXP, SEXP nsuboctavesSEXP, SEXP sigmaSEXP, SEXP nthreadsSEXP, SEXP optplansSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,8 +21,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type noctaves(noctavesSEXP);
     Rcpp::traits::input_parameter< int >::type nsuboctaves(nsuboctavesSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
     Rcpp::traits::input_parameter< bool >::type optplans(optplansSEXP);
-    rcpp_result_gen = Rcpp::wrap(fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, optplans));
+    rcpp_result_gen = Rcpp::wrap(fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, nthreads, optplans));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -40,7 +41,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_fcwtr_fcwt_raw", (DL_FUNC) &_fcwtr_fcwt_raw, 6},
+    {"_fcwtr_fcwt_raw", (DL_FUNC) &_fcwtr_fcwt_raw, 7},
     {"_fcwtr_create_optimization_schemes_raw", (DL_FUNC) &_fcwtr_create_optimization_schemes_raw, 3},
     {NULL, NULL, 0}
 };

@@ -4,7 +4,7 @@
 \alias{fcwt_raw}
 \title{Wraps CPP cwt function (computing a continuous wavelet transform)}
 \usage{
-fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, optplans)
+fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, nthreads, optplans)
 }
 \arguments{
 \item{input}{A numeric vector representing the time series}
@@ -16,6 +16,8 @@ fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, optplans)
 \item{nsuboctaves}{Computing steps per octave}
 
 \item{sigma}{Parameter controlling time-frequency precision}
+
+\item{nthreads}{Number of threads to use (FFTW)}
 
 \item{optplans}{Use FFTW optimization plans}
 }

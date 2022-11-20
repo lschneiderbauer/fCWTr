@@ -8,11 +8,12 @@
 #' @param noctaves     Number of octaves to compute
 #' @param nsuboctaves  Computing steps per octave
 #' @param sigma        Parameter controlling time-frequency precision
+#' @param nthreads     Number of threads to use (FFTW)
 #' @param optplans     Use FFTW optimization plans
 #' @return Returns a numeric vector containing CWT information.
 #'
-fcwt_raw <- function(input, startoctave, noctaves, nsuboctaves, sigma, optplans) {
-    .Call('_fcwtr_fcwt_raw', PACKAGE = 'fcwtr', input, startoctave, noctaves, nsuboctaves, sigma, optplans)
+fcwt_raw <- function(input, startoctave, noctaves, nsuboctaves, sigma, nthreads, optplans) {
+    .Call('_fcwtr_fcwt_raw', PACKAGE = 'fcwtr', input, startoctave, noctaves, nsuboctaves, sigma, nthreads, optplans)
 }
 
 #' Wraps CPP 'create_optimization_schemes' function

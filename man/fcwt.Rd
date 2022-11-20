@@ -10,6 +10,7 @@ fcwt(
   noctave = 8L,
   nsuboctaves = 12L,
   sigma = 1,
+  nthreads = 8,
   optplan = FALSE
 )
 }
@@ -23,6 +24,8 @@ fcwt(
 \item{nsuboctaves}{Computing steps per octave}
 
 \item{sigma}{Parameter controlling time-frequency precision}
+
+\item{nthreads}{Number of threads to use (FFTW)}
 
 \item{optplan}{If TRUE uses the optimization plans that might have been
 generated before by [create_optimization_schemes_raw].}

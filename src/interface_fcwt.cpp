@@ -11,6 +11,7 @@ using namespace Rcpp;
 //' @param noctaves     Number of octaves to compute
 //' @param nsuboctaves  Computing steps per octave
 //' @param sigma        Parameter controlling time-frequency precision
+//' @param nthreads     Number of threads to use (FFTW)
 //' @param optplans     Use FFTW optimization plans
 //' @return Returns a numeric vector containing CWT information.
 //'
@@ -21,6 +22,7 @@ std::vector<float> fcwt_raw(
     int noctaves,
     int nsuboctaves,
     float sigma,
+    int nthreads,
     bool optplans)
 {
   int n = input.size(); //signal length
@@ -40,7 +42,7 @@ std::vector<float> fcwt_raw(
   //optplans  - use FFTW optimization plans if true
 
   fcwt::cwt(input.data(), n, output.data(), startoctave, startoctave + noctaves - 1,
-            nsuboctaves, sigma, 8, optplans);
+            nsuboctaves, sigma, nthreads, optplans);
 
   // divide the output by input size to get a
   // normalized version (fftw does not normalize)

@@ -3,7 +3,7 @@
 \name{fcwt_df}
 \alias{fcwt_df}
 \title{Performs a fast continuous wavelet transform and
-returns the result in a data.frame.}
+returns the result in a data frame.}
 \usage{
 fcwt_df(
   time_series,
@@ -12,6 +12,7 @@ fcwt_df(
   nsuboctaves = 12L,
   time_resolution = NULL,
   sigma = 1,
+  nthreads = 8,
   pooling = mean,
   rm.coi = TRUE,
   optplan = FALSE
@@ -39,6 +40,8 @@ the time/frequency uncertainty balance. Defaults to 1.
 Larger (lower) value of sigma corresponds to a better
 (worse) frequency resolution and a worse (better) time
 resolution.}
+
+\item{nthreads}{Number of threads to use (FFTW)}
 
 \item{pooling}{Pooling function. Defaults to `mean`. Has no effect,
 if `time_resolution` is NULL.}
