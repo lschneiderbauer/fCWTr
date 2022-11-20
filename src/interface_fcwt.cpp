@@ -42,7 +42,10 @@ std::vector<float> fcwt_raw(
   fcwt::cwt(input.data(), n, output.data(), startoctave, startoctave + noctaves - 1,
             nsuboctaves, sigma, 8, optplans);
 
-  return(output);  // wrap is called implicitly
+  // divide the output by input size to get a
+  // normalized version (fftw does not normalize)
+  transform(output.begin(), output.end(), output.begin(), [n](float &c){ return c/n; });
+  return(output);
 }
 
 
