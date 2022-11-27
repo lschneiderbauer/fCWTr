@@ -110,7 +110,7 @@ int fftw_flag(String flag) {
 //' "wisdom_only" is a special planning mode in which the plan is only created if wisdom is available for the given problem, and otherwise a NULL plan is returned. This can be combined with other flags, e.g. ‘FFTW_WISDOM_ONLY | FFTW_PATIENT’ creates a plan only if wisdom is available that was created in FFTW_PATIENT or FFTW_EXHAUSTIVE mode. The FFTW_WISDOM_ONLY flag is intended for users who need to detect whether wisdom is available; for example, if wisdom is not available one may wish to allocate new arrays for planning so that user data is not overwritten.
 //'
 // [[Rcpp::export]]
-void create_optimization_schemes_raw(int maxsize, int threads, String flag) {
-  fcwt::create_optimization_schemes(maxsize, threads, fftw_flag(flag));
+void create_opt_schemes_raw(int max_size, int nthreads, String flag) {
+  fcwt::create_optimization_schemes(max_size, nthreads, fftw_flag(flag));
 }
 

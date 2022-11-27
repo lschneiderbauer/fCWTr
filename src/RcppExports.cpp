@@ -28,22 +28,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// create_optimization_schemes_raw
-void create_optimization_schemes_raw(int maxsize, int threads, String flag);
-RcppExport SEXP _fcwtr_create_optimization_schemes_raw(SEXP maxsizeSEXP, SEXP threadsSEXP, SEXP flagSEXP) {
+// create_opt_schemes_raw
+void create_opt_schemes_raw(int max_size, int nthreads, String flag);
+RcppExport SEXP _fcwtr_create_opt_schemes_raw(SEXP max_sizeSEXP, SEXP nthreadsSEXP, SEXP flagSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type maxsize(maxsizeSEXP);
-    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
+    Rcpp::traits::input_parameter< int >::type max_size(max_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
     Rcpp::traits::input_parameter< String >::type flag(flagSEXP);
-    create_optimization_schemes_raw(maxsize, threads, flag);
+    create_opt_schemes_raw(max_size, nthreads, flag);
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_fcwtr_fcwt_raw", (DL_FUNC) &_fcwtr_fcwt_raw, 7},
-    {"_fcwtr_create_optimization_schemes_raw", (DL_FUNC) &_fcwtr_create_optimization_schemes_raw, 3},
+    {"_fcwtr_fcwt_raw", (DL_FUNC) &_fcwtr_fcwt_raw, 8},
+    {"_fcwtr_create_opt_schemes_raw", (DL_FUNC) &_fcwtr_create_opt_schemes_raw, 3},
     {NULL, NULL, 0}
 };
 

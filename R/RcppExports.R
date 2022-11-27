@@ -33,7 +33,7 @@ fcwt_raw <- function(input, startoctave, noctaves, nsuboctaves, sigma, nthreads,
 #' "exhaustive" is like FFTW_PATIENT, but considers an even wider range of algorithms, including many that we think are unlikely to be fast, to produce the most optimal plan but with a substantially increased planning time.
 #' "wisdom_only" is a special planning mode in which the plan is only created if wisdom is available for the given problem, and otherwise a NULL plan is returned. This can be combined with other flags, e.g. ‘FFTW_WISDOM_ONLY | FFTW_PATIENT’ creates a plan only if wisdom is available that was created in FFTW_PATIENT or FFTW_EXHAUSTIVE mode. The FFTW_WISDOM_ONLY flag is intended for users who need to detect whether wisdom is available; for example, if wisdom is not available one may wish to allocate new arrays for planning so that user data is not overwritten.
 #'
-create_optimization_schemes_raw <- function(maxsize, threads, flag) {
-    invisible(.Call('_fcwtr_create_optimization_schemes_raw', PACKAGE = 'fcwtr', maxsize, threads, flag))
+create_opt_schemes_raw <- function(max_size, nthreads, flag) {
+    invisible(.Call('_fcwtr_create_opt_schemes_raw', PACKAGE = 'fcwtr', max_size, nthreads, flag))
 }
 
