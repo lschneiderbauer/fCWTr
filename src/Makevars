@@ -1,2 +1,2 @@
 PKG_CXXFLAGS = -mavx2 -msse2
-PKG_LIBS =  -lfftw3f -lfftw3f_threads -lfftw3f_omp
+PKG_LIBS =  -lfftw3f -lfftw3f_threads -lfftw3f_omp -fopenmp
