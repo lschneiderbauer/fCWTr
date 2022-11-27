@@ -21,10 +21,8 @@
 #'                        Larger (lower) value of sigma corresponds to a better
 #'                        (worse) frequency resolution and a worse (better) time
 #'                        resolution.
-#' @param pooling         Pooling function. Defaults to `mean`. Has no effect,
-#'                        if `time_resolution` is NULL.
 #' @param time_resolution Defines seconds per time index (regulates the size of
-#'                        the output by performing pooling (see `pooling` parameter)).
+#'                        the output by performing mean-pooling.
 #'                        If NULL, no pooling is performed, and the effective
 #'                        time_resolution will be 1 / `sampling_rate`.
 #' @param rm.coi          If TRUE, sets the values outside of the "cone of
@@ -62,32 +60,48 @@ fcwt_df <- function(time_series,
                     time_resolution = NULL,
                     sigma = 1,
                     nthreads = 8L,
-                    pooling = mean,
                     rm.coi = TRUE,
                     optplan = FALSE) {
   startoctave <- 1
-  max_freq_hz <- sampling_rate / 2 # Nyquist frequency
+  max_freq <- sampling_rate / 2 # Nyquist frequency
   # determine noctave based on sampling_rate and min_freq parameter
-  noctave <- ceiling(log2(max_freq_hz / min_freq))
+  noctave <- freqs_to_noctaves(min_freq, max_freq)
 
   scale_to_freq <-
     rev(lseq(
-      max_freq_hz * sqrt(1 + 1 / nsuboctaves) / 2^noctave,
-      max_freq_hz / sqrt((1 + 1 / nsuboctaves)),
+      max_freq * sqrt(1 + 1 / nsuboctaves) / 2^noctave,
+      max_freq / sqrt((1 + 1 / nsuboctaves)),
       noctave * nsuboctaves
     ))
 
-  result <- fcwt(time_series,
+  result_abs <- fcwt(time_series,
                  startoctave = startoctave,
                  noctave = noctave,
                  nsuboctaves = nsuboctaves,
                  sigma = sigma,
                  nthreads = nthreads,
-                 optplan = optplan
+                 optplan = optplan,
+                 abs = T
   )
 
   # absolute values of complex result
-  result_abs <- sqrt(result[1, , ]^2 + result[2, , ]^2)
+  #result_abs <- sqrt(result[1, , ]^2 + result[2, , ]^2)
+
+  # perform pooling before we create data frame
+  # (pivot longer and pooling afterwards is expensive)
+  if (!is.null(time_resolution)) {
+    npoolsize <- floor(sampling_rate * time_resolution)
+    newlength <- floor(length(time_series) / npoolsize)
+
+    # we might have to cut the length in order to get an integer valued
+    # size decomposition of the length
+    result_abs <- result_abs[1:(newlength*npoolsize), ]
+    dim(result_abs) <- c(npoolsize, newlength, dim(result_abs)[2])
+
+    result_abs <- colMeans(result_abs, dims = 1)
+  } else {
+    time_resolution <- 1 / sampling_rate
+  }
 
   result.df <-
     data.frame(result_abs) |>
@@ -97,28 +111,7 @@ fcwt_df <- function(time_series,
       names_to = "scale",
       names_prefix = "X",
       names_transform = list(scale = as.integer)
-    )
-
-  # perform some pooling in case
-  if (!is.null(time_resolution)) {
-    n_time <- floor((length(time_series)) / sampling_rate / time_resolution)
-
-    result.df <-
-      result.df |>
-      mutate(
-        time_ind = ntile(n = !!n_time) - 1
-      ) |>
-      group_by(time_ind, scale) |>
-      summarize(
-        value = pooling(value),
-        .groups = "drop"
-      )
-  } else {
-    time_resolution <- 1 / sampling_rate
-  }
-
-  result.df <-
-    result.df |>
+    ) |>
     mutate(
       time = time_ind * time_resolution
     ) |>
@@ -134,12 +127,12 @@ fcwt_df <- function(time_series,
     max_time <- max(result.df$time)
 
     # cone of influence
-    Ay <- max_freq_hz # * max_freq
+    Ay <- max_freq # * max_freq
     Ax <- 1 / Ay
-    By <- max_freq_hz / 2^noctave
+    By <- max_freq / 2^noctave
     Bx <- 1 / By
     B2x <- max_time - 1 / By
-    Cy <- max_freq_hz
+    Cy <- max_freq
     Cx <- max_time - 1 / Cy
 
     coi <-

@@ -17,7 +17,8 @@ fcwt <- function(input,
                  nsuboctaves = 12L,
                  sigma = 1,
                  nthreads = 8,
-                 optplan = FALSE) {
+                 optplan = FALSE,
+                 abs = F) {
   stopifnot(is.numeric(startoctave), startoctave >= 1)
   stopifnot(is.numeric(noctave), noctave >= 1)
   stopifnot(is.numeric(nsuboctaves), nsuboctaves >= 1)
@@ -26,9 +27,15 @@ fcwt <- function(input,
 
   output <- fcwt_raw(
     input, startoctave, noctave,
-    nsuboctaves, 2 * pi * sigma, nthreads, optplan
+    nsuboctaves, 2 * pi * sigma, nthreads, optplan, abs
   )
-  dim(output) <- c(2, length(input), noctave * nsuboctaves)
+
+  dim(output) <-
+    if(!abs) {
+      c(2, length(input), noctave * nsuboctaves)
+    } else {
+      c(length(input), noctave * nsuboctaves)
+    }
 
   return(output)
 }

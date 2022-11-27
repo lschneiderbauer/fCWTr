@@ -13,7 +13,6 @@ fcwt_df(
   time_resolution = NULL,
   sigma = 1,
   nthreads = 8L,
-  pooling = mean,
   rm.coi = TRUE,
   optplan = FALSE
 )
@@ -34,7 +33,7 @@ when lowering the minimal frequency.}
 \item{nsuboctaves}{Computing steps per octave}
 
 \item{time_resolution}{Defines seconds per time index (regulates the size of
-the output by performing pooling (see `pooling` parameter)).
+the output by performing mean-pooling.
 If NULL, no pooling is performed, and the effective
 time_resolution will be 1 / `sampling_rate`.}
 
@@ -45,9 +44,6 @@ Larger (lower) value of sigma corresponds to a better
 resolution.}
 
 \item{nthreads}{Number of threads to use (FFTW)}
-
-\item{pooling}{Pooling function. Defaults to `mean`. Has no effect,
-if `time_resolution` is NULL.}
 
 \item{rm.coi}{If TRUE, sets the values outside of the "cone of
 influence" to NA.}

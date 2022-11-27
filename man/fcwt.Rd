@@ -11,7 +11,8 @@ fcwt(
   nsuboctaves = 12L,
   sigma = 1,
   nthreads = 8,
-  optplan = FALSE
+  optplan = FALSE,
+  abs = F
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ fcwt(
 
 \item{optplan}{If TRUE uses the optimization plans that might have been
 generated before by [create_optimization_schemes_raw].}
+
+\item{abs}{Returns the absolute values instead of full
+complex representations.}
 }
 \value{
 Returns a numeric vector with dim = c(2, length(input), scales)
