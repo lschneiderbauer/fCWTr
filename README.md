@@ -37,7 +37,7 @@ library(fcwtr)
 
 # You are given some signal encoded in a numeric vector.
 # In this example we use some superimposed sin signals.
-input <- time_series_sin
+input <- ts_sin_440
 
 # One possibility is to use the fcwt library (almost) directly through
 # a thin wrapper:
@@ -47,13 +47,15 @@ output <- fcwt(input)
 # which can be used for further processing.
 # No additional sugar is provided here.
 dim(output)
-#> [1]    2 6000   96
+#> [1]     2 44100    96
+```
 
+``` r
 # A little more convenience is provided by `fcwt_df` which returns
 # a data frame, already establishes a connection to physical units, and
 # allows for pooling, and other small quality-of-live improvements:
 df <- fcwt_df(
-  time_series_sin,
+  ts_sin_superpos,
   sampling_rate = 44100,
   time_resolution = 0.001
 )
@@ -78,6 +80,34 @@ df
 plot(df)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example_df-1.png" width="100%" />
+
+``` r
+# For long sequences, the needed memory can exceed your local memory. In this
+# case it can be useful to reduce the time resolution of the result and process
+# the data in batches. This can be done with `fcwt_bulk_df`.
+# In case the batch size is not explicitly provided, some heuristics are used to
+# determine a batch size automatically:
+bulk_df <- fcwt_bulk_df(
+  rep(ts_sin_sin, 5),
+  sampling_rate = 44100,
+  time_resolution = 0.01,
+  nsuboctaves = 24L,
+  sigma = 4
+)
+#> ℹ Batch Size: 1048576 (~ Output Size: 2.01 GB)
+#> Start batch process ...
+#> |======================================================================| 100%
+
+plot(bulk_df)
+```
+
+<img src="man/figures/README-example_long_df-1.png" width="100%" />
+
+## Issues
+
+There seems to be still an issue with the normalization of the result:
+When processing the same signal with different batch sizes, different
+values can arise. This is of course not desired.
 
 <!-- regenerate with devtools::build_readme() -->
