@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "fcwt.h"
+#include "abs.h"
 
 using namespace Rcpp;
 
@@ -13,6 +14,8 @@ using namespace Rcpp;
 //' @param sigma        Parameter controlling time-frequency precision
 //' @param nthreads     Number of threads to use (FFTW)
 //' @param optplans     Use FFTW optimization plans
+//' @param abs          Returns the absolute values instead of full
+//'                     complex representations.
 //' @return Returns a numeric vector containing CWT information.
 //'
 // [[Rcpp::export]]
@@ -23,7 +26,8 @@ std::vector<float> fcwt_raw(
     int nsuboctaves,
     float sigma,
     int nthreads,
-    bool optplans)
+    bool optplans,
+    bool abs)
 {
   int n = input.size(); //signal length
 
@@ -44,11 +48,23 @@ std::vector<float> fcwt_raw(
   fcwt::cwt(input.data(), n, output.data(), startoctave, startoctave + noctaves - 1,
             nsuboctaves, sigma, nthreads, optplans);
 
-  // divide the output by input size to get a
-  // normalized version (fftw does not normalize)
-  transform(output.begin(), output.end(), output.begin(), [n](float &c){ return c/n; });
-  return(output);
+  if(abs) {
+    std::vector<float> abs_output(n*noctaves*nsuboctaves);
+
+    comp_abs(output.data(), abs_output.data(), n*noctaves*nsuboctaves);
+    transform(abs_output.begin(), abs_output.end(), abs_output.begin(), [n](float &c){ return c/n; });
+
+    return(abs_output);
+  } else {
+
+    // divide the output by input size to get a
+    // normalized version (fftw does not normalize)
+    transform(output.begin(), output.end(), output.begin(), [n](float &c){ return c/n; });
+    return(output);
+
+  }
 }
+
 
 
 

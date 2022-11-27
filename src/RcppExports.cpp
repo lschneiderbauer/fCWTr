@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // fcwt_raw
-std::vector<float> fcwt_raw(std::vector<float> input, int startoctave, int noctaves, int nsuboctaves, float sigma, int nthreads, bool optplans);
-RcppExport SEXP _fcwtr_fcwt_raw(SEXP inputSEXP, SEXP startoctaveSEXP, SEXP noctavesSEXP, SEXP nsuboctavesSEXP, SEXP sigmaSEXP, SEXP nthreadsSEXP, SEXP optplansSEXP) {
+std::vector<float> fcwt_raw(std::vector<float> input, int startoctave, int noctaves, int nsuboctaves, float sigma, int nthreads, bool optplans, bool abs);
+RcppExport SEXP _fcwtr_fcwt_raw(SEXP inputSEXP, SEXP startoctaveSEXP, SEXP noctavesSEXP, SEXP nsuboctavesSEXP, SEXP sigmaSEXP, SEXP nthreadsSEXP, SEXP optplansSEXP, SEXP absSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -23,7 +23,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
     Rcpp::traits::input_parameter< bool >::type optplans(optplansSEXP);
-    rcpp_result_gen = Rcpp::wrap(fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, nthreads, optplans));
+    Rcpp::traits::input_parameter< bool >::type abs(absSEXP);
+    rcpp_result_gen = Rcpp::wrap(fcwt_raw(input, startoctave, noctaves, nsuboctaves, sigma, nthreads, optplans, abs));
     return rcpp_result_gen;
 END_RCPP
 }
