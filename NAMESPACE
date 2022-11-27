@@ -3,6 +3,7 @@
 S3method(plot,fcwt_df)
 export(create_opt_schemes)
 export(fcwt)
+export(fcwt_bulk_df)
 export(fcwt_df)
 import(Rcpp)
 import(dplyr)
