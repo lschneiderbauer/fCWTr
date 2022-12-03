@@ -105,8 +105,8 @@ int fftw_flag(String flag) {
 //' FFTW allows one to create optimization plans in advance,
 //' which can help to speed up individual calls of [fcwt_raw].
 //'
-//' @param maxsize  Typical length of input vector
-//' @param threads  Number of threads used in the computation
+//' @param max_size  Typical length of input vector
+//' @param nthreads  Number of threads used in the computation
 //' @param flag
 //' From https://www.fftw.org/fftw3_doc/Planner-Flags.html:
 //' "estimate"" specifies that, instead of actual measurements of different algorithms, a simple heuristic is used to pick a (probably sub-optimal) plan quickly. With this flag, the input/output arrays are not overwritten during planning.
