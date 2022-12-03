@@ -92,9 +92,4 @@ bulk_df <- fcwt_bulk_df(
 plot(bulk_df)
 ```
 
-## Issues
-There seems to be still an issue with the normalization of the result: When
-processing the same signal with different batch sizes, different values can
-arise. This is of course not desired.
-
 <!-- regenerate with devtools::build_readme() -->

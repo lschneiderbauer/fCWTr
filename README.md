@@ -97,17 +97,11 @@ bulk_df <- fcwt_bulk_df(
 )
 #> ℹ Batch Size: 1048576 (~ Output Size: 2.01 GB)
 #> Start batch process ...
-#> |======================================================================| 100%
+#>|======================================================================| 100%
 
 plot(bulk_df)
 ```
 
 <img src="man/figures/README-example_long_df-1.png" width="100%" />
-
-## Issues
-
-There seems to be still an issue with the normalization of the result:
-When processing the same signal with different batch sizes, different
-values can arise. This is of course not desired.
 
 <!-- regenerate with devtools::build_readme() -->
