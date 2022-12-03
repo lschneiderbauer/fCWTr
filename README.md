@@ -37,17 +37,17 @@ library(fcwtr)
 
 # You are given some signal encoded in a numeric vector.
 # In this example we use some superimposed sin signals.
-input <- ts_sin_440
+input <- ts_sin_superpos
 
 # One possibility is to use the fcwt library (almost) directly through
 # a thin wrapper:
 output <- fcwt(input)
 
-# In this case the result is a tensor of rank 3,
+# In this case the result is a rank 3 tensor,
 # which can be used for further processing.
 # No additional sugar is provided here.
 dim(output)
-#> [1]     2 44100    96
+#> [1]    2 6000   96
 ```
 
 ``` r
@@ -83,7 +83,7 @@ plot(df)
 <img src="man/figures/README-example_df-1.png" width="100%" />
 
 ``` r
-# For long sequences, the needed memory can exceed your local memory. In this
+# For long sequences, the required memory can exceed your local memory. In this
 # case it can be useful to reduce the time resolution of the result and process
 # the data in batches. This can be done with `fcwt_bulk_df`.
 # In case the batch size is not explicitly provided, some heuristics are used to
