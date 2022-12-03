@@ -11,3 +11,10 @@
 #' @format ## `ts_sin_440`
 #' A vector of float containing a signal time series.
 "ts_sin_440"
+
+#' A sinusoidal wave with varying frequency.
+#' The frequency itself is changing in a sinusoidal fashion.
+#'
+#' @format ## `ts_sin_sin`
+#' A vector of float containing a signal time series.
+"ts_sin_sin"

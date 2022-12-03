@@ -68,14 +68,14 @@ of the input time series.
 \examples{
 # defaults to sigma = 1
 fcwt_df(
-  time_series_sin,
+  ts_sin_superpos,
   sampling_rate = 44100,
   time_resolution = 0.001
 )
 
 # enhance frequency resolution
 fcwt_df(
-  time_series_sin,
+  ts_sin_superpos,
   sampling_rate = 44100,
   time_resolution = 0.001,
   sigma = 5

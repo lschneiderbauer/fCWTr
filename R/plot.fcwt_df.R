@@ -8,7 +8,7 @@
 #' @examples
 #' # providing the sampling rate in addition to the time series is important to
 #' # establishing a connection to physical units.
-#' result_df <- fcwt_df(time_series_sin,
+#' result_df <- fcwt_df(ts_sin_440,
 #'   sampling_rate = 44100,
 #'   time_resolution = 0.001
 #' )
@@ -16,7 +16,7 @@
 #' plot(result_df)
 #'
 #' # now change the time-frequency uncertainty
-#' result_df <- fcwt_df(time_series_sin,
+#' result_df <- fcwt_df(ts_sin_440,
 #'   sampling_rate = 44100,
 #'   time_resolution = 0.001, sigma = 3
 #' )
