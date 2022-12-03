@@ -48,20 +48,26 @@ std::vector<float> fcwt_raw(
   fcwt::cwt(input.data(), n, output.data(), startoctave, startoctave + noctaves - 1,
             nsuboctaves, sigma, nthreads, optplans);
 
+  // divide the output by input size to get a
+  // normalized version (fftw does not normalize)
+  // let's do that before we calculate the absolute values
+
+  // since fcwt::cwt only fourier-transforms the nearest smaller power of 2 size,
+  // we need to get that value in order to normalize properly.
+  int n_norm = (1 << fcwt::find2power(n)) / 2;
+  transform(output.begin(), output.end(), output.begin(),
+    [n_norm](float &c){
+      return c/n_norm;
+    }
+  );
+
   if(abs) {
     std::vector<float> abs_output(n*noctaves*nsuboctaves);
 
     comp_abs(output.data(), abs_output.data(), n*noctaves*nsuboctaves);
-    transform(abs_output.begin(), abs_output.end(), abs_output.begin(), [n](float &c){ return c/n; });
-
     return(abs_output);
   } else {
-
-    // divide the output by input size to get a
-    // normalized version (fftw does not normalize)
-    transform(output.begin(), output.end(), output.begin(), [n](float &c){ return c/n; });
     return(output);
-
   }
 }
 

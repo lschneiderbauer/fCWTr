@@ -61,4 +61,5 @@ namespace fcwt {
     void main(float *Rinput,float *Routput,int *stboctave, int *endoctave, int *pnbvoice, int *pinputsize, float *pcenterfrequency, int nthreads, bool use_optimalization_schemes);
     void FCWT_LIBRARY_API cwt(float *input, int inputsize, float* output, int stboctave, int endoctave, int pnbvoice, float c0, int threads, bool use_optimalization_schemes);
 
+    int find2power(int n);
 }
