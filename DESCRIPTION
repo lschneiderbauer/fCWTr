@@ -20,6 +20,7 @@ Depends:
 Imports:
     tidyr (>= 1.1.4),
     dplyr (>= 1.0.10),
+    rlang (>= 1.0.6),
     Rcpp (>= 1.0.9)
 Suggests:
     ggplot2 (>= 3.3.5),

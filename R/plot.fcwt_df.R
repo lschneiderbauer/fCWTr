@@ -23,6 +23,7 @@
 #' # plot the result again
 #' plot(result_df)
 #'
+#' @importFrom rlang .data
 #' @export
 plot.fcwt_df <- function(result.df) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
@@ -30,10 +31,16 @@ plot.fcwt_df <- function(result.df) {
 
   plot <-
     result.df |>
-    ggplot2::ggplot(ggplot2::aes(x = time, y = freq, fill = value)) +
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = .data$time, y = .data$freq, fill = .data$value
+      )
+    ) +
     ggplot2::geom_raster() +
     viridis::scale_fill_viridis(discrete = FALSE) +
-    ggplot2::scale_y_continuous(name = "Freq [Hz]", trans = "log2", n.breaks = 20) +
+    ggplot2::scale_y_continuous(
+      name = "Freq [Hz]", trans = "log2", n.breaks = 20
+    ) +
     ggplot2::scale_x_time(name = NULL) +
     ggplot2::theme_minimal()
 

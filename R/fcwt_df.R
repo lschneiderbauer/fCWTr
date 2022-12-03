@@ -52,6 +52,7 @@
 #'   sigma = 5
 #' )
 #'
+#' @importFrom rlang .data
 #' @export
 fcwt_df <- function(time_series,
                     sampling_rate,
@@ -113,13 +114,13 @@ fcwt_df <- function(time_series,
       names_transform = list(scale = as.integer)
     ) |>
     mutate(
-      time = time_ind * time_resolution
+      time = .data$time_ind * time_resolution
     ) |>
     mutate(
       # include offset due to potentially missing upper frequencies
-      freq = scale_to_freq[scale + !!nsuboctaves * (!!startoctave - 1)]
+      freq = scale_to_freq[.data$scale + !!nsuboctaves * (!!startoctave - 1)]
     ) |>
-    select(-scale)
+    select(-.data$scale)
 
 
 
@@ -154,11 +155,14 @@ fcwt_df <- function(time_series,
     result.df <-
       result.df |>
       mutate(
-        value = if_else(
-          ((Bx - Ax) * (1 / freq - 1 / Ay) - (1 / By - 1 / Ay) * (time - Ax) < 0) &
-            ((B2x - Cx) * (1 / freq - 1 / Cy) - (1 / By - 1 / Cy) * (time - Cx) > 0),
-          value, as.numeric(NA)
-        )
+        value =
+          if_else(
+            ((Bx - Ax) * (1 / .data$freq - 1 / Ay) -
+              (1 / By - 1 / Ay) * (.data$time - Ax) < 0) &
+              ((B2x - Cx) * (1 / .data$freq - 1 / Cy) -
+                (1 / By - 1 / Cy) * (.data$time - Cx) > 0),
+            .data$value, as.numeric(NA)
+          )
       )
   }
 
@@ -169,6 +173,6 @@ fcwt_df <- function(time_series,
   return(
     # define column order
     result.df |>
-      select(time_ind, time, freq, value)
+      select(.data$time_ind, .data$time, .data$freq, .data$value)
   )
 }

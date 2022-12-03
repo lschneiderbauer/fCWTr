@@ -41,6 +41,8 @@
 #'                          the batch-transformations.
 #' @seealso fcwt_df create_opt_schemes
 #' @export
+#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom rlang .data
 fcwt_bulk_df <- function(time_series,
                          sampling_rate,
                          min_freq = sampling_rate / 2000,
@@ -99,12 +101,12 @@ fcwt_bulk_df <- function(time_series,
         ...
       ) |>
       mutate(
-        time_ind = time_ind + floor(cursor / (sampling_rate * time_resolution)),
-        time = time_ind * time_resolution
+        time_ind = .data$time_ind + floor(cursor / (sampling_rate * time_resolution)),
+        time = .data$time_ind * time_resolution
       ) |>
       # remove timeframes w/ any NA-value in it.
-      group_by(time_ind, time) |>
-      filter(!any(is.na(value))) |>
+      group_by(.data$time_ind, .data$time) |>
+      filter(!any(is.na(.data$value))) |>
       ungroup()
 
     # take into account that some time records are lost due to boundary
