@@ -3,7 +3,7 @@
 #' The x-axis corresponds to time, y-axis corresponds to frequency.
 #' Note, the frequency axis is scaled logarithmically.
 #'
-#' @param result.df as it returned by [fcwt.df].
+#' @param result.df as is returned by [fcwt.df].
 #' @return ggplot plot object
 #' @examples
 #' # providing the sampling rate in addition to the time series is important to

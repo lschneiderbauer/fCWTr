@@ -76,17 +76,14 @@ fcwt_df <- function(time_series,
     ))
 
   result_abs <- fcwt(time_series,
-                 startoctave = startoctave,
-                 noctave = noctave,
-                 nsuboctaves = nsuboctaves,
-                 sigma = sigma,
-                 nthreads = nthreads,
-                 optplan = optplan,
-                 abs = T
+    startoctave = startoctave,
+    noctave = noctave,
+    nsuboctaves = nsuboctaves,
+    sigma = sigma,
+    nthreads = nthreads,
+    optplan = optplan,
+    abs = T
   )
-
-  # absolute values of complex result
-  #result_abs <- sqrt(result[1, , ]^2 + result[2, , ]^2)
 
   # perform pooling before we create data frame
   # (pivot longer and pooling afterwards is expensive)
@@ -96,7 +93,7 @@ fcwt_df <- function(time_series,
 
     # we might have to cut the length in order to get an integer valued
     # size decomposition of the length
-    result_abs <- result_abs[1:(newlength*npoolsize), ]
+    result_abs <- result_abs[1:(newlength * npoolsize), ]
     dim(result_abs) <- c(npoolsize, newlength, dim(result_abs)[2])
 
     result_abs <- colMeans(result_abs, dims = 1)

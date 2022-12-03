@@ -7,7 +7,7 @@
 \method{plot}{fcwt_df}(result.df)
 }
 \arguments{
-\item{result.df}{as it returned by [fcwt.df].}
+\item{result.df}{as is returned by [fcwt.df].}
 }
 \value{
 ggplot plot object
