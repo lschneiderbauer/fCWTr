@@ -4,10 +4,10 @@
 \alias{plot.fcwt_df}
 \title{Plots a scalogram given a fcwt dataframe.}
 \usage{
-\method{plot}{fcwt_df}(result.df)
+\method{plot}{fcwt_df}(x, ...)
 }
 \arguments{
-\item{result.df}{as is returned by [fcwt.df].}
+\item{x}{A data frame as is returned by [fcwt.df].}
 }
 \value{
 ggplot plot object

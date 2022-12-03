@@ -3,7 +3,7 @@
 #' The x-axis corresponds to time, y-axis corresponds to frequency.
 #' Note, the frequency axis is scaled logarithmically.
 #'
-#' @param result.df as is returned by [fcwt.df].
+#' @param x A data frame as is returned by [fcwt.df].
 #' @return ggplot plot object
 #' @examples
 #' # providing the sampling rate in addition to the time series is important to
@@ -25,12 +25,12 @@
 #'
 #' @importFrom rlang .data
 #' @export
-plot.fcwt_df <- function(result.df) {
+plot.fcwt_df <- function(x, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
 
   plot <-
-    result.df |>
+    x |>
     ggplot2::ggplot(
       ggplot2::aes(
         x = .data$time, y = .data$freq, fill = .data$value
