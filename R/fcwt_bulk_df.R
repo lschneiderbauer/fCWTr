@@ -36,9 +36,7 @@
 #'                        In case of the parameter not being provided,
 #'                        heuristics are used to try to estimate a reasonable
 #'                        size.
-#' @param create_opt_schemes Creates optimization plans for the corresponding
-#'                          batch size and parameters before executing
-#'                          the batch-transformations.
+#' @param ... Other parameters that are directly passed to [fcwt].
 #' @seealso fcwt_df create_opt_schemes
 #' @export
 #' @importFrom utils setTxtProgressBar txtProgressBar

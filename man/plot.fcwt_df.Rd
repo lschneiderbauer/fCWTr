@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{A data frame as is returned by [fcwt.df].}
+
+\item{...}{For compatibility with its generic [plot].}
 }
 \value{
 ggplot plot object

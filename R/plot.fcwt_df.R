@@ -4,6 +4,7 @@
 #' Note, the frequency axis is scaled logarithmically.
 #'
 #' @param x A data frame as is returned by [fcwt.df].
+#' @param ... For compatibility with its generic [plot].
 #' @return ggplot plot object
 #' @examples
 #' # providing the sampling rate in addition to the time series is important to

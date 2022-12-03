@@ -50,9 +50,7 @@ size.}
 \item{optplan}{If TRUE uses the optimization plans that might have been
 generated before by [create_optimization_schemes_raw].}
 
-\item{create_opt_schemes}{Creates optimization plans for the corresponding
-batch size and parameters before executing
-the batch-transformations.}
+\item{...}{Other parameters that are directly passed to [fcwt].}
 }
 \description{
 Performs a fast continuous wavelet transform on long sequences. It should
