@@ -4265,15 +4265,35 @@ printf "%s\n" "no" >&6; }
 fi
 
 if test  -n "$PKG_CONFIG"  ; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config for fftw" >&5
-printf %s "checking pkg-config for fftw... " >&6; }
-  if $PKG_CONFIG --exists fftw3; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config for fftw3f" >&5
+printf %s "checking pkg-config for fftw3f... " >&6; }
+  if $PKG_CONFIG --exists fftw3f; then
     have_fftw=yes
-    FFTW_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f fftw3f_threads fftw3f_omp`
-    FFTW_LIBS=`"${PKG_CONFIG}" --libs fftw3f fftw3f_threads fftw3f_omp`
+    FFTW_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f`
+    FFTW_LIBS=`"${PKG_CONFIG}" --libs fftw3f`
   fi
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: ${have_fftw}" >&5
 printf "%s\n" "${have_fftw}" >&6; }
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config for fftw3f_threads" >&5
+printf %s "checking pkg-config for fftw3f_threads... " >&6; }
+  if $PKG_CONFIG --exists fftw3f_threads; then
+    have_fftwf_threads=yes
+    FFTW_THREADS_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_threads`
+    FFTW_THREADS_LIBS=`"${PKG_CONFIG}" --libs fftw3f_threads`
+  fi
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: ${have_fftwf_threads}" >&5
+printf "%s\n" "${have_fftwf_threads}" >&6; }
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config for fftw3f_omp" >&5
+printf %s "checking pkg-config for fftw3f_omp... " >&6; }
+  if $PKG_CONFIG --exists fftw3f_omp; then
+    have_fftwf_omp=yes
+    FFTW_OMP_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_omp`
+    FFTW_OMP_LIBS=`"${PKG_CONFIG}" --libs fftw3f_omp`
+  fi
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: ${have_fftwf_omp}" >&5
+printf "%s\n" "${have_fftwf_omp}" >&6; }
 fi
 
 if test "x${have_fftw}" = xno; then
@@ -4325,9 +4345,9 @@ fi
 # Write the flags into the src/Makevars file.
 PKG_CPPFLAGS="${PKG_CPPFLAGS}"
 
-PKG_CXXFLAGS="${PKG_CXXFLAGS} ${OPENMP_CXXFLAGS}"
+PKG_CXXFLAGS="${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_THREADS_CXXFLAGS} ${FFTW_OMP_CXXFLAGS}  ${OPENMP_CXXFLAGS}"
 
-PKG_LIBS="${LIBS} ${PKG_LIBS} ${FFTW_LIBS}"
+PKG_LIBS="${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_THREADS_LIBS} ${FFTW_OMP_LIBS}"
 
 ac_config_files="$ac_config_files src/Makevars"
 

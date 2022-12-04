@@ -20,13 +20,29 @@ FFTW_LIBS="-lfftw3f -lfftw3f_threads -lfftw3f_omp"
 PKG_PROG_PKG_CONFIG
 
 if test [ -n "$PKG_CONFIG" ] ; then
-  AC_MSG_CHECKING([pkg-config for fftw])
-  if $PKG_CONFIG --exists fftw3; then
+  AC_MSG_CHECKING([pkg-config for fftw3f])
+  if $PKG_CONFIG --exists fftw3f; then
     have_fftw=yes
-    FFTW_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f fftw3f_threads fftw3f_omp`
-    FFTW_LIBS=`"${PKG_CONFIG}" --libs fftw3f fftw3f_threads fftw3f_omp`
+    FFTW_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f`
+    FFTW_LIBS=`"${PKG_CONFIG}" --libs fftw3f`
   fi
   AC_MSG_RESULT([${have_fftw}])
+
+  AC_MSG_CHECKING([pkg-config for fftw3f_threads])
+  if $PKG_CONFIG --exists fftw3f_threads; then
+    have_fftwf_threads=yes
+    FFTW_THREADS_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_threads`
+    FFTW_THREADS_LIBS=`"${PKG_CONFIG}" --libs fftw3f_threads`
+  fi
+  AC_MSG_RESULT([${have_fftwf_threads}])
+
+  AC_MSG_CHECKING([pkg-config for fftw3f_omp])
+  if $PKG_CONFIG --exists fftw3f_omp; then
+    have_fftwf_omp=yes
+    FFTW_OMP_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_omp`
+    FFTW_OMP_LIBS=`"${PKG_CONFIG}" --libs fftw3f_omp`
+  fi
+  AC_MSG_RESULT([${have_fftwf_omp}])
 fi
 
 if test "x${have_fftw}" = xno; then
@@ -38,8 +54,8 @@ fi
 
 # Write the flags into the src/Makevars file.
 AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS}"])
-AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${OPENMP_CXXFLAGS}"])
-AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS}"])
+AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_THREADS_CXXFLAGS} ${FFTW_OMP_CXXFLAGS}  ${OPENMP_CXXFLAGS}"])
+AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_THREADS_LIBS} ${FFTW_OMP_LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
 
