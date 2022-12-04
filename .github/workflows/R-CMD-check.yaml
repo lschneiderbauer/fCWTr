@@ -47,7 +47,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install libomp
-          brew install fftw
+          brew install fftw --with-threads --with-omp
         
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
