@@ -41,7 +41,7 @@ jobs:
 
       - name: Install fftw3 on Linux
         if: runner.os == 'Linux'
-        run: sudo apt-get update -y && sudo apt-get install -y fftw3-dev
+        run: sudo apt-get update -y && sudo apt-get install -y libfftw3-dev
         
       - name: Install fftw3 on macOS
         if: runner.os == 'macOS'
