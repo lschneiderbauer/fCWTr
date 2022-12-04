@@ -28,4 +28,6 @@ Suggests:
     ggplot2 (>= 3.3.5),
     viridis (>= 0.6.0)
 LinkingTo: Rcpp
-SystemRequirements: fftw3 (>= 3.3.0)
+SystemRequirements:
+    fftw3 (>= 3.3.0),
+    openmp (>= 15.0.0)
