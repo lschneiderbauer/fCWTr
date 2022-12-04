@@ -4,6 +4,8 @@
 # fcwtr
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The R package fcwtr is a simple wrapper invoking the [fcwt
