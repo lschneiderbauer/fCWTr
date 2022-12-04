@@ -58,7 +58,7 @@ if test "x${have_fftwf_threads}" = xno; then
 fi
 
 if test "x${have_fftwf_omp}" = xno; then
-  AC_CHECK_HEADERS(omp.h, [have_fftw=yes], [AC_MSG_ERROR(
+  AC_CHECK_HEADERS(omp.h, [have_fftwf_omp=yes], [AC_MSG_ERROR(
     [OMP-support in fftw3 library is required.]
   )])
 fi
