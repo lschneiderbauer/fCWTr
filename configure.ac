@@ -29,6 +29,7 @@ if test [ -n "$PKG_CONFIG" ] ; then
   AC_MSG_RESULT([${have_fftw}])
 
   AC_MSG_CHECKING([pkg-config for fftw3f_threads])
+  have_fftwf_threads=no
   if $PKG_CONFIG --exists fftw3f_threads; then
     have_fftwf_threads=yes
     FFTW_THREADS_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_threads`
@@ -37,6 +38,7 @@ if test [ -n "$PKG_CONFIG" ] ; then
   AC_MSG_RESULT([${have_fftwf_threads}])
 
   AC_MSG_CHECKING([pkg-config for fftw3f_omp])
+  have_fftwf_omp=no
   if $PKG_CONFIG --exists fftw3f_omp; then
     have_fftwf_omp=yes
     FFTW_OMP_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_omp`
@@ -48,6 +50,16 @@ fi
 if test "x${have_fftw}" = xno; then
   AC_CHECK_HEADERS(fftw3.h, [have_fftw=yes], [AC_MSG_ERROR(
     [The fftw3 library headers are required.]
+  )])
+fi
+
+if test "x${have_fftwf_threads}" = xno; then
+  AC_MSG_ERROR([Thread-support in fftw3 library is required.])
+fi
+
+if test "x${have_fftwf_omp}" = xno; then
+  AC_CHECK_HEADERS(omp.h, [have_fftw=yes], [AC_MSG_ERROR(
+    [OMP-support in fftw3 library is required.]
   )])
 fi
 

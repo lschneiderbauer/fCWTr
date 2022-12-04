@@ -4277,6 +4277,7 @@ printf "%s\n" "${have_fftw}" >&6; }
 
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config for fftw3f_threads" >&5
 printf %s "checking pkg-config for fftw3f_threads... " >&6; }
+  have_fftwf_threads=no
   if $PKG_CONFIG --exists fftw3f_threads; then
     have_fftwf_threads=yes
     FFTW_THREADS_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_threads`
@@ -4287,6 +4288,7 @@ printf "%s\n" "${have_fftwf_threads}" >&6; }
 
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking pkg-config for fftw3f_omp" >&5
 printf %s "checking pkg-config for fftw3f_omp... " >&6; }
+  have_fftwf_omp=no
   if $PKG_CONFIG --exists fftw3f_omp; then
     have_fftwf_omp=yes
     FFTW_OMP_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_omp`
@@ -4335,6 +4337,26 @@ then :
  have_fftw=yes
 else $as_nop
   as_fn_error $? "The fftw3 library headers are required.
+  " "$LINENO" 5
+fi
+
+done
+fi
+
+if test "x${have_fftwf_threads}" = xno; then
+  as_fn_error $? "Thread-support in fftw3 library is required." "$LINENO" 5
+fi
+
+if test "x${have_fftwf_omp}" = xno; then
+         for ac_header in omp.h
+do :
+  ac_fn_cxx_check_header_compile "$LINENO" "omp.h" "ac_cv_header_omp_h" "$ac_includes_default"
+if test "x$ac_cv_header_omp_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_OMP_H 1" >>confdefs.h
+ have_fftw=yes
+else $as_nop
+  as_fn_error $? "OMP-support in fftw3 library is required.
   " "$LINENO" 5
 fi
 
