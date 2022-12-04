@@ -39,6 +39,18 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Install fftw3 on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -y && sudo apt-get install -y fftw3-dev
+        
+      - name: Install fftw3 on macOS
+        if: runner.os == 'macOS'
+        run: brew install fftw3
+        
+      - name: Install fftw3 on Windows
+        if: runner.os == 'Windows'
+        run: pacman -Syu fftw --noconfirm
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
