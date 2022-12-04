@@ -1,0 +1,1 @@
+PKG_CPPFLAGS = -I. -lfftw3f -lfftw3f_threads -lfftw3f_omp
