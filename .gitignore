@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 .Rdata
+.Rprofile
 .httr-oauth
 .DS_Store
 autom4te.cache
