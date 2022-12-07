@@ -1,5 +1,8 @@
  AC_INIT(fcwtr, 0.1.0)
 
+m4_include([src/m4_ax_gcc_x86_cpu_supports.m4])
+m4_include([src/m4_ax_check_x86_features.m4])
+
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -27,24 +30,6 @@ if test [ -n "$PKG_CONFIG" ] ; then
     FFTW_LIBS=`"${PKG_CONFIG}" --libs fftw3f`
   fi
   AC_MSG_RESULT([${have_fftw}])
-
-  AC_MSG_CHECKING([pkg-config for fftw3f_threads])
-  have_fftwf_threads=no
-  if $PKG_CONFIG --exists fftw3f_threads; then
-    have_fftwf_threads=yes
-    FFTW_THREADS_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_threads`
-    FFTW_THREADS_LIBS=`"${PKG_CONFIG}" --libs fftw3f_threads`
-  fi
-  AC_MSG_RESULT([${have_fftwf_threads}])
-
-  AC_MSG_CHECKING([pkg-config for fftw3f_omp])
-  have_fftwf_omp=no
-  if $PKG_CONFIG --exists fftw3f_omp; then
-    have_fftwf_omp=yes
-    FFTW_OMP_CXXFLAGS=`"${PKG_CONFIG}" --cflags fftw3f_omp`
-    FFTW_OMP_LIBS=`"${PKG_CONFIG}" --libs fftw3f_omp`
-  fi
-  AC_MSG_RESULT([${have_fftwf_omp}])
 fi
 
 if test "x${have_fftw}" = xno; then
@@ -53,16 +38,12 @@ if test "x${have_fftw}" = xno; then
   )])
 fi
 
-if test "x${have_fftwf_threads}" = xno; then
-  AC_MSG_ERROR([Thread-support in fftw3 library is required.])
-fi
+have_fftwf_omp=no
+AC_SEARCH_LIBS(fftwf_plan_with_nthreads, fftw3f_omp, [have_fftwf_omp=yes],
+  [AC_MSG_ERROR([OMP-support in fftw3 library is required.])]
+)
 
-if test "x${have_fftwf_omp}" = xno; then
-  AC_CHECK_HEADERS(omp.h, [have_fftwf_omp=yes], [AC_MSG_ERROR(
-    [OMP-support in fftw3 library is required.]
-  )])
-fi
-
+AX_CHECK_X86_FEATURES([PKG_CXXFLAGS="$PKG_CXXFLAGS $X86_FEATURE_CFLAGS"])
 
 # Write the flags into the src/Makevars file.
 AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS}"])
