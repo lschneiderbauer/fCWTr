@@ -113,12 +113,15 @@ namespace fcwt {
             fftwf_complex *O1 = fftwf_alloc_complex(n);
             fftwf_complex *out = fftwf_alloc_complex(n);
 
+#ifdef _OPENMP
             omp_set_num_threads(threads);
             // std::cout << "Threads:" << omp_get_max_threads() << std::endl;
             Rcpp::Rcout << "Threads:" << omp_get_max_threads() << "\n";
 
             fftwf_init_threads();
             fftwf_plan_with_nthreads(omp_get_max_threads());
+#endif
+
             fftwf_plan p_for;
             fftwf_plan p_back;
 
@@ -195,13 +198,16 @@ namespace fcwt {
         memset(Ihat,0,sizeof(fftwf_complex)*newsize);
         memset(O1,0,sizeof(fftwf_complex)*newsize);
 
-        omp_set_num_threads(nthreads);
-
         //Initialize FFTW plans
-        fftwf_init_threads();
         fftwf_plan pinv;
 
+#ifdef _OPENMP
+        omp_set_num_threads(nthreads);
+
+        fftwf_init_threads();
         fftwf_plan_with_nthreads(omp_get_max_threads());
+#endif
+
         fftwf_plan p;
 
         //Load optimization schemes if necessary

@@ -42,11 +42,11 @@ jobs:
       - name: Install fftw3 on Linux
         if: runner.os == 'Linux'
         run: sudo apt-get update -y && sudo apt-get install -y libfftw3-dev libomp-dev
-        
+
       - name: Install fftw3 on macOS
         if: runner.os == 'macOS'
-        run: brew install llvm libomp fftw
-        
+        run: brew install libomp fftw
+
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
         run: pacman -Syu mingw-w64-x86_64-fftw --noconfirm

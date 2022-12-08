@@ -40,7 +40,11 @@ limitations under the License.
 
 #include <iostream>
 #include <sstream>
+
+#ifdef _OPENMP
 #include <omp.h>
+#endif
+
 #ifdef _WIN32
     #include <windows.h>
 #else

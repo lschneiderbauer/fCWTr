@@ -17,8 +17,6 @@ AC_LANG(C++)
 AC_PROG_CPP
 AX_CXX_COMPILE_STDCXX(17, , [mandatory])
 
-AC_OPENMP
-
 AX_GCC_BUILTIN(__builtin_cpu_init)
 AX_GCC_BUILTIN(__builtin_cpu_supports)
 
@@ -55,16 +53,16 @@ if test "x${have_fftw}" = xno; then
   )])
 fi
 
-have_fftwf_omp=no
-AC_SEARCH_LIBS(fftwf_plan_with_nthreads, fftw3f_omp, [have_fftwf_omp=yes],
-  [AC_MSG_ERROR([OMP-support in fftw3 library is required.])]
+AX_OPENMP(
+  [AC_SEARCH_LIBS(fftwf_plan_with_nthreads, fftw3f_omp, [have_fftwf_omp=yes],
+    [AC_MSG_ERROR([OMP-support in fftw3 library is required if OpenMP support is enabled.])]
+  )]
 )
-
 
 # Write the flags into the src/Makevars file.
 AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS} ${OPENMP_CXXFLAGS}"])
-AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_THREADS_CXXFLAGS} ${FFTW_OMP_CXXFLAGS}  ${OPENMP_CXXFLAGS}"])
-AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_THREADS_LIBS} ${FFTW_OMP_LIBS}"])
+AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"])
+AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_OMP_LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
 
