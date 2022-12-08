@@ -1,1 +1,3 @@
-PKG_CPPFLAGS = -I. -lfftw3f -lfftw3f_threads -lfftw3f_omp
+PKG_CPPFLAGS = -I.
+PKG_CXXFLAGS = -I. -mavx2
+PKG_LIBS = -lfftw3f -lfftw3f_omp

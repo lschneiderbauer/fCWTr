@@ -2,6 +2,7 @@
 
 m4_include([src/m4_ax_gcc_x86_cpu_supports.m4])
 m4_include([src/m4_ax_check_x86_features.m4])
+m4_include([src/m4_ax_cxx_compile_stdcxx.m4])
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
@@ -15,6 +16,23 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 AC_LANG(C++)
 AC_PROG_CPP
 AC_OPENMP # use openmp if possible
+
+AX_CXX_COMPILE_STDCXX(17, , [mandatory])
+echo "$CXX"
+
+AX_GCC_BUILTIN(__builtin_cpu_init)
+AX_GCC_BUILTIN(__builtin_cpu_supports)
+
+if test [ "$ax_cv_have___builtin_cpu_init" == yes ] &&
+    test [ "$ax_cv_have___builtin_cpu_supports" == yes ] ; then
+  AX_GCC_X86_CPU_SUPPORTS(avx2, [PKG_CXXFLAGS="$PKG_CXXFLAGS -mavx2"])
+else
+  # perform the substitution anyways
+  # (I do not know how these flags can be checked for other
+  # architectures)
+  AC_SUBST([PKG_CXXFLAGS], ["$PKG_CXXFLAGS -mavx2"])
+fi
+
 
 have_fftw=no
 FFTW_CXXFLAGS=""
@@ -43,7 +61,6 @@ AC_SEARCH_LIBS(fftwf_plan_with_nthreads, fftw3f_omp, [have_fftwf_omp=yes],
   [AC_MSG_ERROR([OMP-support in fftw3 library is required.])]
 )
 
-AX_CHECK_X86_FEATURES([PKG_CXXFLAGS="$PKG_CXXFLAGS $X86_FEATURE_CFLAGS"])
 
 # Write the flags into the src/Makevars file.
 AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS}"])
