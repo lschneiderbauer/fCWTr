@@ -25,7 +25,7 @@ The sampling rate also defines the highest possible
 frequency resolution of the CWT: half of the sampling
 rate.}
 
-\item{min_freq}{Sets the minimal frequency (>0!) in Hz that should be
+\item{min_freq}{Sets the minimal frequency (`>0`!) in Hz that should be
 contained in the output. Computation time increases
 when lowering the minimal frequency.}
 
@@ -34,7 +34,7 @@ when lowering the minimal frequency.}
 \item{time_resolution}{Defines seconds per time index (regulates the size of
 the output by performing mean-pooling.
 If NULL, no pooling is performed, and the effective
-time_resolution will be 1 / `sampling_rate`.}
+time_resolution will be `1 / sampling_rate`.}
 
 \item{nthreads}{Number of threads to use (FFTW)}
 
@@ -64,7 +64,7 @@ performed in one run.
 For instance, in case of processing a song of three minutes length (assuming
 a simpling rate of 44100 Hz), the size of the output vector is
 `3 * 60 seconds * 44100 Hz * 2 * noctaves * nsuboctaves * 4 bytes`,
-which for e.g. noctaves = 8, and nsuboctaves = 24, equals ~ 24 GB, hence
+which for e.g. `noctaves = 8`, and `nsuboctaves = 24`, equals ~ 24 GB, hence
 nowadays already at the limit of the hardware of a modern personal computer.
 
 In cases where the needed output time-resolution is smaller than the time

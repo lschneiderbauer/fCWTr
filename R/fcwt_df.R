@@ -1,4 +1,3 @@
-
 #' Performs a fast continuous wavelet transform and
 #' returns the result in a data frame.
 #'
@@ -13,7 +12,7 @@
 #'                        The sampling rate also defines the highest possible
 #'                        frequency resolution of the CWT: half of the sampling
 #'                        rate.
-#' @param min_freq        Sets the minimal frequency (>0!) in Hz that should be
+#' @param min_freq        Sets the minimal frequency (`>0`!) in Hz that should be
 #'                        contained in the output. Computation time increases
 #'                        when lowering the minimal frequency.
 #' @param sigma           Sets a parameter modifying the wavelet length. Adjusts
@@ -24,7 +23,7 @@
 #' @param time_resolution Defines seconds per time index (regulates the size of
 #'                        the output by performing mean-pooling.
 #'                        If NULL, no pooling is performed, and the effective
-#'                        time_resolution will be 1 / `sampling_rate`.
+#'                        time_resolution will be `1 / sampling_rate`.
 #' @param rm.coi          If TRUE, sets the values outside of the "cone of
 #'                        influence" to NA.
 #'

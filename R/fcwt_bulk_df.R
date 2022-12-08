@@ -11,7 +11,7 @@
 #' For instance, in case of processing a song of three minutes length (assuming
 #' a simpling rate of 44100 Hz), the size of the output vector is
 #' `3 * 60 seconds * 44100 Hz * 2 * noctaves * nsuboctaves * 4 bytes`,
-#' which for e.g. noctaves = 8, and nsuboctaves = 24, equals ~ 24 GB, hence
+#' which for e.g. `noctaves = 8`, and `nsuboctaves = 24`, equals ~ 24 GB, hence
 #' nowadays already at the limit of the hardware of a modern personal computer.
 #'
 #' In cases where the needed output time-resolution is smaller than the time

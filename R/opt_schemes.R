@@ -1,7 +1,7 @@
 #' Create Optimization Schemes
 #'
 #' Utilizes an FFTW feature to create optimization schemes
-#' before the actual calulations. In conjunction with 'fcwt(...,optplan = T)`
+#' before the actual calculations. In conjunction with `fcwt(...,optplan = T)`
 #' this can provide a performance boost.
 #'
 #' @inheritParams create_opt_schemes_raw

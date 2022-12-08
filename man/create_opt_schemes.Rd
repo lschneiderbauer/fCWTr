@@ -20,7 +20,7 @@ create_opt_schemes(max_size, nthreads = 8L, flag = "measure")
 }
 \description{
 Utilizes an FFTW feature to create optimization schemes
-before the actual calulations. In conjunction with 'fcwt(...,optplan = T)`
+before the actual calculations. In conjunction with `fcwt(...,optplan = T)`
 this can provide a performance boost.
 }
 \seealso{

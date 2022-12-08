@@ -26,7 +26,7 @@ The sampling rate also defines the highest possible
 frequency resolution of the CWT: half of the sampling
 rate.}
 
-\item{min_freq}{Sets the minimal frequency (>0!) in Hz that should be
+\item{min_freq}{Sets the minimal frequency (`>0`!) in Hz that should be
 contained in the output. Computation time increases
 when lowering the minimal frequency.}
 
@@ -35,7 +35,7 @@ when lowering the minimal frequency.}
 \item{time_resolution}{Defines seconds per time index (regulates the size of
 the output by performing mean-pooling.
 If NULL, no pooling is performed, and the effective
-time_resolution will be 1 / `sampling_rate`.}
+time_resolution will be `1 / sampling_rate`.}
 
 \item{sigma}{Sets a parameter modifying the wavelet length. Adjusts
 the time/frequency uncertainty balance. Defaults to 1.
