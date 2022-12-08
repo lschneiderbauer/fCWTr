@@ -15,10 +15,9 @@ CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 AC_LANG(C++)
 AC_PROG_CPP
-AC_OPENMP # use openmp if possible
-
 AX_CXX_COMPILE_STDCXX(17, , [mandatory])
-echo "$CXX"
+
+AC_OPENMP
 
 AX_GCC_BUILTIN(__builtin_cpu_init)
 AX_GCC_BUILTIN(__builtin_cpu_supports)
@@ -30,7 +29,7 @@ else
   # perform the substitution anyways
   # (I do not know how these flags can be checked for other
   # architectures)
-  AC_SUBST([PKG_CXXFLAGS], ["$PKG_CXXFLAGS -mavx2"])
+  AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} -mavx2"])
 fi
 
 
@@ -63,7 +62,7 @@ AC_SEARCH_LIBS(fftwf_plan_with_nthreads, fftw3f_omp, [have_fftwf_omp=yes],
 
 
 # Write the flags into the src/Makevars file.
-AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS}"])
+AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS} ${OPENMP_CXXFLAGS}"])
 AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_THREADS_CXXFLAGS} ${FFTW_OMP_CXXFLAGS}  ${OPENMP_CXXFLAGS}"])
 AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_THREADS_LIBS} ${FFTW_OMP_LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
