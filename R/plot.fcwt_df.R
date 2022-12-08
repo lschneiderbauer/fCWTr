@@ -29,6 +29,7 @@
 plot.fcwt_df <- function(x, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
+  stopifnot(requireNamespace("hms", quietly = TRUE))
 
   plot <-
     x |>

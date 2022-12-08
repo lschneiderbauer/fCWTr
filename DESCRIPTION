@@ -26,7 +26,8 @@ Imports:
     Rcpp (>= 1.0.9)
 Suggests:
     ggplot2 (>= 3.3.5),
-    viridis (>= 0.6.0)
+    viridis (>= 0.6.0),
+    hms (>= 1.1.2)
 LinkingTo: Rcpp
 SystemRequirements:
     fftw3 (>= 3.3.0),
