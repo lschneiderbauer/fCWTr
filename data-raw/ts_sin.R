@@ -23,7 +23,7 @@ ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / sampling_rate)
 
 # 10 sec sin signal with sin-varying frequency
 f <- \(t,a) { 1.01*t + (1-cos(a*t))/a }
-ts_sin_sin <- sin(2 * pi * 5000 / sampling_rate * f((1:441000), 4*pi / 441000))
+ts_sin_sin <- sin(2 * pi * 5000 / sampling_rate * f((1:44100), 16*pi / 441000))
 
 usethis::use_data(ts_sin_superpos, ts_sin_440, ts_sin_sin, overwrite = TRUE)
 
