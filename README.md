@@ -91,7 +91,7 @@ plot(df)
 # In case the batch size is not explicitly provided, some heuristics are used to
 # determine a batch size automatically:
 bulk_df <- fcwt_bulk_df(
-  rep(ts_sin_sin, 5),
+  rep(ts_sin_sin, 10),
   sampling_rate = 44100,
   time_resolution = 0.01,
   nsuboctaves = 24L,
@@ -99,7 +99,6 @@ bulk_df <- fcwt_bulk_df(
 )
 #> ℹ Batch Size: 1048576 (~ Output Size: 2.01 GB)
 #> Start batch process ...
-#>|======================================================================| 100%
 
 plot(bulk_df)
 ```
