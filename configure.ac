@@ -32,8 +32,6 @@ fi
 
 
 have_fftw=no
-FFTW_CXXFLAGS=""
-FFTW_LIBS="-lfftw3f -lfftw3f_threads -lfftw3f_omp"
 
 PKG_PROG_PKG_CONFIG
 
