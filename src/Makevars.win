@@ -1,3 +1,4 @@
+CXX_STD = CXX17
 PKG_CPPFLAGS = -I.
 PKG_CXXFLAGS = -I. -mavx2
 PKG_LIBS = -lfftw3f -lfftw3f_omp
