@@ -17,8 +17,11 @@ with a Morlet wavelet, utilizing the power of
 
 ## Runtime Dependencies
 
--   R \>= 4.1 (due to the use of native pipes)
--   [fftw](https://www.fftw.org/) library (used by fcwt)
+- R \>= 4.1 (due to the use of native pipes)
+- [fftw](https://www.fftw.org/) library (used by fcwt)
+- A CPU supporting the
+  [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
+  instruction set
 
 ## Installation
 
@@ -28,6 +31,14 @@ installed [devtools](https://devtools.r-lib.org/) package):
 ``` r
 devtools::install_github("lschneiderbauer/fcwtr")
 ```
+
+### Compile-time Dependencies
+
+- Compiler w/ C++17 support
+- [fftw](https://www.fftw.org/) library headers
+- A CPU/compiler supporting the
+  [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
+  instruction set
 
 ## Example
 

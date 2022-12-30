@@ -29,7 +29,7 @@ a fast fourier transform implementation.
 ## Runtime Dependencies
 * R >= 4.1 (due to the use of native pipes)
 * [fftw](https://www.fftw.org/) library (used by fcwt)
-
+* A CPU supporting the [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) instruction set
 
 ## Installation
 
@@ -39,6 +39,13 @@ You can install the development version of fcwtr like so (requiring installed
 ``` r
 devtools::install_github("lschneiderbauer/fcwtr")
 ```
+
+### Compile-time Dependencies
+
+* Compiler w/ C++17 support
+* [fftw](https://www.fftw.org/) library headers
+* A CPU/compiler supporting the [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) instruction set
+
 
 ## Example
 
