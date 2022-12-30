@@ -67,13 +67,8 @@ fcwt_bulk_df <- function(time_series,
   # retains O(n lg n) performance, even for prime sizes).
   # Transforms whose sizes are powers of 2 are especially fast.
   #
-  # We also need to make sure, that batch_size * max(time_series)
-  # is not too large, otherwise we get problems with floating point precision
   batch_size <-
-    2^floor(log2(min(
-      10^7 / max(time_series),
-      max_batch_size
-    )))
+    2^floor(log2(max_batch_size))
 
   rlang::inform(
     c("i" = paste0(
@@ -82,7 +77,6 @@ fcwt_bulk_df <- function(time_series,
         nsuboctaves * 4) / 10^9, 2), " GB)"
     ))
   )
-
 
   rlang::inform("Start batch process ...")
   result.df <- NULL
