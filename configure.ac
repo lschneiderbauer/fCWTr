@@ -22,11 +22,19 @@ AX_GCC_BUILTIN(__builtin_cpu_supports)
 
 if test [ "$ax_cv_have___builtin_cpu_init" == yes ] &&
     test [ "$ax_cv_have___builtin_cpu_supports" == yes ] ; then
-  AX_GCC_X86_CPU_SUPPORTS(avx2, [PKG_CXXFLAGS="$PKG_CXXFLAGS -mavx2"])
+  AX_GCC_X86_CPU_SUPPORTS(avx2,
+    [PKG_CXXFLAGS="$PKG_CXXFLAGS -mavx2"],
+    # perform the substitution anyways
+    # TODO (I do not know how these flags can be checked for other
+    # architectures)
+    echo "Warning: avx2 seems not supported. Adding flags anyways just in case."
+    AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} -mavx2"])
+  )
 else
   # perform the substitution anyways
-  # (I do not know how these flags can be checked for other
+  # TODO (I do not know how these flags can be checked for other
   # architectures)
+  echo "Warning: Cannot probe for avx2 support. Adding flags anyways just in case."
   AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} -mavx2"])
 fi
 

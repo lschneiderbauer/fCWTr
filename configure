@@ -7015,13 +7015,23 @@ then :
 printf "%s\n" "#define HAVE_AVX2_INSTRUCTIONS 1" >>confdefs.h
 
           PKG_CXXFLAGS="$PKG_CXXFLAGS -mavx2"
+else $as_nop
+  # perform the substitution anyways
+    # TODO (I do not know how these flags can be checked for other
+    # architectures)
+    echo "Warning: avx2 seems not supported. Adding flags anyways just in case."
+    PKG_CXXFLAGS="${PKG_CXXFLAGS} -mavx2"
+
+
+
 fi
 
 
 else
   # perform the substitution anyways
-  # (I do not know how these flags can be checked for other
+  # TODO (I do not know how these flags can be checked for other
   # architectures)
+  echo "Warning: Cannot probe for avx2 support. Adding flags anyways just in case."
   PKG_CXXFLAGS="${PKG_CXXFLAGS} -mavx2"
 
 fi
