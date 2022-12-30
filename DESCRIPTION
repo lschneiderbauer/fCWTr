@@ -6,7 +6,8 @@ Authors@R: c(
     person("Lukas", "Schneiderbauer",
         email = "lukas.schneiderbauer@gmail.com",
         role = c("aut", "cre")),
-    person("Lukas", "Arts", role = "cph"))
+    person("Lukas P. A.", "Arts", role = "cph"),
+    person("Egon L.", "van den Broek", role = "cph"))
 Maintainer: Lukas Schneiderbauer <lukas.schneiderbauer@gmail.com>
 Description: Bundles and utilizes the 'fCWT' C++ library by Lukas Arts to make it
     available via an R package (using 'Rcpp').
