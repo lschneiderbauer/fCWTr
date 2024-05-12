@@ -6,33 +6,20 @@
 \usage{
 fcwt(
   input,
-  startoctave = 1L,
-  noctave = 8L,
-  nsuboctaves = 12L,
-  sigma = 1,
-  nthreads = 8,
-  optplan = FALSE,
-  abs = F
+  sample_freq,
+  freq_begin,
+  freq_end,
+  n_freqs,
+  sigma,
+  abs = FALSE,
+  nthreads = 8L
 )
 }
 \arguments{
-\item{input}{A numeric vector representing the time series}
-
-\item{startoctave}{Starting octave (corresponds to a scale of 2^startoctave)}
-
 \item{noctave}{The number of octaves to be processed.}
-
-\item{nsuboctaves}{Computing steps per octave}
-
-\item{sigma}{Parameter controlling time-frequency precision}
-
-\item{nthreads}{Number of threads to use (FFTW)}
 
 \item{optplan}{If TRUE uses the optimization plans that might have been
 generated before by [create_optimization_schemes_raw].}
-
-\item{abs}{Returns the absolute values instead of full
-complex representations.}
 }
 \value{
 Returns a numeric vector with dim = c(2, length(input), scales)

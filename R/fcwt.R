@@ -12,30 +12,36 @@
 #'          the third slot represent different scales / frequencies.
 #' @export
 fcwt <- function(input,
-                 startoctave = 1L,
-                 noctave = 8L,
-                 nsuboctaves = 12L,
-                 sigma = 1,
-                 nthreads = 8,
-                 optplan = FALSE,
-                 abs = F) {
-  stopifnot(is.numeric(startoctave), startoctave >= 1)
-  stopifnot(is.numeric(noctave), noctave >= 1)
-  stopifnot(is.numeric(nsuboctaves), nsuboctaves >= 1)
+                 sample_freq,
+                 freq_begin,
+                 freq_end,
+                 n_freqs,
+                 sigma,
+                 abs = FALSE,
+                 nthreads = 8L) {
+  stopifnot(is.numeric(sample_freq), sample_freq > 0)
+  stopifnot(is.numeric(freq_begin), freq_begin > 0)
+  stopifnot(is.numeric(freq_end), freq_end > freq_begin)
+  stopifnot(is.numeric(n_freqs), n_freqs > 0)
   stopifnot(is.numeric(sigma), sigma > 0)
-  stopifnot(is.logical(optplan))
+  stopifnot(is.numeric(nthreads))
+  stopifnot(is.logical(abs))
 
   output <- fcwt_raw(
-    input, startoctave, noctave,
-    nsuboctaves, 2 * pi * sigma, nthreads, optplan, abs
+    input, as.integer(sample_freq), freq_begin, freq_end, as.integer(n_freqs),
+    sigma, as.integer(nthreads), optplan, abs
   )
 
-  dim(output) <-
-    if(!abs) {
-      c(2, length(input), noctave * nsuboctaves)
-    } else {
-      c(length(input), noctave * nsuboctaves)
-    }
+
+  if (!abs) {
+    dim(output) <- c(length(input), n_freqs, 2)
+
+    output <- output[, , 1] + output[, , 2] * 1i
+  } else {
+    dim(output) <- c(length(input), n_freqs)
+  }
+
+  class(output) <- c("spectogram", class(output))
 
   return(output)
 }

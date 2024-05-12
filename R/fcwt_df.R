@@ -54,40 +54,44 @@
 #' @importFrom rlang .data
 #' @export
 fcwt_df <- function(time_series,
-                    sampling_rate,
-                    min_freq = sampling_rate / 2000,
-                    nsuboctaves = 12L,
+                    sample_freq,
+                    min_freq = sample_freq / 2000,
+                    max_freq = sample_freq / 2, # Nyquist frequency
+                    n_freqs,
                     time_resolution = NULL,
                     sigma = 1,
                     nthreads = 8L,
                     rm.coi = TRUE,
                     optplan = FALSE) {
-  startoctave <- 1
-  max_freq <- sampling_rate / 2 # Nyquist frequency
-  # determine noctave based on sampling_rate and min_freq parameter
-  noctave <- freqs_to_noctaves(min_freq, max_freq)
+  # startoctave <- 1
+  # max_freq <- sampling_rate / 2 #
+  # # determine noctave based on sampling_rate and min_freq parameter
+  # noctave <- freqs_to_noctaves(min_freq, max_freq)
 
-  scale_to_freq <-
-    rev(lseq(
-      max_freq * sqrt(1 + 1 / nsuboctaves) / 2^noctave,
-      max_freq / sqrt((1 + 1 / nsuboctaves)),
-      noctave * nsuboctaves
-    ))
+  # scale_to_freq <-
+  #   rev(lseq(
+  #     max_freq * sqrt(1 + 1 / nsuboctaves) / 2^noctave,
+  #     max_freq / sqrt((1 + 1 / nsuboctaves)),
+  #     noctave * nsuboctaves
+  #   ))
 
-  result_abs <- fcwt(time_series,
-    startoctave = startoctave,
-    noctave = noctave,
-    nsuboctaves = nsuboctaves,
-    sigma = sigma,
-    nthreads = nthreads,
-    optplan = optplan,
-    abs = T
-  )
+  result_abs <-
+    fcwt(
+      time_series,
+      sample_freq,
+      min_freq,
+      max_freq,
+      n_freqs,
+      sigma = sigma,
+      nthreads = nthreads,
+      optplan = optplan,
+      abs = TRUE
+    )
 
   # perform pooling before we create data frame
   # (pivot longer and pooling afterwards is expensive)
   if (!is.null(time_resolution)) {
-    npoolsize <- floor(sampling_rate * time_resolution)
+    npoolsize <- floor(sample_freq * time_resolution)
     newlength <- floor(length(time_series) / npoolsize)
 
     # we might have to cut the length in order to get an integer valued
@@ -97,7 +101,7 @@ fcwt_df <- function(time_series,
 
     result_abs <- colMeans(result_abs, dims = 1)
   } else {
-    time_resolution <- 1 / sampling_rate
+    time_resolution <- 1 / sample_freq
   }
 
   result.df <-
@@ -168,7 +172,6 @@ fcwt_df <- function(time_series,
 
   return(
     # define column order
-    result.df |>
-      select(.data$time_ind, .data$time, .data$freq, .data$value)
+    result.df[, c("time_ind", "time", "freq", "value")]
   )
 }

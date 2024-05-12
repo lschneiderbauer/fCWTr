@@ -7,9 +7,10 @@ returns the result in a data frame.}
 \usage{
 fcwt_df(
   time_series,
-  sampling_rate,
-  min_freq = sampling_rate/2000,
-  nsuboctaves = 12L,
+  sample_freq,
+  min_freq = sample_freq/2000,
+  max_freq = sample_freq/2,
+  n_freqs,
   time_resolution = NULL,
   sigma = 1,
   nthreads = 8L,
@@ -20,17 +21,9 @@ fcwt_df(
 \arguments{
 \item{time_series}{Time series as numeric vector.}
 
-\item{sampling_rate}{Sampling rate of input time series in Hz.
-(to establish a connection to physical units.)
-The sampling rate also defines the highest possible
-frequency resolution of the CWT: half of the sampling
-rate.}
-
 \item{min_freq}{Sets the minimal frequency (`>0`!) in Hz that should be
 contained in the output. Computation time increases
 when lowering the minimal frequency.}
-
-\item{nsuboctaves}{Computing steps per octave}
 
 \item{time_resolution}{Defines seconds per time index (regulates the size of
 the output by performing mean-pooling.
@@ -43,13 +36,17 @@ Larger (lower) value of sigma corresponds to a better
 (worse) frequency resolution and a worse (better) time
 resolution.}
 
-\item{nthreads}{Number of threads to use (FFTW)}
-
 \item{rm.coi}{If TRUE, sets the values outside of the "cone of
 influence" to NA.}
 
 \item{optplan}{If TRUE uses the optimization plans that might have been
 generated before by [create_optimization_schemes_raw].}
+
+\item{sampling_rate}{Sampling rate of input time series in Hz.
+(to establish a connection to physical units.)
+The sampling rate also defines the highest possible
+frequency resolution of the CWT: half of the sampling
+rate.}
 }
 \value{
 The time series as a data frame with the following variables:

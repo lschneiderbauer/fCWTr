@@ -29,14 +29,10 @@ rate.}
 contained in the output. Computation time increases
 when lowering the minimal frequency.}
 
-\item{nsuboctaves}{Computing steps per octave}
-
 \item{time_resolution}{Defines seconds per time index (regulates the size of
 the output by performing mean-pooling.
 If NULL, no pooling is performed, and the effective
 time_resolution will be `1 / sampling_rate`.}
-
-\item{nthreads}{Number of threads to use (FFTW)}
 
 \item{max_batch_size}{The maximal batch size that is used for splitting up
 the input sequence. This limits the maximal memory

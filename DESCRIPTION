@@ -17,19 +17,21 @@ Description: Bundles and utilizes the 'fCWT' C++ library by Lukas Arts to make i
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.2
+RoxygenNote: 7.3.1
 Depends:
     R (>= 4.1)
 Imports:
     tidyr (>= 1.1.4),
     dplyr (>= 1.0.10),
-    rlang (>= 1.0.6),
-    Rcpp (>= 1.0.9)
+    rlang (>= 1.0.6)
 Suggests:
     ggplot2 (>= 3.3.5),
     viridis (>= 0.6.0),
-    hms (>= 1.1.2)
-LinkingTo: Rcpp
+    hms (>= 1.1.2),
+    testthat (>= 3.0.0)
+LinkingTo: 
+    cpp11
 SystemRequirements:
     fftw3 (>= 3.3.0),
     openmp (>= 15.0.0)
+Config/testthat/edition: 3
