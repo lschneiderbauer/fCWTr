@@ -1,11 +1,31 @@
-new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end) {
+new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
+                                sigma, remove_coi) {
+  if (remove_coi) {
+    T <- dim(matrix)[[1]] # Time dimension
+    F <- dim(matrix)[[2]] # Frequency dimension
+
+    # express everything dimensionless
+    t <- rep(1:T, times = F)
+    f <-
+      rep(
+        seq(freq_end, freq_begin, length.out = F) / sample_freq,
+        each = T
+      )
+
+    cmp <- sigma
+
+    # check if points are inside / outside hyperbolic cone
+    matrix[!(f * t > cmp & f * (T - t) > cmp)] <- NA
+  }
+
   obj <-
     structure(
       matrix,
       class = c("fcwtr_scalogram", class(matrix)),
       sample_freq = sample_freq,
       freq_begin = freq_begin,
-      freq_end = freq_end
+      freq_end = freq_end,
+      sigma = sigma
     )
 
   dimnames(obj) <-
@@ -23,12 +43,14 @@ agg <- function(x, n) {
   poolsize <- floor(dim(x)[[1]] / n)
   x_new <- x[1:(poolsize * n), ]
   dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
-  x_new <- colMeans(x_new, dims = 1)
+  x_new <- colMeans(x_new, dims = 1, na.rm = TRUE)
 
   new_fcwtr_scalogram(
     x_new,
     attr(x, "sample_freq") / poolsize,
-    attr(x, "freq_begin"), attr(x, "freq_end")
+    attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "sigma"),
+    remove_coi = FALSE
   )
 }
 

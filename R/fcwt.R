@@ -54,7 +54,6 @@
 #'   sigma = 5
 #' )
 #'
-#'
 #' @export
 fcwt <- function(signal,
                  sample_freq,
@@ -62,7 +61,8 @@ fcwt <- function(signal,
                  freq_end,
                  n_freqs,
                  sigma,
-                 abs = FALSE,
+                 # abs = FALSE,
+                 remove_coi = TRUE,
                  nthreads = 8L) {
   stopifnot(is.numeric(signal))
   stopifnot(is.numeric(sample_freq), sample_freq > 0)
@@ -71,22 +71,24 @@ fcwt <- function(signal,
   stopifnot(is.numeric(n_freqs), n_freqs > 0)
   stopifnot(is.numeric(sigma), sigma > 0)
   stopifnot(is.numeric(nthreads))
-  stopifnot(is.logical(abs))
+  # stopifnot(is.logical(abs))
 
   output <-
     fcwt_raw(
       signal, as.integer(sample_freq), freq_begin, freq_end, as.integer(n_freqs),
-      sigma, as.integer(nthreads), FALSE, abs
+      sigma, as.integer(nthreads), FALSE,
+      abs = TRUE
     )
 
+  # if (!abs) {
+  #   dim(output) <- c(length(signal), n_freqs, 2)
+  #
+  #   output <- output[, , 1] + output[, , 2] * 1i
+  # } else {
+  dim(output) <- c(length(signal), n_freqs)
+  # }
 
-  if (!abs) {
-    dim(output) <- c(length(signal), n_freqs, 2)
-
-    output <- output[, , 1] + output[, , 2] * 1i
-  } else {
-    dim(output) <- c(length(signal), n_freqs)
-  }
-
-  new_fcwtr_scalogram(output, sample_freq, freq_begin, freq_end)
+  new_fcwtr_scalogram(
+    output, sample_freq, freq_begin, freq_end, sigma, remove_coi
+  )
 }
