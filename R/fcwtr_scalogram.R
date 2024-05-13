@@ -1,8 +1,8 @@
-new_fcwtr_spectogram <- function(matrix, sample_freq, freq_begin, freq_end) {
+new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end) {
   obj <-
     structure(
       matrix,
-      class = c("fcwtr_spectogram", class(matrix)),
+      class = c("fcwtr_scalogram", class(matrix)),
       sample_freq = sample_freq,
       freq_begin = freq_begin,
       freq_end = freq_end
@@ -18,14 +18,14 @@ new_fcwtr_spectogram <- function(matrix, sample_freq, freq_begin, freq_end) {
 }
 
 agg <- function(x, n) {
-  stopifnot(inherits(x, "fcwtr_spectogram"))
+  stopifnot(inherits(x, "fcwtr_scalogram"))
 
   poolsize <- floor(dim(x)[[1]] / n)
   x_new <- x[1:(poolsize * n), ]
   dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
   x_new <- colMeans(x_new, dims = 1)
 
-  new_fcwtr_spectogram(
+  new_fcwtr_scalogram(
     x_new,
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end")
@@ -33,7 +33,7 @@ agg <- function(x, n) {
 }
 
 #' @export
-as.data.frame.fcwtr_spectogram <- function(x, ...) {
+as.data.frame.fcwtr_scalogram <- function(x, ...) {
   df <- as.data.frame(as.table(x), stringsAsFactors = FALSE)
   names(df) <- c("time_ind", "freq", "value")
   df[["time_ind"]] <- as.integer(df[["time_ind"]])
@@ -46,11 +46,11 @@ as.data.frame.fcwtr_spectogram <- function(x, ...) {
 
 #' @importFrom graphics plot
 #' @export
-plot.fcwtr_spectogram <- function(x, n = 100, ...) {
-  print(autoplot.fcwtr_spectogram(x, n, ...))
+plot.fcwtr_scalogram <- function(x, n = 100, ...) {
+  print(autoplot.fcwtr_scalogram(x, n, ...))
 }
 
-autoplot.fcwtr_spectogram <- function(object, n = 100, ...) {
+autoplot.fcwtr_scalogram <- function(object, n = 100, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
   stopifnot(requireNamespace("rlang", quietly = TRUE))

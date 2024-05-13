@@ -88,5 +88,5 @@ fcwt <- function(signal,
     dim(output) <- c(length(signal), n_freqs)
   }
 
-  new_fcwtr_spectogram(output, sample_freq, freq_begin, freq_end)
+  new_fcwtr_scalogram(output, sample_freq, freq_begin, freq_end)
 }

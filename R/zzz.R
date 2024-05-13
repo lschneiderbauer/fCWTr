@@ -57,6 +57,6 @@ s3_register <-
 
 .onLoad <- function(...) {
   if (requireNamespace("ggplot2", quietly = TRUE)) {
-    s3_register("ggplot2::autoplot", "fcwtr_spectogram")
+    s3_register("ggplot2::autoplot", "fcwtr_scalogram")
   }
 }
