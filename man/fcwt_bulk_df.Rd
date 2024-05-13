@@ -17,25 +17,6 @@ fcwt_bulk_df(
 )
 }
 \arguments{
-\item{time_series}{Time series as numeric vector.}
-
-\item{sampling_rate}{Sampling rate of input time series in Hz.
-(to establish a connection to physical units.)
-The sampling rate also defines the highest possible
-frequency resolution of the CWT: half of the sampling
-rate.}
-
-\item{min_freq}{Sets the minimal frequency (`>0`!) in Hz that should be
-contained in the output. Computation time increases
-when lowering the minimal frequency.}
-
-\item{time_resolution}{Defines seconds per time index (regulates the size of
-the output by performing mean-pooling.
-If NULL, no pooling is performed, and the effective
-time_resolution will be `1 / sampling_rate`.}
-
-\item{nthreads}{Number of threads used by the computation, if applicable.}
-
 \item{max_batch_size}{The maximal batch size that is used for splitting up
 the input sequence. This limits the maximal memory
 that is used.

@@ -27,7 +27,6 @@
 #' at the beginning and the end of the sequence is lost. (The amount depends on
 #' the minimal frequency captured `min_freq`.)
 #'
-#' @inheritParams fcwt_df
 #' @param max_batch_size  The maximal batch size that is used for splitting up
 #'                        the input sequence. This limits the maximal memory
 #'                        that is used.

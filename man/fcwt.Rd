@@ -11,7 +11,7 @@ fcwt(
   freq_end,
   n_freqs,
   sigma,
-  abs = FALSE,
+  remove_coi = TRUE,
   nthreads = 8L
 )
 }
@@ -39,10 +39,10 @@ Larger (lower) value of sigma corresponds to a better
 (worse) frequency resolution and a worse (better) time
 resolution.}
 
+\item{nthreads}{Number of threads used by the computation, if applicable.}
+
 \item{abs}{Should the output return the only the absolute values of the transform?
 `TRUE` / `FALSE`.}
-
-\item{nthreads}{Number of threads used by the computation, if applicable.}
 }
 \value{
 A numeric matrix with `dim = c(length(signal), n_freqs)`. The matrix is
@@ -62,6 +62,5 @@ fcwt(
   n_freqs = 10,
   sigma = 5
 )
-
 
 }
