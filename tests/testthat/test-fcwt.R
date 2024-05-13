@@ -18,8 +18,7 @@ test_that("fctw_raw works on examples", {
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
-      sigma = 1,
-      abs = TRUE
+      sigma = 10
     ),
     44100 * 10
   )
