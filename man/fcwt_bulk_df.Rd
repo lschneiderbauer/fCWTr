@@ -34,6 +34,8 @@ the output by performing mean-pooling.
 If NULL, no pooling is performed, and the effective
 time_resolution will be `1 / sampling_rate`.}
 
+\item{nthreads}{Number of threads used by the computation, if applicable.}
+
 \item{max_batch_size}{The maximal batch size that is used for splitting up
 the input sequence. This limits the maximal memory
 that is used.
@@ -42,9 +44,6 @@ FFTW processing.
 In case of the parameter not being provided,
 heuristics are used to try to estimate a reasonable
 size.}
-
-\item{optplan}{If TRUE uses the optimization plans that might have been
-generated before by [create_optimization_schemes_raw].}
 
 \item{...}{Other parameters that are directly passed to [fcwt].}
 }
