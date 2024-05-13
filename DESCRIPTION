@@ -23,11 +23,10 @@ Depends:
 Imports:
     tidyr (>= 1.1.4),
     dplyr (>= 1.0.10),
-    rlang (>= 1.0.6)
 Suggests:
-    ggplot2 (>= 3.3.5),
+    ggplot2 (>= 3.3.0),
     viridis (>= 0.6.0),
-    hms (>= 1.1.2),
+    rlang (>= 1.0.0),
     testthat (>= 3.0.0)
 LinkingTo: 
     cpp11
