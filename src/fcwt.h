@@ -47,7 +47,9 @@ limitations under the License.
 #include <sstream>
 
 #ifndef SINGLE_THREAD
-    #include <omp.h>
+  #ifdef _OPENMP
+      #include <omp.h>
+  #endif
 #endif
 #ifdef _WIN32
     #include <windows.h>
@@ -81,7 +83,7 @@ public:
     virtual void generate(int size) { printf("ERROR [generate freq]: Override this virtual class"); };
     virtual int getSupport(float scale) { printf("ERROR [getsupport]: Override this virtual class"); return 0; };
     virtual void getWavelet(float scale, complex<float>* pwav, int pn) { printf("ERROR [getsupport]: Override this virtual class"); };
-    
+
     int width;
     float four_wavelen;
     bool imag_frequency, doublesided;
@@ -92,13 +94,13 @@ class Morlet : public Wavelet {
 public:
     FCWT_LIBRARY_API Morlet(float bandwidth); //frequency domain
     ~Morlet() { free(mother); };
-    
+
     void generate(int size); //frequency domain
     void generate(float* real, float* imag, int size, float scale); //time domain
     int getSupport(float scale) { return (int)(fb*scale*3.0f); };
     void getWavelet(float scale, complex<float>* pwav, int pn);
     float fb;
-    
+
 private:
     float ifb, fb2;
 };
@@ -123,9 +125,9 @@ private:
 
 class FCWT {
 public:
-    FCWT_LIBRARY_API FCWT(Wavelet *pwav, int pthreads, bool puse_optimalization_schemes, bool puse_normalization):  
-        wavelet(pwav), 
-        threads(pthreads), 
+    FCWT_LIBRARY_API FCWT(Wavelet *pwav, int pthreads, bool puse_optimalization_schemes, bool puse_normalization):
+        wavelet(pwav),
+        threads(pthreads),
         use_optimalization_schemes(puse_optimalization_schemes),
         use_normalization(puse_normalization) {};
 
@@ -137,7 +139,7 @@ public:
     void FCWT_LIBRARY_API cwt(complex<float> *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
 
     Wavelet *wavelet;
-    
+
 private:
     void cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput);
     void cwt_static(float *pinput, int psize, float* poutput, float* scales);
@@ -150,10 +152,10 @@ private:
     void main(float *Rinput,float *Routput);
     void load_FFT_optimization_plan();
     void daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *output, float const *mother, float scale, int isize, bool imaginary, bool doublesided);
-    
+
     void calculate_logscale_array(float base, float four_wavl, float *scales);
     void calculate_linscale_array(float four_wavl, float *scales);
-    
+
     int threads;
     int size;
     float fs, f0, f1, fn;
@@ -164,7 +166,7 @@ private:
 inline int find2power(int n)
 {
     int m, m2;
-        
+
     m = 0;
     m2 = 1<<m; /* 2 to the power of m */
     while (m2-n < 0) {
