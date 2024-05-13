@@ -31,9 +31,9 @@
 #'  (worse) frequency resolution and a worse (better) time
 #'  resolution.
 #'
-#' @param abs
-#'  Should the output return the only the absolute values of the transform?
-#'  `TRUE` / `FALSE`.
+#' @param remove_coi
+#'  Boundary effects can result in nonphysical artifacts. Remove those by
+#'  settings corresponding values to NA.
 #'
 #' @param nthreads
 #'  Number of threads used by the computation, if applicable.

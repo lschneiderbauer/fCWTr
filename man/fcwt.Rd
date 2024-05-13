@@ -39,10 +39,10 @@ Larger (lower) value of sigma corresponds to a better
 (worse) frequency resolution and a worse (better) time
 resolution.}
 
-\item{nthreads}{Number of threads used by the computation, if applicable.}
+\item{remove_coi}{Boundary effects can result in nonphysical artifacts. Remove those by
+settings corresponding values to NA.}
 
-\item{abs}{Should the output return the only the absolute values of the transform?
-`TRUE` / `FALSE`.}
+\item{nthreads}{Number of threads used by the computation, if applicable.}
 }
 \value{
 A numeric matrix with `dim = c(length(signal), n_freqs)`. The matrix is
