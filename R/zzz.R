@@ -29,7 +29,7 @@ s3_register <-
       if (exists(generic, envir)) {
         registerS3method(generic, class, method_fn, envir = envir)
       } else if (identical(Sys.getenv("NOT_CRAN"), "true")) {
-        warn <- .rlang_s3_register_compat("warn")
+        # warn <- .rlang_s3_register_compat("warn")
         warn(c(
           sprintf(
             "Can't find generic `%s` in package %s to register S3 method.",
