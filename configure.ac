@@ -12,6 +12,12 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 AC_LANG(C++)
 AC_PROG_CPP
 
+# Check for fftw3.h header
+AC_CHECK_HEADER([fftw3.h], [
+  AC_DEFINE([HAVE_FFTW3_H], [1], [Define if you have the fftw3.h header file])
+], [
+  AC_MSG_ERROR([fftw3.h header file not found])
+])
 
 have_fftw=no
 AC_SEARCH_LIBS(
@@ -20,6 +26,13 @@ AC_SEARCH_LIBS(
   [have_fftw=yes],
   [AC_MSG_ERROR([The fftw3 library is required.])]
 )
+
+# Check for omp.h header
+AC_CHECK_HEADER([omp.h], [
+  AC_DEFINE([HAVE_OMP_H], [1], [Define if you have the fftw3.h header file])
+], [
+  AC_DEFINE([HAVE_OMP_H], [0], [Define if you have the fftw3.h header file])
+])
 
 have_fftw_omp=no
 AC_SEARCH_LIBS(
