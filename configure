@@ -4311,7 +4311,7 @@ printf "%s\n" "$ac_cv_prog_cxx_openmp" >&6; }
 
 
 # Write the flags into the src/Makevars file.
-PKG_CPPFLAGS="${PKG_CPPFLAGS}"
+PKG_CPPFLAGS="${PKG_CPPFLAGS} ${FFTW_CPPFLAGS} ${FFTW_OMP_CPPFLAGS} ${OPENMP_CPPFLAGS}"
 
 PKG_CXXFLAGS="${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"
 
