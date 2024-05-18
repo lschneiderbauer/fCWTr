@@ -45,9 +45,8 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install fftw
-          eval $(brew --prefix)/bin/brew shellenv
-          export CPPFLAGS="-I${HOMEBREW_PREFIX}/include ${CPPFLAGS}"
-          export LDFLAGS="-L${HOMEBREW_PREFIX}/lib ${LDFLAGS}"
+          export CPPFLAGS="-I/usr/local/include ${CPPFLAGS}"
+          export LDFLAGS="-L/usr/local/lib ${LDFLAGS}"
           echo $CPPFLAGS
           echo $LDFLAGS
 
