@@ -45,6 +45,10 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install libomp fftw
 
+      - name: Install fftw3 on Windows
+        if: runner.os == 'Windows'
+        run: coco install fftw3
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
