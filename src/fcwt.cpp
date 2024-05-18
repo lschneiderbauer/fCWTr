@@ -145,7 +145,7 @@ void Scales::calculate_logscale_array(float base, float four_wavl, int fs, float
     float s1 = (fs/nf0);
 
     //Cannot pass the nyquist frequency
-    assert(("Max frequency cannot be higher than the Nyquist frequency (fs/2)", f1 <= fs/2));
+    assert(((void)"Max frequency cannot be higher than the Nyquist frequency (fs/2)", f1 <= fs/2));
 
     float power0 = log(s0)/log(base);
     float power1 = log(s1)/log(base);
@@ -164,7 +164,7 @@ void Scales::calculate_linfreq_array(float four_wavl, int fs, float f0, float f1
     //If a signal has fs=100hz and you want to measure [0.1-50]Hz, you need scales 2 to 1000;
 
     //Cannot pass the nyquist frequency
-    assert(("Max frequency cannot be higher than the Nyquist frequency (fs/2)", f1 <= fs/2));
+    assert(((void)"Max frequency cannot be higher than the Nyquist frequency (fs/2)", f1 <= fs/2));
     float df = nf1-nf0;
 
     for(int i=0; i<fn; i++) {
@@ -181,7 +181,7 @@ void Scales::calculate_linscale_array(float four_wavl, int fs, float f0, float f
     float s1 = fs/nf0;
 
     //Cannot pass the nyquist frequency
-    assert(("Max frequency cannot be higher than the Nyquist frequency (fs/2)", f1 <= fs/2));
+    assert(((void)"Max frequency cannot be higher than the Nyquist frequency (fs/2)", f1 <= fs/2));
     float ds = s1-s0;
 
     for(int i=0; i<fn; i++) {
