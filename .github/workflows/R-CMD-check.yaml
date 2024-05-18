@@ -46,6 +46,8 @@ jobs:
         run: |
           brew install fftw
           eval $(brew --prefix)/bin/brew shellenv
+          export CPPFLAGS="-I${HOMEBREW_PREFIX}/include ${CPPFLAGS}"
+          export LDFLAGS="-L${HOMEBREW_PREFIX}/lib ${LDFLAGS}"
           echo $CPPFLAGS
           echo $LDFLAGS
 
