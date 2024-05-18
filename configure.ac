@@ -29,9 +29,9 @@ AC_SEARCH_LIBS(
 
 # Check for omp.h header
 AC_CHECK_HEADER([omp.h], [
-  AC_DEFINE([HAVE_OMP_H], [1], [Define if you have the fftw3.h header file])
+  AC_DEFINE([HAVE_OMP_H], [1], [Define if you have the omp.h header file])
 ], [
-  AC_DEFINE([HAVE_OMP_H], [0], [Define if you have the fftw3.h header file])
+  AC_DEFINE([HAVE_OMP_H], [0], [Define if you have the omp.h header file])
 ])
 
 have_fftw_omp=no
