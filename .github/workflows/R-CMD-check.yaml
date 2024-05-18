@@ -47,7 +47,7 @@ jobs:
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
-        run: choco install fftw3
+        run: pacman -Syu mingw-w64-x86_64-fftw --noconfirm
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
