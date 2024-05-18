@@ -43,9 +43,11 @@ jobs:
 
       - name: Install fftw3 on macOS
         if: runner.os == 'macOS'
-        run:
-          - brew install fftw
-          - eval $(brew --prefix)/bin/brew shellenv
+        run: |
+          brew install fftw
+          eval $(brew --prefix)/bin/brew shellenv
+          echo $CPPFLAGS
+          echo $LDFLAGS
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
