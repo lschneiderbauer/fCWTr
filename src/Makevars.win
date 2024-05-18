@@ -1,4 +1,4 @@
 CXX_STD = CXX17
 PKG_CPPFLAGS = -I.
-PKG_CXXFLAGS = -I. -fopenmp
-PKG_LIBS = -lfftw3f -lfftw3f_omp
+PKG_CXXFLAGS = -I. $(SHLIB_OPENMP_CXXFLAGS)
+PKG_LIBS = -lfftw3f -lfftw3f_omp $(SHLIB_OPENMP_CXXFLAGS)
