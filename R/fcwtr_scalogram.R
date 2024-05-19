@@ -1,21 +1,26 @@
 new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
                                 sigma, remove_coi) {
   if (remove_coi) {
-    T <- dim(matrix)[[1]] # Time dimension
-    F <- dim(matrix)[[2]] # Frequency dimension
+    dim_t <- dim(matrix)[[1]] # Time dimension
+    dim_f <- dim(matrix)[[2]] # Frequency dimension
 
-    # express everything dimensionless
-    t <- rep(1:T, times = F)
+    # The standard deviation Σ of a the Gauß like wave packet at frequency f
+    # and sampling frequency f_s with given σ is given by
+    # Σ = σ / sqrt(2) f_s / f
+    # we choose 4Σ to define the support of a wave packet
+    # (and so boundary effects are expected to occur until 2Σ)
+    coi_pred <- \(f, t) t * f < sqrt(2) * sigma
+
+    # express in dimensionless quantities
+    t <- rep(1:dim_t, times = dim_f)
     f <-
       rep(
-        seq(freq_end, freq_begin, length.out = F) / sample_freq,
-        each = T
+        seq(freq_end, freq_begin, length.out = dim_f) / sample_freq,
+        each = dim_t
       )
 
-    cmp <- sigma
-
     # check if points are inside / outside hyperbolic cone
-    matrix[!(f * t > cmp & f * (T - t) > cmp)] <- NA
+    matrix[coi_pred(f, t) | coi_pred(f, dim_t - t)] <- NA
   }
 
   obj <-
