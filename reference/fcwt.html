@@ -65,13 +65,13 @@
 
 
 <dt>freq_begin</dt>
-<dd><p>Sets the minimal frequency (`&gt; 0`!), in same units as `sample_freq`,
+<dd><p>Sets the minimal frequency (<code>&gt; 0</code>!), in same units as <code>sample_freq</code>,
 that should be contained in the output.</p></dd>
 
 
 <dt>freq_end</dt>
-<dd><p>Sets the maximal frequency (`&gt; freq_begin`!), in sameunits as `sample_freq`,
-that should be contained in the output.</p></dd>
+<dd><p>Sets the maximal frequency (<code>&gt; freq_begin</code>!), in same units as
+<code>sample_freq</code>, that should be contained in the output.</p></dd>
 
 
 <dt>n_freqs</dt>
@@ -82,8 +82,7 @@ when raising the number of frequency bins.</p></dd>
 
 <dt>sigma</dt>
 <dd><p>Sets a dimensionless parameter modifying the wavelet spread which in the
-time-domain is roughly given by
-\(\Sigma_t \sim \sqrt(2) \frac{\sigma}{f}\).
+time-domain is roughly given by \(\Sigma_t \sim \sqrt{2} \frac{\sigma}{f}\).
 Changing this parameter adjusts the time/frequency uncertainty balance.
 Defaults to 1.
 Larger (lower) value of sigma corresponds to a better (worse) frequency
@@ -95,9 +94,9 @@ resolution and a worse (better) time resolution.</p></dd>
 settings corresponding values to NA.
 We define the essential support of the
 (Gaußian) wavelet to be four times its standard deviation,
-\(4 \Sigma_t = 2 * \sqrt(2) \frac{\sigma}{f}\), and so a wavelet touches
+\(4 \Sigma_t = 2 * \sqrt{2} \frac{\sigma}{f}\), and so a wavelet touches
 the boundary if the distance of the center of the wavelet to the boundary
-is less then \(4 \Sigma_t\). Values that fall into that rangeare removed
+is less then \(4 \Sigma_t\). Values that fall into that range are removed
 if `remove_coi = TRUE`.</p></dd>
 
 
@@ -109,7 +108,7 @@ if `remove_coi = TRUE`.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A numeric real-valued matrix with `dim = c(length(signal), n_freqs)`.</p>
+<p>A numeric real-valued matrix with <code>dim = c(length(signal), n_freqs)</code>.</p>
     </div>
 
     <div class="section level2">
@@ -30135,7 +30134,6 @@ if `remove_coi = TRUE`.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"sigma")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
