@@ -85,7 +85,7 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
   # first aggregate the time series,
   # since we cannot really see too much resolution anyways
   as.data.frame(agg(object, n)) |>
-  ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
+    ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
     geom_raster() +
     viridis::scale_fill_viridis(discrete = FALSE) +
     ggplot2::scale_y_continuous(name = "Frequency") +
