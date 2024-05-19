@@ -1,5 +1,7 @@
 new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
                                 sigma, remove_coi) {
+  stopifnot(is.matrix(matrix))
+
   if (remove_coi) {
     dim_t <- dim(matrix)[[1]] # Time dimension
     dim_f <- dim(matrix)[[2]] # Frequency dimension
@@ -53,6 +55,51 @@ agg <- function(x, n) {
   new_fcwtr_scalogram(
     x_new,
     attr(x, "sample_freq") / poolsize,
+    attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "sigma"),
+    remove_coi = FALSE
+  )
+}
+
+tbind <- function(..., deparse.level = 1) {
+  args <- list(...)
+  stopifnot(length(args) >= 1)
+  lapply(args, \(arg) stopifnot(inherits(arg, "fcwtr_scalogram")))
+
+  # check if attributes are identical, otherwise combination
+  # does not make sense
+  if (length(unique(lapply(args, \(arg) attr(arg, "sample_freq")))) > 1) {
+    stop("Sampling frequencies need to be identical.")
+  }
+  if (length(unique(lapply(args, \(arg) attr(arg, "freq_begin")))) > 1) {
+    stop("Frequency ranges need to be identical.")
+  }
+  if (length(unique(lapply(args, \(arg) attr(arg, "freq_end")))) > 1) {
+    stop("Frequency ranges need to be identical.")
+  }
+  if (length(unique(lapply(args, \(arg) attr(arg, "sigma")))) > 1) {
+    stop("Sigma parameter needs to be identical.")
+  }
+
+  x_new <- do.call(rbind, c(lapply(args, unclass), list(deparse.level = deparse.level)))
+
+  new_fcwtr_scalogram(
+    x_new,
+    attr(args[[1]], "sample_freq"),
+    attr(args[[1]], "freq_begin"), attr(args[[1]], "freq_end"),
+    attr(args[[1]], "sigma"),
+    remove_coi = FALSE
+  )
+}
+
+rm_na_time_slices <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  rows_to_remove <- unique(which(is.na(x), arr.ind = TRUE)[, 1])
+
+  new_fcwtr_scalogram(
+    x[-rows_to_remove, ],
+    attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
     attr(x, "sigma"),
     remove_coi = FALSE
