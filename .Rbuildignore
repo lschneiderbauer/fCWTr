@@ -3,5 +3,6 @@
 ^data-raw$
 ^LICENSE\.md$
 ^README\.Rmd$
-^src/Makevars$
 ^\.github$
+^Makefile$
+^src/Makevars$

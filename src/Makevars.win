@@ -1,4 +1,4 @@
 CXX_STD = CXX17
-PKG_CPPFLAGS = -I.
-PKG_CXXFLAGS = -I. -mavx2
-PKG_LIBS = -lfftw3f -lfftw3f_omp
+PKG_CPPFLAGS = -I. -I$(LIB_FFTW)/include
+PKG_CXXFLAGS = -I. $(SHLIB_OPENMP_CXXFLAGS)
+PKG_LIBS = -L$(LIB_FFTW)/lib $(SHLIB_OPENMP_CXXFLAGS) -lfftw3f -lfftw3f_omp

@@ -8,6 +8,8 @@ on:
 
 name: R-CMD-check
 
+permissions: read-all
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -29,7 +31,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -39,17 +41,18 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install fftw3 on Linux
-        if: runner.os == 'Linux'
-        run: sudo apt-get update -y && sudo apt-get install -y libfftw3-dev libomp-dev
-
       - name: Install fftw3 on macOS
         if: runner.os == 'macOS'
-        run: brew install libomp fftw
+        run: |
+          brew install fftw
+          export CPPFLAGS="-I/usr/local/include ${CPPFLAGS}"
+          export LDFLAGS="-L/usr/local/lib ${LDFLAGS}"
+          echo $CPPFLAGS
+          echo $LDFLAGS
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
-        run: pacman -Syu mingw-w64-x86_64-fftw --noconfirm
+        run: pacman -Syu mingw-w64-x86_64-fftw mingw-w64-x86_64-openmp --noconfirm
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -59,3 +62,4 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
