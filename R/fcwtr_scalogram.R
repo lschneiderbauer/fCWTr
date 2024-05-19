@@ -68,11 +68,11 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 
 #' @importFrom graphics plot
 #' @export
-plot.fcwtr_scalogram <- function(x, n = 100, ...) {
+plot.fcwtr_scalogram <- function(x, n = 1000, ...) {
   print(autoplot.fcwtr_scalogram(x, n, ...))
 }
 
-autoplot.fcwtr_scalogram <- function(object, n = 100, ...) {
+autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
   stopifnot(requireNamespace("rlang", quietly = TRUE))
