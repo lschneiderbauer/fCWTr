@@ -6,3 +6,6 @@
 ^\.github$
 ^Makefile$
 ^src/Makevars$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

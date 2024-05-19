@@ -32,3 +32,4 @@ SystemRequirements:
     fftw3 (>= 3.3.0),
     openmp (>= 15.0.0)
 Config/testthat/edition: 3
+URL: https://lschneiderbauer.github.io/fcwtr/
