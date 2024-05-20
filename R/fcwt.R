@@ -1,9 +1,12 @@
 #' Performs a fast continuous wavelet transform.
 #'
-#' This function call is a thin wrapper for the fcwt API.
+#' The core function of this package making use of the fcwt library. It processes
+#' a input signal in form of a real valued numeric vector interpreted as an
+#' evenly spaced time series and returns the absolute values of a spectogram,
+#' i.e. a graph with a time and a frequency dimension.
 #'
 #' @param signal
-#'  Real-valued time series. The time step gaps are assumed to be uniform.
+#'  Real-valued time series. The time step gaps are assumed to be evenly spaced.
 #'
 #' @param sample_freq
 #'  Sampling rate of input time series in physical units.

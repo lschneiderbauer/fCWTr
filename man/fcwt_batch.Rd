@@ -17,7 +17,7 @@ fcwt_batch(
 )
 }
 \arguments{
-\item{signal}{Real-valued time series. The time step gaps are assumed to be uniform.}
+\item{signal}{Real-valued time series. The time step gaps are assumed to be evenly spaced.}
 
 \item{sample_freq}{Sampling rate of input time series in physical units.}
 

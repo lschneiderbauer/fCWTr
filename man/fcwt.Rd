@@ -16,7 +16,7 @@ fcwt(
 )
 }
 \arguments{
-\item{signal}{Real-valued time series. The time step gaps are assumed to be uniform.}
+\item{signal}{Real-valued time series. The time step gaps are assumed to be evenly spaced.}
 
 \item{sample_freq}{Sampling rate of input time series in physical units.}
 
@@ -52,7 +52,10 @@ if `remove_coi = TRUE`.}
 A numeric real-valued matrix with \code{dim = c(length(signal), n_freqs)}.
 }
 \description{
-This function call is a thin wrapper for the fcwt API.
+The core function of this package making use of the fcwt library. It processes
+a input signal in form of a real valued numeric vector interpreted as an
+evenly spaced time series and returns the absolute values of a spectogram,
+i.e. a graph with a time and a frequency dimension.
 }
 \examples{
 ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
