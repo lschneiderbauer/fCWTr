@@ -43,8 +43,8 @@ This limits the maximal memory that is used. Defaults to roughly 4GB.
 The actual batch size is optimized for use with FFTW.}
 
 \item{time_resolution}{The time resolution in inverse units of `sample_freq` of the result.
-Memory consumption is directly related
-to that. Can not be higher than the time resolution of the input signal.}
+Memory consumption is directly related to that.
+Can not be higher than the time resolution of the input signal.}
 
 \item{nthreads}{Number of threads used by the computation, if applicable.}
 }

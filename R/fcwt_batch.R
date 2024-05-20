@@ -33,11 +33,11 @@
 #'  The actual batch size is optimized for use with FFTW.
 #' @param time_resolution
 #'  The time resolution in inverse units of `sample_freq` of the result.
-#'  Memory consumption is directly related
-#'  to that. Can not be higher than the time resolution of the input signal.
+#'  Memory consumption is directly related to that.
+#'  Can not be higher than the time resolution of the input signal.
 #'
 #' @inheritParams fcwt
-#' @importFrom utils txtProgressBar
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 fcwt_batch <- function(signal,
                        sample_freq,
@@ -55,13 +55,12 @@ fcwt_batch <- function(signal,
   # computed by means of a slow, general-purpose routine (which nevertheless
   # retains O(n lg n) performance, even for prime sizes).
   # Transforms whose sizes are powers of 2 are especially fast.
-  #
-  batch_size <- 2^floor(log2(max_batch_size))
 
+  batch_size <- 2^floor(log2(max_batch_size))
 
   total_result <- NULL
 
-  #pb <- txtProgressBar(min = 0, max = length(signal), style = 3)
+  pb <- txtProgressBar(min = 0, max = length(signal), style = 3)
   cursor <- 0
   diff <- 0
   while (cursor < length(signal) - diff) {
@@ -69,7 +68,7 @@ fcwt_batch <- function(signal,
     end <- pmin(cursor + batch_size, length(signal))
 
     n <- (1 + end - begin)
-    reduced_n <- ceiling(n * sample_freq * time_resolution)
+    reduced_n <- ceiling(n / (sample_freq * time_resolution))
 
     result_intermediate <-
       fcwt(
@@ -87,16 +86,24 @@ fcwt_batch <- function(signal,
       result_intermediate |>
       rm_na_time_slices() # we fully remove COI infected time slices
 
+    if (dim(result)[[1]] < 1) {
+      stop(paste0(
+        "Removing COI yields empty result. Typically that happens if ",
+        "the batch size is too small. ",
+        "To avoid that you can either increase the batch size or raise the ",
+        "frequency range."
+      ))
+    }
+
     # take into account that some time records are lost due to boundary
     # effect cut off (that's why cursor is not just end + 1)
     # TODO: check if this is really correct (so that we do not have time shifts ...)
-    cursor <- cursor + 1 -
-      floor(n / reduced_n * (length(result_intermediate) - length(result)))
+    cursor <- cursor + ceiling(dim(result)[[1]] * n / reduced_n)
     diff <- end - cursor
 
     if (!is.null(total_result)) {
-      print(attr(total_result, "sample_freq"))
-      print(attr(result, "sample_freq"))
+      #print(attr(total_result, "sample_freq"))
+      #print(attr(result, "sample_freq"))
 
       total_result <-
         tbind(
@@ -107,11 +114,11 @@ fcwt_batch <- function(signal,
       total_result <- result
     }
 
-    #setTxtProgressBar(pb, cursor)
+    setTxtProgressBar(pb, cursor)
   }
 
-  #setTxtProgressBar(pb, length(signal))
-  #close(pb)
+  setTxtProgressBar(pb, length(signal))
+  close(pb)
 
   return(total_result)
 }
