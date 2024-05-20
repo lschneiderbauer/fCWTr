@@ -45,17 +45,13 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install fftw
-          export CPPFLAGS="-I/usr/local/include ${CPPFLAGS}"
-          export LDFLAGS="-L/usr/local/lib ${LDFLAGS}"
-          echo $CPPFLAGS
-          echo $LDFLAGS
+          brew install openmp
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
         run: |
-          pacman -Syu mingw-w64-x86_64-fftw mingw-w64-x86_64-openmp --noconfirm
-          set CPPFLAGS=-I/mingw64/lib %CPPFLAGS%
-          set LDFLAGS=-L/mingw64/bin %LDFLAGS%
+          pacman -Syu mingw-w64-x86_64-fftw --noconfirm
+          pacman -Syu mingw-w64-x86_64-openmp --noconfirm
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
