@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
 The R package fcwtr is a simple wrapper invoking the [fcwt
@@ -15,13 +16,23 @@ transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform)
 with a Morlet wavelet, utilizing the power of
 [fftw](https://www.fftw.org/), a fast fourier transform implementation.
 
-## Runtime Dependencies
+## Dependencies
 
-- R \>= 4.1 (due to the use of native pipes)
+- R \>= 4.1
 - [fftw](https://www.fftw.org/) library (used by fcwt)
-- A CPU supporting the
+- Optional: a CPU/compiler supporting the
   [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
+
+If you are an R user that has a CPU supporting AVX2 and want to make use
+of it, you might need to manually enable compiler flags to let R know
+about it, and install the package by source (so that it gets compiled on
+your machine). One way to enable the flags is to create a file
+`~/.R/Makevars` with the following content:
+
+``` bash
+CXXFLAGS = -mavx2
+```
 
 ## Installation
 
@@ -32,18 +43,10 @@ installed [devtools](https://devtools.r-lib.org/) package):
 devtools::install_github("lschneiderbauer/fcwtr")
 ```
 
-### Compile-time Dependencies
-
-- Compiler w/ C++17 support
-- [fftw](https://www.fftw.org/) library headers
-- A CPU/compiler supporting the
-  [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
-  instruction set
-
 ## Example
 
-This is a basic example which shows how to invoke the fcwt library to
-calculate the continuous wavelet transform and plot the result.
+This is a basic example that invokes the fcwt library to calculate the
+continuous wavelet transform and plot the result.
 
 ``` r
 library(fcwtr)
@@ -52,8 +55,6 @@ library(fcwtr)
 # In this example we use some superimposed sin signals.
 signal <- ts_sin_superpos
 
-# One possibility is to use the fcwt library (almost) directly through
-# a thin wrapper:
 output <-
   fcwt(
     signal,
@@ -70,11 +71,10 @@ dim(output)
 #> [1] 6000  200
 ```
 
-Some helpers to conveniently convert this matrix to a meaningful data
-frame:
+Conversion functions to a meaningful data frame is also provided:
 
 ``` r
-as.data.frame(output) |> head(10)
+head(as.data.frame(output), 10)
 #>    time_ind freq value         time
 #> 1         0 2100    NA 0.000000e+00
 #> 2         1 2100    NA 2.267574e-05
