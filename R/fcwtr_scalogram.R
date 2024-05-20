@@ -44,10 +44,18 @@ new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
   obj
 }
 
+# perform aggregation, if possible.
+# if it's not possible, be identity
 agg <- function(x, n) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
   poolsize <- floor(dim(x)[[1]] / n)
+
+  if (poolsize <= 1) {
+    # do nothing in case we cannot aggregate
+    return(x)
+  }
+
   x_new <- x[1:(poolsize * n), ]
   dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
   x_new <- colMeans(x_new, dims = 1, na.rm = TRUE)
