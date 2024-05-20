@@ -52,7 +52,10 @@ jobs:
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
-        run: pacman -Syu mingw-w64-x86_64-fftw mingw-w64-x86_64-openmp --noconfirm
+        run: |
+          pacman -Syu mingw-w64-x86_64-fftw mingw-w64-x86_64-openmp --noconfirm
+          export CPPFLAGS="-I/mingw64/lib ${CPPFLAGS}"
+          export LDFLAGS="-L/mingw64/bin $LDFLAGS"
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
