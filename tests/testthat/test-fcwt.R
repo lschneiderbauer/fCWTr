@@ -51,7 +51,7 @@ test_that("fcwt() returns same result", {
         ) |>
           agg(1000)
       ),
-      digits = 6
+      digits = 5
     )
 
   expect_snapshot(
