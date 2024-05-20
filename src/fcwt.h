@@ -46,15 +46,18 @@ limitations under the License.
 #include <iostream>
 #include <sstream>
 
+#ifdef _WIN32
+    #include <windows.h>
+
+    // disable on windows since rtools does compile fftw without openmp support
+    #define SINGLE_THREAD
+#else
+    #include <unistd.h>
+#endif
 #ifndef SINGLE_THREAD
   #ifdef _OPENMP
       #include <omp.h>
   #endif
-#endif
-#ifdef _WIN32
-    #include <windows.h>
-#else
-    #include <unistd.h>
 #endif
 #include "fftw3.h"
 #include <memory>
