@@ -64,7 +64,7 @@ those potentially dominate for short sequences.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>signal</dt>
-<dd><p>Real-valued time series. The time step gaps are assumed to be uniform.</p></dd>
+<dd><p>Real-valued time series. The time step gaps are assumed to be evenly spaced.</p></dd>
 
 
 <dt>sample_freq</dt>
@@ -104,8 +104,8 @@ The actual batch size is optimized for use with FFTW.</p></dd>
 
 <dt>time_resolution</dt>
 <dd><p>The time resolution in inverse units of `sample_freq` of the result.
-Memory consumption is directly related
-to that. Can not be higher than the time resolution of the input signal.</p></dd>
+Memory consumption is directly related to that.
+Can not be higher than the time resolution of the input signal.</p></dd>
 
 
 <dt>nthreads</dt>
@@ -134,6 +134,23 @@ at the beginning and the end of the sequence is lost. (The amount depends on
 the minimal frequency captured `min_freq`.)</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">fcwt_batch</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">ts_sin_sin</span>,</span></span>
+<span class="r-in"><span>    sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span></span>
+<span class="r-in"><span>    freq_begin <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>    freq_end <span class="op">=</span> <span class="fl">11000</span>,</span></span>
+<span class="r-in"><span>    n_freqs <span class="op">=</span> <span class="fl">300</span>,</span></span>
+<span class="r-in"><span>    sigma <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>    max_batch_size <span class="op">=</span> <span class="fl">20000</span>,</span></span>
+<span class="r-in"><span>    time_resolution <span class="op">=</span> <span class="fl">0.001</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   |                                                                              |                                                                      |   0%  |                                                                              |======                                                                |   9%  |                                                                              |=============                                                         |  18%  |                                                                              |===================                                                   |  27%  |                                                                              |=========================                                             |  36%  |                                                                              |===============================                                       |  45%  |                                                                              |======================================                                |  54%  |                                                                              |============================================                          |  63%  |                                                                              |==================================================                    |  72%  |                                                                              |======================================================================| 100%</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
