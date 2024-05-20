@@ -1,9 +1,14 @@
 #' Performs a fast continuous wavelet transform.
 #'
 #' The core function of this package making use of the fcwt library. It processes
-#' a input signal in form of a real valued numeric vector interpreted as an
+#' an input signal in form of a real valued numeric vector interpreted as an
 #' evenly spaced time series and returns the absolute values of a spectogram,
 #' i.e. a graph with a time and a frequency dimension.
+#'
+#' @details
+#'  The wavelet used in this calculation is the so called Morlet wavelet,
+#'  a sinusoidal wave modulated by a Gaussian whose spread is controlled by
+#'  the argument `sigma`.
 #'
 #' @param signal
 #'  Real-valued time series. The time step gaps are assumed to be evenly spaced.
