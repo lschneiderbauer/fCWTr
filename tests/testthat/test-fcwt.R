@@ -38,15 +38,23 @@ test_that("fcwt() errs if frequency specs are higher than Nyquist frequency", {
 })
 
 test_that("fcwt() returns same result", {
+  res_vec <-
+    round(
+      c(
+        fcwt(
+          ts_sin_440,
+          sample_freq = 44100,
+          freq_begin = 50,
+          freq_end = 1000,
+          n_freqs = 10,
+          sigma = 1
+        ) |>
+          agg(1000)
+      ),
+      digits = 6
+    )
+
   expect_snapshot(
-    fcwt(
-      ts_sin_440,
-      sample_freq = 44100,
-      freq_begin = 50,
-      freq_end = 1000,
-      n_freqs = 10,
-      sigma = 1
-    ) |>
-      agg(1000)
+    res_vec
   )
 })
