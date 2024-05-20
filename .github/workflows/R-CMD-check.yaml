@@ -45,13 +45,12 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install fftw
-          brew install openmp
+          brew install libomp
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
         run: |
           pacman -Syu mingw-w64-x86_64-fftw --noconfirm
-          pacman -Syu mingw-w64-x86_64-openmp --noconfirm
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
