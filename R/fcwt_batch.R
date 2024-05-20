@@ -39,6 +39,19 @@
 #' @inheritParams fcwt
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
+#' @examples
+#' res <-
+#'   fcwt_batch(
+#'     ts_sin_sin,
+#'     sample_freq = 44100,
+#'     freq_begin = 100,
+#'     freq_end = 11000,
+#'     n_freqs = 300,
+#'     sigma = 10,
+#'     max_batch_size = 20000,
+#'     time_resolution = 0.001
+#'   )
+#'
 fcwt_batch <- function(signal,
                        sample_freq,
                        freq_begin,
@@ -102,9 +115,6 @@ fcwt_batch <- function(signal,
     diff <- end - cursor
 
     if (!is.null(total_result)) {
-      #print(attr(total_result, "sample_freq"))
-      #print(attr(result, "sample_freq"))
-
       total_result <-
         tbind(
           total_result,
