@@ -48,14 +48,17 @@
 #' @examples
 #' ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
 #'
-#' fcwt(
-#'   ts_sin_440,
-#'   sample_freq = 44100,
-#'   freq_begin = 50,
-#'   freq_end = 1000,
-#'   n_freqs = 10,
-#'   sigma = 5
-#' )
+#' res <-
+#'   fcwt(
+#'     ts_sin_440,
+#'     sample_freq = 44100,
+#'     freq_begin = 50,
+#'     freq_end = 1000,
+#'     n_freqs = 10,
+#'     sigma = 5
+#'   )
+#'
+#' plot(res)
 #' @export
 fcwt <- function(signal,
                  sample_freq,
