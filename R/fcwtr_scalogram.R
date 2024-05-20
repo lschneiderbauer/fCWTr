@@ -22,7 +22,7 @@ new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
       )
 
     # check if points are inside / outside hyperbolic cone
-    matrix[coi_pred(f, t) | coi_pred(f, dim_t - t)] <- NA
+    matrix[coi_pred(f, t) | coi_pred(f, dim_t - t)] <- NA_real_
   }
 
   obj <-
@@ -59,6 +59,9 @@ agg <- function(x, n) {
   x_new <- x[1:(poolsize * n), ]
   dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
   x_new <- colMeans(x_new, dims = 1, na.rm = TRUE)
+
+  # replace NaN by NA
+  x_new[is.nan(x_new)] <- NA_real_
 
   new_fcwtr_scalogram(
     x_new,
