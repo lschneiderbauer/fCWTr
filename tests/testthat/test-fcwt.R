@@ -55,7 +55,8 @@ test_that("fcwt() result does not change", {
 
   expect_snapshot_value(
     values,
-    tolerance = 10^-5,
+    # ridiculous tolerance due to large differences between AVX / non AVX
+    tolerance = 10^-2,
     style = "json2"
   )
 })
