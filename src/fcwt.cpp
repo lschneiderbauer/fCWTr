@@ -211,9 +211,10 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
     float endpointf = fmin(isizef/2.0,((isizef*2.0)/scale));
     float step = (scale/2.0);
     int endpoint = ((int)endpointf);
-    int endpoint4 = endpoint>>2;
 
     #ifdef AVX
+        int endpoint4 = endpoint>>2;
+
         //has avx instructions
         __m256* O8 = (__m256*)output;
         __m256* I8 = (__m256*)input;
