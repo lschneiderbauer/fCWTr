@@ -21,7 +21,7 @@ with a Morlet wavelet, utilizing the power of
 - R \>= 4.1
 - [fftw](https://www.fftw.org/) library (used by fcwt)
 - Optional: a CPU/compiler supporting the
-  [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
+  [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
 - Optional: OpenMP
   - On Windows, OpenMP support is disabled since rtools decided to
@@ -29,14 +29,17 @@ with a Morlet wavelet, utilizing the power of
   - On Linux and MacOS the build scripts should automatically detect
     whether OpenMP support is available.
 
-If you are an R user that has a CPU supporting AVX2 and want to make use
-of it, you might need to manually enable compiler flags to let R know
-about it, and install the package from source (so that it gets compiled
-on your machine). One way to enable the flags is to create a file
-`~/.R/Makevars` with the following content:
+By default, most compiler setups do not make use of AVX to increase
+portability of the binary. If you are an R user that has a CPU
+supporting AVX and want to make use of it, you might need to manually
+enable compiler flags to let R know about it, and install the package
+from source (so that it gets compiled on your machine). One way to
+enable the flags is to create a file `~/.R/Makevars` with the following
+content:
 
 ``` bash
-CXXFLAGS = -mavx2
+CPPFLAGS = -mavx
+CXXFLAGS = -mavx
 ```
 
 ## Installation
