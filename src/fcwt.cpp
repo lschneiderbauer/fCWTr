@@ -100,8 +100,8 @@ void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
         pwav[t].imag(imag[t]);
     }
 
-	delete real;
-	delete imag;
+    free(real);
+    free(imag);
 };
 
 //==============================================================//
@@ -211,9 +211,10 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
     float endpointf = fmin(isizef/2.0,((isizef*2.0)/scale));
     float step = (scale/2.0);
     int endpoint = ((int)endpointf);
-    int endpoint4 = endpoint>>2;
 
     #ifdef AVX
+        int endpoint4 = endpoint>>2;
+
         //has avx instructions
         __m256* O8 = (__m256*)output;
         __m256* I8 = (__m256*)input;
@@ -321,13 +322,15 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
     return;
 }
 
+/*
 void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
 
     int nt = find2power(maxsize);
 
-    if(nt <= 10) {
-        // std::cerr << "Maxsize is too small (<=1024)... please use a larger number" << std::endl;
-    }
+    // if(nt <= 10) {
+    //     std::cerr << "Maxsize is too small (<=1024)... please use a larger number" << std::endl;
+    // }
+
 
     for(int i=11; i<=nt; i++) {
         int n = 1 << i;
@@ -394,14 +397,16 @@ void FCWT::load_FFT_optimization_plan() {
             return;
         }
 
-        char file_for[50];
+        // char file_for[50];
         // sprintf(file_for, "n%d_t%d.wis", newsize, threads);
 
-        if(!fftwf_import_wisdom_from_filename(file_for)) {
-            // std::cout << "WARNING: Optimization scheme '" << file_for << "' was not found, fallback to calculation without optimization." << std::endl;
-        }
+        // if(!fftwf_import_wisdom_from_filename(file_for)) {
+        //     std::cout << "WARNING: Optimization scheme '" << file_for << "' was not found, fallback to calculation without optimization." << std::endl;
+        // }
+
     }
 }
+*/
 
 //Convolve in time domain using a single wavelet
 void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale) {
@@ -418,9 +423,9 @@ void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, comple
         if(use_normalization) fft_normalize((complex<float>*)lastscalemem, newsize);
         memcpy(out, (complex<float>*)lastscalemem, sizeof(complex<float>)*size);
     } else {
-        if(!out) {
-            // std::cout << "OUT NOT A POINTER" << std::endl;
-        }
+        // if(!out) {
+        //     std::cout << "OUT NOT A POINTER" << std::endl;
+        // }
         fftbased(p, Ihat, O1, (float*)out, wav->mother, newsize, scale, wav->imag_frequency, wav->doublesided);
         if(use_normalization) fft_normalize(out, newsize);
     }
@@ -491,7 +496,7 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     fftwf_plan p;
 
     // //Load optimization schemes if necessary
-    load_FFT_optimization_plan();
+    // load_FFT_optimization_plan();
 
     // //Perform forward FFT on input signal
     float *input;

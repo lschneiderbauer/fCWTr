@@ -21,17 +21,25 @@ with a Morlet wavelet, utilizing the power of
 - R \>= 4.1
 - [fftw](https://www.fftw.org/) library (used by fcwt)
 - Optional: a CPU/compiler supporting the
-  [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
+  [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
+- Optional: OpenMP
+  - On Windows, OpenMP support is disabled since rtools decided to
+    compile fftw without OpenMP support.
+  - On Linux and MacOS the build scripts should automatically detect
+    whether OpenMP support is available.
 
-If you are an R user that has a CPU supporting AVX2 and want to make use
-of it, you might need to manually enable compiler flags to let R know
-about it, and install the package by source (so that it gets compiled on
-your machine). One way to enable the flags is to create a file
-`~/.R/Makevars` with the following content:
+By default, most compiler setups do not make use of AVX to increase
+portability of the binary. If you are an R user that has a CPU
+supporting AVX and want to make use of it, you might need to manually
+enable compiler flags to let R know about it, and install the package
+from source (so that it gets compiled on your machine). One way to
+enable the flags is to create a file `~/.R/Makevars` with the following
+content:
 
 ``` bash
-CXXFLAGS = -mavx2
+CPPFLAGS = -mavx
+CXXFLAGS = -mavx
 ```
 
 ## Installation
@@ -96,17 +104,28 @@ plot(output)
 
 <img src="man/figures/README-example_plot-1.png" width="100%" />
 
-<!-- ```{r example_long_df, results='hide'} -->
-<!-- # For long sequences, the required memory can exceed your local memory. In this -->
-<!-- # case it can be useful to reduce the time resolution of the result and process -->
-<!-- # the data in batches. This can be done with `fcwt_bulk_df`. -->
-<!-- # In case the batch size is not explicitly provided, some heuristics are used to -->
-<!-- # determine a batch size automatically: -->
-<!-- batch_result <- fcwt_batch( -->
-<!--   rep(ts_sin_sin, 10), -->
-<!--   sampling_rate = 44100, -->
-<!--   sigma = 4 -->
-<!-- ) -->
-<!-- plot(batch_result) -->
-<!-- ``` -->
+For long sequences, the required memory can exceed your local memory. In
+this case it can be useful to reduce the time resolution of the result
+and process the data in batches. This can be done with `fcwt_batch()`.
+In case the batch size is not explicitly provided, some heuristics are
+used to determine a batch size automatically:
+
+``` r
+
+batch_result <-
+  fcwt_batch(
+    rep(ts_sin_sin, 10),
+    sample_freq = 44100,
+    freq_begin = 10,
+    freq_end = 12000,
+    n_freqs = 200,
+    sigma = 4,
+    time_resolution = 1 / 44100
+  )
+
+plot(batch_result)
+```
+
+<img src="man/figures/README-example_long_df-1.png" width="100%" />
+
 <!-- regenerate with devtools::build_readme() -->
