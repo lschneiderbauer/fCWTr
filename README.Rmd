@@ -86,30 +86,26 @@ We can also directly plot the resulting scalogram:
 plot(output)
 ```
 
-<!-- ```{r example_long_df, results='hide'} -->
+For long sequences, the required memory can exceed your local memory. In this
+case it can be useful to reduce the time resolution of the result and process
+the data in batches. This can be done with `fcwt_batch()`.
+In case the batch size is not explicitly provided, some heuristics are used to
+determine a batch size automatically:
 
-<!-- # For long sequences, the required memory can exceed your local memory. In this -->
+```{r example_long_df, results='hide'}
 
-<!-- # case it can be useful to reduce the time resolution of the result and process -->
+batch_result <-
+  fcwt_batch(
+    rep(ts_sin_sin, 10),
+    sample_freq = 44100,
+    freq_begin = 10,
+    freq_end = 12000,
+    n_freqs = 200,
+    sigma = 4,
+    time_resolution = 1 / 44100
+  )
 
-<!-- # the data in batches. This can be done with `fcwt_bulk_df`. -->
-
-<!-- # In case the batch size is not explicitly provided, some heuristics are used to -->
-
-<!-- # determine a batch size automatically: -->
-
-<!-- batch_result <- fcwt_batch( -->
-
-<!--   rep(ts_sin_sin, 10), -->
-
-<!--   sampling_rate = 44100, -->
-
-<!--   sigma = 4 -->
-
-<!-- ) -->
-
-<!-- plot(batch_result) -->
-
-<!-- ``` -->
+plot(batch_result)
+```
 
 <!-- regenerate with devtools::build_readme() -->
