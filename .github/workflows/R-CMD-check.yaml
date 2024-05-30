@@ -45,8 +45,8 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install fftw
-          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/opt/fftw/lib"
-          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/opt/ftw/include"
+          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/lib"
+          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/include"
           brew install libomp
           export LDFLAGS="${LDFLAGS} -L/opt/homebrew/opt/libomp/lib"
           export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/opt/libomp/include"
