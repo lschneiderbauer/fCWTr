@@ -64,10 +64,17 @@
 <li>R &gt;= 4.1</li>
 <li>
 <a href="https://www.fftw.org/" class="external-link">fftw</a> library (used by fcwt)</li>
-<li>Optional: a CPU/compiler supporting the <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" class="external-link">AVX2</a> instruction set</li>
+<li>Optional: a CPU/compiler supporting the <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" class="external-link">AVX</a> instruction set</li>
+<li>Optional: OpenMP
+<ul>
+<li>On Windows, OpenMP support is disabled since rtools decided to compile fftw without OpenMP support.</li>
+<li>On Linux and MacOS the build scripts should automatically detect whether OpenMP support is available.</li>
 </ul>
-<p>If you are an R user that has a CPU supporting AVX2 and want to make use of it, you might need to manually enable compiler flags to let R know about it, and install the package by source (so that it gets compiled on your machine). One way to enable the flags is to create a file <code>~/.R/Makevars</code> with the following content:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">CXXFLAGS</span> = <span class="at">-mavx2</span></span></code></pre></div>
+</li>
+</ul>
+<p>By default, most compiler setups do not make use of AVX to increase portability of the binary. If you are an R user that has a CPU supporting AVX and want to make use of it, you might need to manually enable compiler flags to let R know about it, and install the package from source (so that it gets compiled on your machine). One way to enable the flags is to create a file <code>~/.R/Makevars</code> with the following content:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">CPPFLAGS</span> = <span class="at">-mavx</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="ex">CXXFLAGS</span> = <span class="at">-mavx</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -119,19 +126,22 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example_plot-1.png" width="100%"></p>
-<!-- ```{r example_long_df, results='hide'} -->
-<!-- # For long sequences, the required memory can exceed your local memory. In this -->
-<!-- # case it can be useful to reduce the time resolution of the result and process -->
-<!-- # the data in batches. This can be done with `fcwt_bulk_df`. -->
-<!-- # In case the batch size is not explicitly provided, some heuristics are used to -->
-<!-- # determine a batch size automatically: -->
-<!-- batch_result <- fcwt_batch( -->
-<!--   rep(ts_sin_sin, 10), -->
-<!--   sampling_rate = 44100, -->
-<!--   sigma = 4 -->
-<!-- ) -->
-<!-- plot(batch_result) -->
-<!-- ``` -->
+<p>For long sequences, the required memory can exceed your local memory. In this case it can be useful to reduce the time resolution of the result and process the data in batches. This can be done with <code><a href="reference/fcwt_batch.html">fcwt_batch()</a></code>. In case the batch size is not explicitly provided, some heuristics are used to determine a batch size automatically:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">batch_result</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ts_sin_sin</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span>
+<span>    freq_begin <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    freq_end <span class="op">=</span> <span class="fl">12000</span>,</span>
+<span>    n_freqs <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>    sigma <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    time_resolution <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">44100</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">batch_result</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-example_long_df-1.png" width="100%"></p>
 <!-- regenerate with devtools::build_readme() -->
 </div>
 </div>
