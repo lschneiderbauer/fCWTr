@@ -100,8 +100,8 @@ void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
         pwav[t].imag(imag[t]);
     }
 
-	delete real;
-	delete imag;
+    free(real);
+    free(imag);
 };
 
 //==============================================================//
