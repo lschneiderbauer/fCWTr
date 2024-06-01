@@ -61,8 +61,3 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
-        run: |
-          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/opt/libomp/lib"
-          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/opt/libomp/include"
-          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/lib"
-          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/include"
