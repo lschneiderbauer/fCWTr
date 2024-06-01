@@ -46,6 +46,10 @@ limitations under the License.
 #include <iostream>
 #include <sstream>
 
+#ifndef _OPENMP
+    // if we have no platform support, enable single_threading
+    #define SINGLE_THREAD
+#endif
 #ifdef _WIN32
     #include <windows.h>
 
@@ -55,10 +59,9 @@ limitations under the License.
     #include <unistd.h>
 #endif
 #ifndef SINGLE_THREAD
-  #ifdef _OPENMP
-      #include <omp.h>
-  #endif
+    #include <omp.h>
 #endif
+
 #include "fftw3.h"
 #include <memory>
 //check if avx is supported and include the header

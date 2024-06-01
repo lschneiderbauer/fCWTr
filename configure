@@ -647,12 +647,14 @@ ac_header_cxx_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 PKG_LIBS
+PKG_LDFLAGS
 PKG_CXXFLAGS
 PKG_CPPFLAGS
 OPENMP_CXXFLAGS
 ac_ct_CXX
 CXXFLAGS
 CXX
+BREW
 CPP
 OBJEXT
 EXEEXT
@@ -2523,6 +2525,8 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
+
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -2531,7 +2535,8 @@ if test -z "${R_HOME}"; then
 fi
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
-CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS`"
+LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS`"
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3666,6 +3671,61 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
+
+
+# extra check for macos brew
+# Extract the first word of "brew", so it can be a program name with args.
+set dummy brew; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_BREW+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$BREW"; then
+  ac_cv_prog_BREW="$BREW" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_BREW="yes"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+BREW=$ac_cv_prog_BREW
+if test -n "$BREW"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $BREW" >&5
+printf "%s\n" "$BREW" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+if test "x${BREW}" = xyes; then
+  # in order for AC_CHECK_HEADER to work
+  CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
+  PKG_CPPFLAGS="-I`brew --prefix`/include"
+
+  LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
+  PKG_LDFLAGS="-L`brew --prefix`/lib"
+fi
+
+
 # Check for fftw3.h header
 
 
@@ -4082,7 +4142,7 @@ printf "%s\n" "#define HAVE_FFTW3_H 1" >>confdefs.h
 
 else $as_nop
 
-  as_fn_error $? "fftw3.h header file not found" "$LINENO" 5
+  as_fn_error $? "fftw3.h header file not found in: $CPPFLAGS" "$LINENO" 5
 
 fi
 
@@ -4314,6 +4374,8 @@ printf "%s\n" "$ac_cv_prog_cxx_openmp" >&6; }
 PKG_CPPFLAGS="${PKG_CPPFLAGS} ${FFTW_CPPFLAGS} ${FFTW_OMP_CPPFLAGS} ${OPENMP_CPPFLAGS}"
 
 PKG_CXXFLAGS="${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"
+
+PKG_LDFLAGS="${PKG_LDFLAGS}"
 
 PKG_LIBS="${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_OMP_LIBS}"
 
@@ -5474,8 +5536,9 @@ echo "
   --------------------------------------------------
   Configuration for ${PACKAGE_NAME} ${PACKAGE_VERSION}
 
-    cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS}
-    cxxflags: ${CXXFLAGS} ${PKG_CXXFLAGS}
+    cppflags: ${PKG_CPPFLAGS}
+    cxxflags: ${PKG_CXXFLAGS}
+    ldflags:  ${PKG_LDFLAGS}
     libs:     ${PKG_LIBS}
 
   --------------------------------------------------
