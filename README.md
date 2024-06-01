@@ -10,6 +10,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fcwtr)](https://CRAN.R-project.org/package=fcwtr)
+
 <!-- badges: end -->
 
 The R package fcwtr is a simple wrapper invoking the [fcwt
