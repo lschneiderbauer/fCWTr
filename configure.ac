@@ -1,4 +1,40 @@
-AC_INIT(fcwtr, 0.2.0)
+AC_INIT([fcwtr],[0.2.0])
+
+dnl Select an optional include path, from a configure option
+dnl or from an environment variable.
+AC_ARG_WITH([includedir],
+            AS_HELP_STRING([--includedir=INCLUDE_PATH],[the location of header files]),
+            [includedir=$withval])
+EXT_CPPFLAGS=""
+if test [ -n "$includedir" ] ; then
+  EXT_CPPFLAGS="-I${includedir}"
+else
+  if test [ -n "${CPPFLAGS}" ] ; then
+     EXT_CPPFLAGS="-I${CPPFLAGS}"
+  fi
+fi
+
+dnl ditto for a library path
+AC_ARG_WITH([libdir],
+            AS_HELP_STRING([--libdir=LIB_PATH],[the location of libraries]),
+            [libdir=$withval])
+EXT_LDFLAGS=""
+if test [ -n "$libdir" ] ; then
+   EXT_LDFLAGS="-L${libdir}"
+else
+  if test [ -n "$LDFLAGS}" ] ; then
+     EXT_LDFLAGS="-L${LDFLAGS}"
+  fi
+fi
+
+# extra check for macos brew
+AC_CHECK_PROG(BREW,brew,yes)
+BREW_CPPFLAGS=""
+BREW_LDFLAGS=""
+if test "x${brew}" = xyes; then
+  BREW_CPPFLAGS="`brew --prefix`/include"
+  BREW_LDFLAGS="`brew --prefix`/lib"
+fi
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
@@ -8,10 +44,12 @@ if test -z "${R_HOME}"; then
 fi
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
-CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
-LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
+CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS` ${EXT_CPPFLAGS} ${BREW_CPPFLAGS}"
+LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS` ${EXT_LDFLAGS} ${BREW_LDFLAGS}"
 AC_LANG(C++)
 AC_PROG_CPP
+
+
 
 # Check for fftw3.h header
 AC_CHECK_HEADER([fftw3.h], [
