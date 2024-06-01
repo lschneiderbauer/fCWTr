@@ -1,8 +1,12 @@
-#' Automatic batching of fcwt calculations on long sequences
+#' Fcwt batch processing
 #'
-#' Performs a fast continuous wavelet transform on long sequences. It should
-#' not be used on short sequences since boundary artefacts are discarded (and
-#' those potentially dominate for short sequences.)
+#' Performs a fast continuous wavelet transform on long sequences by sequentially
+#' processing junks of the input signal and keeping only low-resolution output
+#' data to preserve memory.
+#' This is only useful for very long signals whose output does not fit into
+#' memory as a whole.
+#' It should not be used on short signals since boundary artefacts are discarded
+#' (and those potentially dominate for short sequences.)
 #'
 #' @details
 #' In case of input sequences that exceed the a certain size, the output
@@ -37,7 +41,7 @@
 #'  Can not be higher than the time resolution of the input signal.
 #'
 #' @inheritParams fcwt
-#' @seealso fcwt
+#' @seealso [fcwt()]
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 #' @examples
