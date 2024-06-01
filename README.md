@@ -6,7 +6,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml)
-
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/fcwtr)](https://CRAN.R-project.org/package=fcwtr)
 <!-- badges: end -->
 
 The R package fcwtr is a simple wrapper invoking the [fcwt
@@ -111,7 +114,6 @@ In case the batch size is not explicitly provided, some heuristics are
 used to determine a batch size automatically:
 
 ``` r
-
 batch_result <-
   fcwt_batch(
     rep(ts_sin_sin, 10),

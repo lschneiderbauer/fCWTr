@@ -20,7 +20,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml)
-
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/fcwtr)](https://CRAN.R-project.org/package=fcwtr)
 <!-- badges: end -->
 
 The R package fcwtr is a simple wrapper invoking the [fcwt library](https://github.com/fastlib/fCWT), a library implementing a [continuous wavelet transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform) with a Morlet wavelet, utilizing the power of [fftw](https://www.fftw.org/), a fast fourier transform implementation.
