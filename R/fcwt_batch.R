@@ -6,7 +6,7 @@
 #' This is only useful for very long signals whose output does not fit into
 #' memory as a whole.
 #' It should not be used on short signals since boundary artefacts are discarded
-#' (and those potentially dominate for short sequences.)
+#' (and those potentially dominate for short sequences).
 #'
 #' @details
 #' In case of input sequences that exceed the a certain size, the output
@@ -18,8 +18,8 @@
 #' which for e.g. `nfreqs = 200`, equals ~ 21 GB, hence
 #' nowadays already at the limit of the hardware of a modern personal computer.
 #'
-#' In cases where the needed output time-resolution is smaller than the time
-#' resolution of the input signal, one can perform the fcwt and reduce the
+#' In cases where the required output time-resolution is smaller than the time
+#' resolution of the input signal, one can perform the [fcwt()] and reduce the
 #' output size by averaging.
 #' (The input signal time resolution can in general not be reduced since
 #' high-frequency information would get lost.)
