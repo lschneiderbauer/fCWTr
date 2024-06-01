@@ -13,7 +13,8 @@ fcwt_batch(
   sigma,
   max_batch_size = ceiling(4 * 10^9/(n_freqs * 4)),
   time_resolution,
-  nthreads = 8L
+  nthreads = 8L,
+  progress_bar = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,10 @@ Memory consumption is directly related to that.
 Can not be higher than the time resolution of the input signal.}
 
 \item{nthreads}{Number of threads used by the computation, if supported by your platform.}
+
+\item{progress_bar}{Monitoring progress can sometimes be useful when performing time consuming
+operations. Setting \code{progress_bar = TRUE} enables printing a progress
+bar to the console. Defaults to \code{FALSE}.}
 }
 \description{
 Performs a fast continuous wavelet transform on long sequences by sequentially

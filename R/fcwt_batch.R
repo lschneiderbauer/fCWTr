@@ -39,6 +39,10 @@
 #'  The time resolution in inverse units of `sample_freq` of the result.
 #'  Memory consumption is directly related to that.
 #'  Can not be higher than the time resolution of the input signal.
+#' @param progress_bar
+#'  Monitoring progress can sometimes be useful when performing time consuming
+#'  operations. Setting `progress_bar = TRUE` enables printing a progress
+#'  bar to the console. Defaults to `FALSE`.
 #'
 #' @inheritParams fcwt
 #' @seealso [fcwt()]
@@ -64,7 +68,8 @@ fcwt_batch <- function(signal,
                        sigma,
                        max_batch_size = ceiling(4 * 10^9 / (n_freqs * 4)),
                        time_resolution,
-                       nthreads = 8L) {
+                       nthreads = 8L,
+                       progress_bar = FALSE) {
   # From FFTW documentation:
   # FTW is best at handling sizes of the form 2^a 3^b 5^c 7^d 11^e 13^f,
   # where e+f is
@@ -77,7 +82,15 @@ fcwt_batch <- function(signal,
 
   total_result <- NULL
 
-  pb <- txtProgressBar(min = 0, max = length(signal), style = 3)
+  if (progress_bar) {
+    pb <- txtProgressBar(min = 0, max = length(signal), style = 3)
+
+    on.exit({
+      setTxtProgressBar(pb, length(signal))
+      close(pb)
+    })
+  }
+
   cursor <- 0
   diff <- 0
   while (cursor < length(signal) - diff) {
@@ -128,11 +141,8 @@ fcwt_batch <- function(signal,
       total_result <- result
     }
 
-    setTxtProgressBar(pb, cursor)
+    if (progress_bar) setTxtProgressBar(pb, cursor)
   }
-
-  setTxtProgressBar(pb, length(signal))
-  close(pb)
 
   return(total_result)
 }
