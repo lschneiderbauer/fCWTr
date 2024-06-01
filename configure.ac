@@ -33,7 +33,7 @@ fi
 AC_CHECK_HEADER([fftw3.h], [
   AC_DEFINE([HAVE_FFTW3_H], [1], [Define if you have the fftw3.h header file])
 ], [
-  AC_MSG_ERROR([fftw3.h header file not found. cppflags: $CPPFLAGS])
+  AC_MSG_ERROR([fftw3.h header file not found in: $CPPFLAGS])
 ])
 
 have_fftw=no
@@ -77,9 +77,9 @@ echo "
   --------------------------------------------------
   Configuration for ${PACKAGE_NAME} ${PACKAGE_VERSION}
 
-    cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS}
-    cxxflags: ${CXXFLAGS} ${PKG_CXXFLAGS}
-    ldflags:  ${LDFLAGS} ${PKG_LDFLAGS}
+    cppflags: ${PKG_CPPFLAGS}
+    cxxflags: ${PKG_CXXFLAGS}
+    ldflags:  ${PKG_LDFLAGS}
     libs:     ${PKG_LIBS}
 
   --------------------------------------------------
