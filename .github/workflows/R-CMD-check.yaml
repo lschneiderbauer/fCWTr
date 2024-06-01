@@ -50,6 +50,9 @@ jobs:
           brew install libomp
           export LDFLAGS="${LDFLAGS} -L/opt/homebrew/opt/libomp/lib"
           export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/opt/libomp/include"
+          echo $LDFLAGS
+          echo $CPPFLAGS
+          brew info fftw
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
