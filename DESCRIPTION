@@ -33,3 +33,4 @@ SystemRequirements:
     openmp (>= 15.0.0)
 Config/testthat/edition: 3
 URL: https://lschneiderbauer.github.io/fcwtr/
+Roxygen: list(markdown = TRUE)

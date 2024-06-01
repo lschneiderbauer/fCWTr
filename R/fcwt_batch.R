@@ -1,11 +1,11 @@
-#' FCWT on long sequences
+#' Automatic batching of fcwt calculations on long sequences
 #'
 #' Performs a fast continuous wavelet transform on long sequences. It should
-#' not be used on short sequences, since boundary artefacts are discarded, and
-#' those potentially dominate for short sequences.
+#' not be used on short sequences since boundary artefacts are discarded (and
+#' those potentially dominate for short sequences.)
 #'
 #' @details
-#' In case of input sequences that exceed the a certain size, the outputl
+#' In case of input sequences that exceed the a certain size, the output
 #' sequence will not fit into the local memory and the fcwt cannot be
 #' performed in one run.
 #' For instance, in case of processing a song of 10 minutes length (assuming
@@ -37,6 +37,7 @@
 #'  Can not be higher than the time resolution of the input signal.
 #'
 #' @inheritParams fcwt
+#' @seealso fcwt
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
 #' @examples
