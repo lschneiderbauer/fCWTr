@@ -647,6 +647,7 @@ ac_header_cxx_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 PKG_LIBS
+PKG_LDFLAGS
 PKG_CXXFLAGS
 PKG_CPPFLAGS
 OPENMP_CXXFLAGS
@@ -2524,32 +2525,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-# dnl Select an optional include path, from a configure option
-# dnl or from an environment variable.
-# AC_ARG_WITH([includedir],
-#             AS_HELP_STRING([--includedir=INCLUDE_PATH],[the location of header files]),
-#             [includedir=$withval])
-# EXT_CPPFLAGS=""
-# if test [ -n "$includedir" ] ; then
-#   EXT_CPPFLAGS="-I${includedir}"
-# else
-#   if test [ -n "${CPPFLAGS}" ] ; then
-#      EXT_CPPFLAGS="-I${CPPFLAGS}"
-#   fi
-# fi
-#
-# dnl ditto for a library path
-# AC_ARG_WITH([libdir],
-#             AS_HELP_STRING([--libdir=LIB_PATH],[the location of libraries]),
-#             [libdir=$withval])
-# EXT_LDFLAGS=""
-# if test [ -n "$libdir" ] ; then
-#    EXT_LDFLAGS="-L${libdir}"
-# else
-#   if test [ -n "$LDFLAGS}" ] ; then
-#      EXT_LDFLAGS="-L${LDFLAGS}"
-#   fi
-# fi
 
 
 # Find the compiler and compiler flags used by R.
@@ -2560,8 +2535,8 @@ if test -z "${R_HOME}"; then
 fi
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
-CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS` ${EXT_CPPFLAGS}"
-LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS` ${EXT_LDFLAGS}"
+CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS`"
+LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS`"
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3742,8 +3717,8 @@ fi
 
 
 if test "x${BREW}" = xyes; then
-  CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
-  LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
+  PKG_CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
+  PKG_LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
 fi
 
 
@@ -4395,6 +4370,8 @@ printf "%s\n" "$ac_cv_prog_cxx_openmp" >&6; }
 PKG_CPPFLAGS="${PKG_CPPFLAGS} ${FFTW_CPPFLAGS} ${FFTW_OMP_CPPFLAGS} ${OPENMP_CPPFLAGS}"
 
 PKG_CXXFLAGS="${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"
+
+PKG_LDFLAGS="${PKG_LDFLAGS}"
 
 PKG_LIBS="${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_OMP_LIBS}"
 
@@ -5557,7 +5534,7 @@ echo "
 
     cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS}
     cxxflags: ${CXXFLAGS} ${PKG_CXXFLAGS}
-    ldflags:  ${LDFLAGS}
+    ldflags:  ${LDFLAGS} ${PKG_LDFLAGS}
     libs:     ${PKG_LIBS}
 
   --------------------------------------------------

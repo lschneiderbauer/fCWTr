@@ -1,31 +1,5 @@
 AC_INIT([fcwtr],[0.2.0])
 
-# dnl Select an optional include path, from a configure option
-# dnl or from an environment variable.
-# AC_ARG_WITH([includedir],
-#             AS_HELP_STRING([--includedir=INCLUDE_PATH],[the location of header files]),
-#             [includedir=$withval])
-# EXT_CPPFLAGS=""
-# if test [ -n "$includedir" ] ; then
-#   EXT_CPPFLAGS="-I${includedir}"
-# else
-#   if test [ -n "${CPPFLAGS}" ] ; then
-#      EXT_CPPFLAGS="-I${CPPFLAGS}"
-#   fi
-# fi
-#
-# dnl ditto for a library path
-# AC_ARG_WITH([libdir],
-#             AS_HELP_STRING([--libdir=LIB_PATH],[the location of libraries]),
-#             [libdir=$withval])
-# EXT_LDFLAGS=""
-# if test [ -n "$libdir" ] ; then
-#    EXT_LDFLAGS="-L${libdir}"
-# else
-#   if test [ -n "$LDFLAGS}" ] ; then
-#      EXT_LDFLAGS="-L${LDFLAGS}"
-#   fi
-# fi
 
 
 # Find the compiler and compiler flags used by R.
@@ -36,8 +10,8 @@ if test -z "${R_HOME}"; then
 fi
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
-CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS` ${EXT_CPPFLAGS}"
-LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS` ${EXT_LDFLAGS}"
+CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS`"
+LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS`"
 AC_LANG(C++)
 AC_PROG_CPP
 
@@ -46,8 +20,8 @@ AC_PROG_CPP
 # extra check for macos brew
 AC_CHECK_PROG(BREW,brew,yes)
 if test "x${BREW}" = xyes; then
-  CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
-  LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
+  PKG_CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
+  PKG_LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
 fi
 
 
@@ -90,6 +64,7 @@ AC_OPENMP(
 # Write the flags into the src/Makevars file.
 AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS} ${FFTW_CPPFLAGS} ${FFTW_OMP_CPPFLAGS} ${OPENMP_CPPFLAGS}"])
 AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"])
+AC_SUBST([PKG_LDFLAGS], ["${PKG_LDFLAGS}"])
 AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_OMP_LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
@@ -100,7 +75,7 @@ echo "
 
     cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS}
     cxxflags: ${CXXFLAGS} ${PKG_CXXFLAGS}
-    ldflags:  ${LDFLAGS}
+    ldflags:  ${LDFLAGS} ${PKG_LDFLAGS}
     libs:     ${PKG_LIBS}
 
   --------------------------------------------------
