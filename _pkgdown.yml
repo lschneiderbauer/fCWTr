@@ -1,4 +1,15 @@
 url: https://lschneiderbauer.github.io/fcwtr/
 template:
   bootstrap: 5
-
+reference:
+- title: "Fast continuous wavelet transform"
+  desc: >
+    Functions for performing fast continuous wavelet transforms.
+  contents:
+  - starts_with("fcwt")
+- title: "Sample data"
+  desc: >
+    Sample signal data mainly used to generate examples. The signals consist
+    of simple superpositions of sinusoidal patterns.
+  contents:
+  - starts_with("ts_")
