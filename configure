@@ -653,6 +653,7 @@ OPENMP_CXXFLAGS
 ac_ct_CXX
 CXXFLAGS
 CXX
+BREW
 CPP
 OBJEXT
 EXEEXT
@@ -661,7 +662,6 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
-BREW
 target_alias
 host_alias
 build_alias
@@ -704,8 +704,6 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
-with_includedir
-with_libdir
 enable_openmp
 '
       ac_precious_vars='build_alias
@@ -1339,13 +1337,6 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-openmp        do not use OpenMP
-
-Optional Packages:
-  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
-  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --includedir=INCLUDE_PATH
-                          the location of header files
-  --libdir=LIB_PATH       the location of libraries
 
 Some influential environment variables:
   CC          C compiler command
@@ -2533,87 +2524,33 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+# dnl Select an optional include path, from a configure option
+# dnl or from an environment variable.
+# AC_ARG_WITH([includedir],
+#             AS_HELP_STRING([--includedir=INCLUDE_PATH],[the location of header files]),
+#             [includedir=$withval])
+# EXT_CPPFLAGS=""
+# if test [ -n "$includedir" ] ; then
+#   EXT_CPPFLAGS="-I${includedir}"
+# else
+#   if test [ -n "${CPPFLAGS}" ] ; then
+#      EXT_CPPFLAGS="-I${CPPFLAGS}"
+#   fi
+# fi
+#
+# dnl ditto for a library path
+# AC_ARG_WITH([libdir],
+#             AS_HELP_STRING([--libdir=LIB_PATH],[the location of libraries]),
+#             [libdir=$withval])
+# EXT_LDFLAGS=""
+# if test [ -n "$libdir" ] ; then
+#    EXT_LDFLAGS="-L${libdir}"
+# else
+#   if test [ -n "$LDFLAGS}" ] ; then
+#      EXT_LDFLAGS="-L${LDFLAGS}"
+#   fi
+# fi
 
-# Check whether --with-includedir was given.
-if test ${with_includedir+y}
-then :
-  withval=$with_includedir; includedir=$withval
-fi
-
-EXT_CPPFLAGS=""
-if test  -n "$includedir"  ; then
-  EXT_CPPFLAGS="-I${includedir}"
-else
-  if test  -n "${CPPFLAGS}"  ; then
-     EXT_CPPFLAGS="-I${CPPFLAGS}"
-  fi
-fi
-
-
-# Check whether --with-libdir was given.
-if test ${with_libdir+y}
-then :
-  withval=$with_libdir; libdir=$withval
-fi
-
-EXT_LDFLAGS=""
-if test  -n "$libdir"  ; then
-   EXT_LDFLAGS="-L${libdir}"
-else
-  if test  -n "$LDFLAGS}"  ; then
-     EXT_LDFLAGS="-L${LDFLAGS}"
-  fi
-fi
-
-# extra check for macos brew
-# Extract the first word of "brew", so it can be a program name with args.
-set dummy brew; ac_word=$2
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-printf %s "checking for $ac_word... " >&6; }
-if test ${ac_cv_prog_BREW+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  if test -n "$BREW"; then
-  ac_cv_prog_BREW="$BREW" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  case $as_dir in #(((
-    '') as_dir=./ ;;
-    */) ;;
-    *) as_dir=$as_dir/ ;;
-  esac
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
-    ac_cv_prog_BREW="yes"
-    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-BREW=$ac_cv_prog_BREW
-if test -n "$BREW"; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $BREW" >&5
-printf "%s\n" "$BREW" >&6; }
-else
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-fi
-
-
-BREW_CPPFLAGS=""
-BREW_LDFLAGS=""
-if test "x${brew}" = xyes; then
-  BREW_CPPFLAGS="`brew --prefix`/include"
-  BREW_LDFLAGS="`brew --prefix`/lib"
-fi
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
@@ -2623,8 +2560,8 @@ if test -z "${R_HOME}"; then
 fi
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
 CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
-CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS` ${EXT_CPPFLAGS} ${BREW_CPPFLAGS}"
-LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS` ${EXT_LDFLAGS} ${BREW_LDFLAGS}"
+CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS` ${EXT_CPPFLAGS}"
+LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS` ${EXT_LDFLAGS}"
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3759,6 +3696,55 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
+
+
+# extra check for macos brew
+# Extract the first word of "brew", so it can be a program name with args.
+set dummy brew; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_BREW+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$BREW"; then
+  ac_cv_prog_BREW="$BREW" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_BREW="yes"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+BREW=$ac_cv_prog_BREW
+if test -n "$BREW"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $BREW" >&5
+printf "%s\n" "$BREW" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+if test "x${BREW}" = xyes; then
+  CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
+  LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
+fi
 
 
 # Check for fftw3.h header
@@ -5571,6 +5557,7 @@ echo "
 
     cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS}
     cxxflags: ${CXXFLAGS} ${PKG_CXXFLAGS}
+    ldflags:  ${LDFLAGS}
     libs:     ${PKG_LIBS}
 
   --------------------------------------------------
