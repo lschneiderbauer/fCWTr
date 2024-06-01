@@ -20,7 +20,10 @@ AC_PROG_CPP
 # extra check for macos brew
 AC_CHECK_PROG(BREW,brew,yes)
 if test "x${BREW}" = xyes; then
-  PKG_CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
+  # in order for AC_CHECK_HEADER to work
+  CPPFLAGS= "${CPPFLAGS} -I`brew --prefix`/include"
+  PKG_CPPFLAGS="-I`brew --prefix`/include"
+
   PKG_LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
 fi
 
