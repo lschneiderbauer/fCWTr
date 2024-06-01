@@ -17,7 +17,7 @@ AC_PROG_CPP
 AC_CHECK_HEADER([fftw3.h], [
   AC_DEFINE([HAVE_FFTW3_H], [1], [Define if you have the fftw3.h header file])
 ], [
-  AC_MSG_ERROR([fftw3.h header file not found])
+  AC_MSG_ERROR([fftw3.h header file not found. cppflags: $CPPFLAGS])
 ])
 
 have_fftw=no

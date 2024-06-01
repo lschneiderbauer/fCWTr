@@ -4083,7 +4083,7 @@ printf "%s\n" "#define HAVE_FFTW3_H 1" >>confdefs.h
 
 else $as_nop
 
-  as_fn_error $? "fftw3.h header file not found" "$LINENO" 5
+  as_fn_error $? "fftw3.h header file not found. cppflags: $CPPFLAGS" "$LINENO" 5
 
 fi
 
