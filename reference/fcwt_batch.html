@@ -69,7 +69,8 @@ It should not be used on short signals since boundary artefacts are discarded
 <span>  <span class="va">sigma</span>,</span>
 <span>  max_batch_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fl">4</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">9</span><span class="op">/</span><span class="op">(</span><span class="va">n_freqs</span> <span class="op">*</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  <span class="va">time_resolution</span>,</span>
-<span>  nthreads <span class="op">=</span> <span class="fl">8L</span></span>
+<span>  nthreads <span class="op">=</span> <span class="fl">8L</span>,</span>
+<span>  progress_bar <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -125,6 +126,12 @@ Can not be higher than the time resolution of the input signal.</p></dd>
 <dt>nthreads</dt>
 <dd><p>Number of threads used by the computation, if supported by your platform.</p></dd>
 
+
+<dt>progress_bar</dt>
+<dd><p>Monitoring progress can sometimes be useful when performing time consuming
+operations. Setting <code>progress_bar = TRUE</code> enables printing a progress
+bar to the console. Defaults to <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -165,8 +172,6 @@ the minimal frequency captured <code>min_freq</code>.)</p>
 <span class="r-in"><span>    max_batch_size <span class="op">=</span> <span class="fl">20000</span>,</span></span>
 <span class="r-in"><span>    time_resolution <span class="op">=</span> <span class="fl">0.001</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   |                                                                              |                                                                      |   0%  |                                                                              |======                                                                |   9%  |                                                                              |=============                                                         |  18%  |                                                                              |===================                                                   |  27%  |                                                                              |=========================                                             |  36%  |                                                                              |===============================                                       |  45%  |                                                                              |======================================                                |  54%  |                                                                              |============================================                          |  63%  |                                                                              |==================================================                    |  72%  |                                                                              |======================================================================| 100%</span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

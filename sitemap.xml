@@ -13,6 +13,12 @@
     <loc>https://lschneiderbauer.github.io/fcwtr/index.html</loc>
   </url>
   <url>
+    <loc>https://lschneiderbauer.github.io/fcwtr/reference/as.data.frame.fcwtr_scalogram.html</loc>
+  </url>
+  <url>
+    <loc>https://lschneiderbauer.github.io/fcwtr/reference/autoplot.fcwtr_scalogram.html</loc>
+  </url>
+  <url>
     <loc>https://lschneiderbauer.github.io/fcwtr/reference/fcwt.html</loc>
   </url>
   <url>
@@ -20,6 +26,9 @@
   </url>
   <url>
     <loc>https://lschneiderbauer.github.io/fcwtr/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://lschneiderbauer.github.io/fcwtr/reference/plot.fcwtr_scalogram.html</loc>
   </url>
   <url>
     <loc>https://lschneiderbauer.github.io/fcwtr/reference/ts_sin_440.html</loc>
