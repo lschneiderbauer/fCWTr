@@ -53,6 +53,7 @@ jobs:
           echo $LDFLAGS
           echo $CPPFLAGS
           brew info fftw
+          ls -alR /opt/homebrew
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
