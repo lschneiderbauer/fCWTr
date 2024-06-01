@@ -6,9 +6,15 @@
 #' i.e. a graph with a time and a frequency dimension.
 #'
 #' @details
-#'  The wavelet used in this calculation is the so called Morlet wavelet,
-#'  a sinusoidal wave modulated by a Gaussian whose spread is controlled by
-#'  the argument `sigma`.
+#' The wavelet used in this calculation is the so called Morlet wavelet,
+#' a sinusoidal wave modulated by a Gaussian whose spread is controlled by
+#' the argument `sigma`.
+#'
+#' See the original paper
+#' Arts, L.P.A., van den Broek, E.L.
+#' The fast continuous wavelet transformation (fCWT) for real-time, high-quality,
+#' noise-resistant time–frequency analysis.
+#' Nat Comput Sci 2, 47–58 (2022). \doi{10.1038/s43588-021-00183-z}
 #'
 #' @param signal
 #'  Real-valued time series. The time steps are assumed to be evenly spaced.

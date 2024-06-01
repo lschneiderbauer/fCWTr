@@ -20,6 +20,11 @@ transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform)
 with a Morlet wavelet, utilizing the power of
 [fftw](https://www.fftw.org/), a fast fourier transform implementation.
 
+See the original paper by Arts, L.P.A., van den Broek, E.L. The fast
+continuous wavelet transformation (fCWT) for real-time, high-quality,
+noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
+<https://doi.org/10.1038/s43588-021-00183-z>
+
 ## Dependencies
 
 - R \>= 4.1
