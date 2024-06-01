@@ -94,7 +94,6 @@ res <-
     max_batch_size = 20000,
     time_resolution = 0.001
   )
-
 }
 \seealso{
 \code{\link[=fcwt]{fcwt()}}

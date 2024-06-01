@@ -68,8 +68,6 @@
 #'     n_freqs = 10,
 #'     sigma = 5
 #'   )
-#'
-#' plot(res)
 #' @export
 fcwt <- function(signal,
                  sample_freq,

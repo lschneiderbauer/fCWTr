@@ -77,6 +77,4 @@ res <-
     n_freqs = 10,
     sigma = 5
   )
-
-plot(res)
 }

@@ -117,6 +117,16 @@ rm_na_time_slices <- function(x) {
   )
 }
 
+#' Coerce the scalogram matrix to a data frame
+#'
+#' Internally, the scalogram resulting from [fcwt()] is represented by
+#' a numeric matrix. This method coerces this matrix into a reasonable
+#' data frame. It is associated to a certain runtime cost.
+#'
+#' @param x
+#'  An object resulting from [fcwt()].
+#'
+#' @inheritParams base::as.data.frame
 #' @export
 as.data.frame.fcwtr_scalogram <- function(x, ...) {
   df <- as.data.frame(as.table(x), stringsAsFactors = FALSE)
@@ -129,12 +139,46 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
   df
 }
 
+#' Scalogram plotting
+#'
+#' Plots the scalogram resulting from [fcwt()].
+#' Requires [ggplot2](https://ggplot2.tidyverse.org/).
+#'
+#' @param x
+#'  An object resulting from [fcwt()].
+#'
+#' @inheritParams autoplot.fcwtr_scalogram
+#'
 #' @importFrom graphics plot
 #' @export
+#' @examples
+#' ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
+#'
+#' res <-
+#'   fcwt(
+#'     ts_sin_440,
+#'     sample_freq = 44100,
+#'     freq_begin = 50,
+#'     freq_end = 1000,
+#'     n_freqs = 10,
+#'     sigma = 5
+#'   )
+#'
+#' plot(res)
 plot.fcwtr_scalogram <- function(x, n = 1000, ...) {
   print(autoplot.fcwtr_scalogram(x, n, ...))
 }
 
+#' Create a ggplot object resembling a scalogram
+#'
+#' @param n
+#'  The plotting function reduces the time resolution by averaging
+#'  to generate a reasonable graphics format. `n` is the number of time
+#'  steps that are plotted. Defaults to `n = 1000`.
+#' @param ...
+#'  other arguments passed to specific methods
+#'
+#' @keywords internal
 autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
