@@ -24,7 +24,8 @@ if test "x${BREW}" = xyes; then
   CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
   PKG_CPPFLAGS="-I`brew --prefix`/include"
 
-  PKG_LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
+  LDFLAGS="${CPPFLAGS} -L`brew --prefix`/lib"
+  PKG_LDFLAGS="-L`brew --prefix`/lib"
 fi
 
 
