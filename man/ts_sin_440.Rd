@@ -3,17 +3,14 @@
 \docType{data}
 \name{ts_sin_440}
 \alias{ts_sin_440}
-\title{Pure (long) sin wave of 440 Hz
-assuming a sample rate of 44100 Hz)}
+\title{Pure sine wave}
 \format{
-## `ts_sin_440`
-A vector of float containing a signal time series.
+A numeric vector containing a time series signal.
 }
 \usage{
 ts_sin_440
 }
 \description{
-Pure (long) sin wave of 440 Hz
-assuming a sample rate of 44100 Hz)
+Assuming a sample rate of 44100 Hz, the sine wave's frequency is 440 Hz.
 }
 \keyword{datasets}

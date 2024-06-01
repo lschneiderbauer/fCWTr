@@ -3,17 +3,14 @@
 \docType{data}
 \name{ts_sin_sin}
 \alias{ts_sin_sin}
-\title{A sinusoidal wave with varying frequency.
-The frequency itself is changing in a sinusoidal fashion.}
+\title{A sinusoidal wave with varying frequency}
 \format{
-## `ts_sin_sin`
-A vector of float containing a signal time series.
+A numeric vector containing a time series signal.
 }
 \usage{
 ts_sin_sin
 }
 \description{
-A sinusoidal wave with varying frequency.
 The frequency itself is changing in a sinusoidal fashion.
 }
 \keyword{datasets}

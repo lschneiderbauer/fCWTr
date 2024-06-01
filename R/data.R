@@ -1,20 +1,24 @@
-#' Superimposed sin waves of different frequencies and different amplitudes
-#' (440 Hz, 880 Hz, 100 Hz, 500 Hz, 1200 Hz, 50 Hz, assuming a sample rate of 44100 Hz)
+#' Pure sine wave
 #'
-#' @format ## `ts_sin_superpos`
-#' A vector of float containing a signal time series.
-"ts_sin_superpos"
-
-#' Pure (long) sin wave of 440 Hz
-#' assuming a sample rate of 44100 Hz)
+#' Assuming a sample rate of 44100 Hz, the sine wave's frequency is 440 Hz.
 #'
-#' @format ## `ts_sin_440`
-#' A vector of float containing a signal time series.
+#' @format
+#' A numeric vector containing a time series signal.
 "ts_sin_440"
 
-#' A sinusoidal wave with varying frequency.
+#' Superimposed sine waves of different frequencies and different amplitudes
+#'
+#' Assuming a sample rate of 44100 Hz, the superimposed signals' frequencies are
+#' 440 Hz, 880 Hz, 100 Hz, 500 Hz, 1200 Hz and 50 Hz.
+#'
+#' @format
+#' A numeric vector containing a time series signal.
+"ts_sin_superpos"
+
+#' A sinusoidal wave with varying frequency
+#'
 #' The frequency itself is changing in a sinusoidal fashion.
 #'
-#' @format ## `ts_sin_sin`
-#' A vector of float containing a signal time series.
+#' @format
+#' A numeric vector containing a time series signal.
 "ts_sin_sin"
