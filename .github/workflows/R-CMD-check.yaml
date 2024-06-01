@@ -45,13 +45,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install fftw
-          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/lib"
-          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/include"
           brew install libomp
-          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/opt/libomp/lib"
-          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/opt/libomp/include"
-          echo $LDFLAGS
-          echo $CPPFLAGS
 
       - name: Install fftw3 on Windows
         if: runner.os == 'Windows'
@@ -67,3 +61,8 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+        run: |
+          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/opt/libomp/lib"
+          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/opt/libomp/include"
+          export LDFLAGS="${LDFLAGS} -L/opt/homebrew/lib"
+          export CPPFLAGS="${CPPFLAGS} -I/opt/homebrew/include"
