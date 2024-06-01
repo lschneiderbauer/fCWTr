@@ -55,7 +55,6 @@
 </h1></div>
 <!-- badges: start -->
 
-<!-- badges: end -->
 <p>The R package fcwtr is a simple wrapper invoking the <a href="https://github.com/fastlib/fCWT" class="external-link">fcwt library</a>, a library implementing a <a href="https://en.wikipedia.org/wiki/Continuous_wavelet_transform" class="external-link">continuous wavelet transform</a> with a Morlet wavelet, utilizing the power of <a href="https://www.fftw.org/" class="external-link">fftw</a>, a fast fourier transform implementation.</p>
 <div class="section level2">
 <h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
@@ -128,8 +127,7 @@
 <p><img src="reference/figures/README-example_plot-1.png" width="100%"></p>
 <p>For long sequences, the required memory can exceed your local memory. In this case it can be useful to reduce the time resolution of the result and process the data in batches. This can be done with <code><a href="reference/fcwt_batch.html">fcwt_batch()</a></code>. In case the batch size is not explicitly provided, some heuristics are used to determine a batch size automatically:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">batch_result</span> <span class="op">&lt;-</span></span>
+<code class="sourceCode R"><span><span class="va">batch_result</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ts_sin_sin</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>    sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span>
@@ -173,6 +171,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://CRAN.R-project.org/package=fcwtr" class="external-link"><img src="https://www.r-pkg.org/badges/version/fcwtr" alt="CRAN status"></a></li>
 </ul>
 </div>
 
