@@ -47,6 +47,9 @@ test_that("tbind() for fcwtr_scalogram", {
 })
 
 test_that("ggplot2::autoplot() does not err", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("viridis")
+
   res <-
     fcwt(
       ts_sin_440,
