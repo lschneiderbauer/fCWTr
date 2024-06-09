@@ -86,14 +86,9 @@ a connection to physical units which is used in other frequency definitions
 as well as the units of the output data.</p></dd>
 
 
-<dt>freq_begin</dt>
-<dd><p>Sets the minimal frequency (<code>&gt; 0</code>), in same units as <code>sample_freq</code>,
-that should be contained in the output.</p></dd>
-
-
-<dt>freq_end</dt>
-<dd><p>Sets the maximal frequency (<code>&gt; freq_begin</code>), in same units as
-<code>sample_freq</code>, that should be contained in the output.</p></dd>
+<dt>freq_begin, freq_end</dt>
+<dd><p>Defines the frequency range <code>[freq_end, freq_begin]</code>. This range and <code>sample_freq</code>
+need to be specified in the same units.</p></dd>
 
 
 <dt>n_freqs</dt>
@@ -133,6 +128,14 @@ operations. Setting <code>progress_bar = TRUE</code> enables printing a progress
 bar to the console. Defaults to <code>FALSE</code>.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>The spectogram, a numeric real-valued matrix with dimensions roughly
+<code>dim ~ c(length(signal) * time_resolution * sample_freq, n_freqs)</code>.
+The exact length of the output depends on boundary effect details.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>In case of input sequences that exceed the a certain size, the output

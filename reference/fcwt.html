@@ -75,14 +75,9 @@ a connection to physical units which is used in other frequency definitions
 as well as the units of the output data.</p></dd>
 
 
-<dt>freq_begin</dt>
-<dd><p>Sets the minimal frequency (<code>&gt; 0</code>), in same units as <code>sample_freq</code>,
-that should be contained in the output.</p></dd>
-
-
-<dt>freq_end</dt>
-<dd><p>Sets the maximal frequency (<code>&gt; freq_begin</code>), in same units as
-<code>sample_freq</code>, that should be contained in the output.</p></dd>
+<dt>freq_begin, freq_end</dt>
+<dd><p>Defines the frequency range <code>[freq_end, freq_begin]</code>. This range and <code>sample_freq</code>
+need to be specified in the same units.</p></dd>
 
 
 <dt>n_freqs</dt>
@@ -101,10 +96,10 @@ resolution and a worse (better) time resolution.</p></dd>
 
 
 <dt>remove_coi</dt>
-<dd><p>Boundary effects can result in nonphysical artifacts. If <code>TRUE</code>, the function
-removes those by settings corresponding values to NA.
+<dd><p>Boundary effects can result in nonphysical artifacts. If <code>remove_coi = TRUE</code>,
+those are effectively removed by setting corresponding values to <code>NA</code>.
 We define the essential support of the
-(Gaußian) wavelet to be four times its standard deviation,
+(Gaussian) wavelet to be four times its standard deviation,
 \(4 \Sigma_t = 2 * \sqrt{2} \frac{\sigma}{f}\), and so a wavelet touches
 the boundary if the distance of the center of the wavelet to the boundary
 is less then \(4 \Sigma_t\). Values that fall into that range are removed
