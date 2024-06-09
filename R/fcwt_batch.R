@@ -44,6 +44,11 @@
 #'  operations. Setting `progress_bar = TRUE` enables printing a progress
 #'  bar to the console. Defaults to `FALSE`.
 #'
+#' @return
+#'  The spectogram, a numeric real-valued matrix with dimensions roughly
+#'  `dim ~ c(length(signal) * time_resolution * sample_freq, n_freqs)`.
+#'  The exact length of the output depends on boundary effect details.
+#'
 #' @inheritParams fcwt
 #' @seealso [fcwt()]
 #' @importFrom utils txtProgressBar setTxtProgressBar

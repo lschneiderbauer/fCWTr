@@ -177,6 +177,8 @@ plot.fcwtr_scalogram <- function(x, n = 1000, ...) {
 #'  steps that are plotted. Defaults to `n = 1000`.
 #' @param ...
 #'  other arguments passed to specific methods
+#' @return
+#'  A ggplot object.
 #'
 #' @keywords internal
 autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {

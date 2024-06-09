@@ -13,6 +13,9 @@ steps that are plotted. Defaults to \code{n = 1000}.}
 
 \item{...}{other arguments passed to specific methods}
 }
+\value{
+A ggplot object.
+}
 \description{
 Create a ggplot object resembling a scalogram
 }
