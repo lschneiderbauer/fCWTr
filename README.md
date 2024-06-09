@@ -55,7 +55,7 @@ CXXFLAGS = -mavx
 
 ## Installation
 
-You can install the latest CRAN release of binpackr with:
+You can install the latest CRAN release of fcwtr with:
 
 ``` r
 install.packages("fcwtr")
