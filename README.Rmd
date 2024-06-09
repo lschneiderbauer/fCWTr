@@ -64,7 +64,7 @@ This is a basic example that invokes the fcwt library to calculate the continuou
 ```{r example}
 library(fcwtr)
 
-# You are given some signal encoded in a numeric vector.
+# A signal encoded in a numeric vector.
 # In this example we use some superimposed sin signals.
 signal <- ts_sin_superpos
 
@@ -78,12 +78,11 @@ output <-
     sigma = 5
   )
 
-# In this case the result is a matrix,
-# which can be used for further processing.
+# The result is a numeric matrix
 dim(output)
 ```
 
-Conversion functions to a meaningful data frame is also provided:
+A conversion functions to a data frame is also provided:
 
 ```{r example_df}
 head(as.data.frame(output), 10)

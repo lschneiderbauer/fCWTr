@@ -76,7 +76,7 @@ continuous wavelet transform and plot the result.
 ``` r
 library(fcwtr)
 
-# You are given some signal encoded in a numeric vector.
+# A signal encoded in a numeric vector.
 # In this example we use some superimposed sin signals.
 signal <- ts_sin_superpos
 
@@ -90,13 +90,12 @@ output <-
     sigma = 5
   )
 
-# In this case the result is a matrix,
-# which can be used for further processing.
+# The result is a numeric matrix
 dim(output)
 #> [1] 6000  200
 ```
 
-Conversion functions to a meaningful data frame is also provided:
+A conversion functions to a data frame is also provided:
 
 ``` r
 head(as.data.frame(output), 10)
