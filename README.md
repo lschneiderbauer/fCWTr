@@ -12,6 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/fcwtr)](https://CRAN.R-project.org/package=fcwtr)
 [![Codecov test
 coverage](https://codecov.io/gh/lschneiderbauer/fcwtr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/lschneiderbauer/fcwtr?branch=master)
+
 <!-- badges: end -->
 
 The R package fcwtr is a simple wrapper invoking the [fcwt
@@ -54,8 +55,14 @@ CXXFLAGS = -mavx
 
 ## Installation
 
-You can install the development version of fcwtr like so (requiring
-installed [devtools](https://devtools.r-lib.org/) package):
+You can install the latest CRAN release of binpackr with:
+
+``` r
+install.packages("fcwtr")
+```
+
+Alternatively, you can install the development version of fcwtr like so
+(requiring installed [devtools](https://devtools.r-lib.org/) package):
 
 ``` r
 devtools::install_github("lschneiderbauer/fcwtr")
