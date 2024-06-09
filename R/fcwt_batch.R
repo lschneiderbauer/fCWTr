@@ -62,7 +62,7 @@
 #'     freq_end = 11000,
 #'     n_freqs = 300,
 #'     sigma = 10,
-#'     max_batch_size = 20000,
+#'     max_batch_size = 50000,
 #'     time_resolution = 0.001
 #'   )
 fcwt_batch <- function(signal,
