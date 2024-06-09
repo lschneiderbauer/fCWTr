@@ -151,7 +151,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'
 #' @importFrom graphics plot
 #' @export
-#' @examples
+#' @examplesIf requireNamespace("ggplot2", quietly = TRUE)
 #' ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
 #'
 #' res <-
