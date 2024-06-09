@@ -39,7 +39,13 @@ It should not be used on short signals since boundary artefacts are discarded
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/lschneiderbauer/fcwtr/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -47,7 +53,7 @@ It should not be used on short signals since boundary artefacts are discarded
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Fcwt batch processing</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/lschneiderbauer/fcwtr/blob/HEAD/R/fcwt_batch.R" class="external-link"><code>R/fcwt_batch.R</code></a></small>
       <div class="d-none name"><code>fcwt_batch.Rd</code></div>
     </div>
 
@@ -175,7 +181,7 @@ the minimal frequency captured <code>min_freq</code>.)</p>
 <span class="r-in"><span>    freq_end <span class="op">=</span> <span class="fl">11000</span>,</span></span>
 <span class="r-in"><span>    n_freqs <span class="op">=</span> <span class="fl">300</span>,</span></span>
 <span class="r-in"><span>    sigma <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>    max_batch_size <span class="op">=</span> <span class="fl">20000</span>,</span></span>
+<span class="r-in"><span>    max_batch_size <span class="op">=</span> <span class="fl">50000</span>,</span></span>
 <span class="r-in"><span>    time_resolution <span class="op">=</span> <span class="fl">0.001</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 </code></pre></div>
