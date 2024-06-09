@@ -91,8 +91,8 @@ fcwt <- function(signal,
 
   output <-
     fcwt_raw(
-      signal, as.integer(sample_freq), freq_begin, freq_end, as.integer(n_freqs),
-      sigma, as.integer(nthreads), FALSE,
+      as.numeric(signal), as.integer(sample_freq), freq_begin, freq_end,
+      as.integer(n_freqs), sigma, as.integer(nthreads), FALSE,
       abs = TRUE
     )
 
