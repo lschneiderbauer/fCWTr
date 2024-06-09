@@ -5,10 +5,12 @@ Version: 0.2.0
 Authors@R: c(
     person("Lukas", "Schneiderbauer",
         email = "lukas.schneiderbauer@gmail.com",
-        role = c("aut", "cre"),
+        role = c("aut", "cre", "cph"),
         comment = c(ORCID = "0000-0002-0975-6803")),
-    person("Lukas P. A.", "Arts", role = "cph", comment = "Author of the majority of the C++ code, indicated in the respective header files."),
-    person("Egon L.", "van den Broek", role = "cph", comment = "Author of the majority of the C++ code, indicated in the respective header files."))
+    person("Lukas P. A.", "Arts", role = "cph",
+        comment = "Author of the majority of the C++ code, indicated in the respective header files."),
+    person("Egon L.", "van den Broek", role = "cph",
+        comment = "Author of the majority of the C++ code, indicated in the respective header files."))
 Maintainer: Lukas Schneiderbauer <lukas.schneiderbauer@gmail.com>
 Description: Enables the usage of the fast continuous wavelet transform,
     originally implemented in C++ library 'fCWT' by Lukas Arts.
