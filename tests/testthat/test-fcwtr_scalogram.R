@@ -1,7 +1,7 @@
 test_that("tbind() for fcwtr_scalogram", {
   first <-
     fcwt(
-      ts_sin_440,
+      ts_sin_440[1:1000],
       sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
@@ -11,7 +11,7 @@ test_that("tbind() for fcwtr_scalogram", {
 
   second <-
     fcwt(
-      ts_sin_440,
+      ts_sin_440[1:1000],
       sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
@@ -21,7 +21,7 @@ test_that("tbind() for fcwtr_scalogram", {
 
   third <-
     fcwt(
-      ts_sin_440,
+      ts_sin_440[1:1000],
       sample_freq = 22100,
       freq_begin = 50,
       freq_end = 1000,
@@ -52,7 +52,7 @@ test_that("ggplot2::autoplot() does not err", {
 
   res <-
     fcwt(
-      ts_sin_440,
+      ts_sin_440[1:1000],
       sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
