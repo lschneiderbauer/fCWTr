@@ -9,7 +9,7 @@ fcwt(
   sample_freq,
   n_freqs,
   freq_begin = 2 * sample_freq/length(signal),
-  freq_end = floor(sample_freq/2),
+  freq_end = sample_freq/2,
   sigma = 1,
   remove_coi = TRUE,
   nthreads = 8L
