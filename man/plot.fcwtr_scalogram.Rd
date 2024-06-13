@@ -21,7 +21,7 @@ Requires \href{https://ggplot2.tidyverse.org/}{ggplot2}.
 }
 \examples{
 \dontshow{if (requireNamespace("ggplot2", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
+ts_sin_440 <- sin((1:4410) * 2 * pi * 440 / 44100)
 
 res <-
   fcwt(
