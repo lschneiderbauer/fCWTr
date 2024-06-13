@@ -24,6 +24,16 @@ test_that("fcwt() returns a vector of expected length", {
   )
 })
 
+test_that("fcwt() optional arguments do work", {
+  expect_no_error(
+    fcwt(
+      ts_sin_440,
+      sample_freq = 44100,
+      n_freqs = 10
+    )
+  )
+})
+
 test_that("fcwt() errs if frequency specs are higher than Nyquist frequency", {
   expect_error(
     fcwt(
