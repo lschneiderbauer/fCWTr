@@ -61,7 +61,7 @@
 #'  `dim = c(length(signal), n_freqs)`.
 #'
 #' @examples
-#' ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
+#' ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
 #'
 #' res <-
 #'   fcwt(

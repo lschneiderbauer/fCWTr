@@ -71,7 +71,7 @@ noise-resistant time–frequency analysis.
 Nat Comput Sci 2, 47–58 (2022). \doi{10.1038/s43588-021-00183-z}
 }
 \examples{
-ts_sin_440 <- sin((1:44100) * 2 * pi * 440 / 44100)
+ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
 
 res <-
   fcwt(

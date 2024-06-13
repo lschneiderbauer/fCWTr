@@ -68,7 +68,7 @@ test_that("as.data.frame() `time_ind` columns is reasonable", {
   time <-
     as.data.frame(
     fcwt(
-      ts_sin_440,
+      ts_sin_440[1:1000],
       sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
