@@ -67,12 +67,12 @@
 #'   )
 fcwt_batch <- function(signal,
                        sample_freq,
-                       freq_begin,
-                       freq_end,
                        n_freqs,
-                       sigma,
-                       max_batch_size = ceiling(4 * 10^9 / (n_freqs * 4)),
                        time_resolution,
+                       freq_begin = 2 * sample_freq / length(signal),
+                       freq_end = sample_freq / 2,
+                       sigma = 1,
+                       max_batch_size = ceiling(4 * 10^9 / (n_freqs * 4)),
                        nthreads = 8L,
                        progress_bar = FALSE) {
   # From FFTW documentation:
