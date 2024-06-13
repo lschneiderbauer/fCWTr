@@ -59,16 +59,12 @@ AC_SEARCH_LIBS(
   [AC_MSG_RESULT([The fftw3-omp support not found.])]
 )
 
-AC_OPENMP(
-  [AC_SEARCH_LIBS(fftwf_plan_with_nthreads, fftw3f_omp, [have_fftwf_omp=yes],
-    [AC_MSG_ERROR([OMP-support in fftw3 library is required if OpenMP support is enabled.])]
-  )]
-)
+AC_OPENMP
 
 # Write the flags into the src/Makevars file.
 AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS} ${FFTW_CPPFLAGS} ${FFTW_OMP_CPPFLAGS} ${OPENMP_CPPFLAGS}"])
 AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"])
-AC_SUBST([PKG_LDFLAGS], ["${PKG_LDFLAGS}"])
+AC_SUBST([PKG_LDFLAGS], ["${PKG_LDFLAGS} ${OPENMP_CXXFLAGS}"])
 AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_OMP_LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
