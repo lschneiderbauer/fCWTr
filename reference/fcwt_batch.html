@@ -78,7 +78,7 @@ It should not be used on short signals since boundary artefacts are discarded
 <span>  freq_end <span class="op">=</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
 <span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  max_batch_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fl">4</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">9</span><span class="op">/</span><span class="op">(</span><span class="va">n_freqs</span> <span class="op">*</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  nthreads <span class="op">=</span> <span class="fl">8L</span>,</span>
+<span>  n_threads <span class="op">=</span> <span class="fl">2L</span>,</span>
 <span>  progress_bar <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -129,8 +129,9 @@ This limits the maximal memory that is used. Defaults to roughly 4GB.
 The actual batch size is optimized for use with FFTW.</p></dd>
 
 
-<dt>nthreads</dt>
-<dd><p>Number of threads used by the computation, if supported by your platform.</p></dd>
+<dt>n_threads</dt>
+<dd><p>Number of threads used by the computation, if supported by your platform.
+Defaults to 2 threads (to accomodate CRAN requirements).</p></dd>
 
 
 <dt>progress_bar</dt>

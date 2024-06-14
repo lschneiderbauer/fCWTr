@@ -68,7 +68,7 @@ i.e. a graph with a time and a frequency dimension.</p>
 <span>  freq_end <span class="op">=</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
 <span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  remove_coi <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  nthreads <span class="op">=</span> <span class="fl">8L</span></span>
+<span>  n_threads <span class="op">=</span> <span class="fl">2L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,8 +117,9 @@ is less then \(4 \Sigma_t\). Values that fall into that range are removed
 if <code>remove_coi = TRUE</code>.</p></dd>
 
 
-<dt>nthreads</dt>
-<dd><p>Number of threads used by the computation, if supported by your platform.</p></dd>
+<dt>n_threads</dt>
+<dd><p>Number of threads used by the computation, if supported by your platform.
+Defaults to 2 threads (to accomodate CRAN requirements).</p></dd>
 
 </dl></div>
     <div class="section level2">
