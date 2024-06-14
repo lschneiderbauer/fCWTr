@@ -12,7 +12,7 @@ fcwt(
   freq_end = sample_freq/2,
   sigma = 1,
   remove_coi = TRUE,
-  nthreads = 8L
+  n_threads = 2L
 )
 }
 \arguments{
@@ -47,7 +47,8 @@ the boundary if the distance of the center of the wavelet to the boundary
 is less then \eqn{4 \Sigma_t}. Values that fall into that range are removed
 if \code{remove_coi = TRUE}.}
 
-\item{nthreads}{Number of threads used by the computation, if supported by your platform.}
+\item{n_threads}{Number of threads used by the computation, if supported by your platform.
+Defaults to 2 threads (to accomodate CRAN requirements).}
 }
 \value{
 The spectogram, a numeric real-valued matrix with dimensions

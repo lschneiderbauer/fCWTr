@@ -13,7 +13,7 @@ fcwt_batch(
   freq_end = sample_freq/2,
   sigma = 1,
   max_batch_size = ceiling(4 * 10^9/(n_freqs * 4)),
-  nthreads = 8L,
+  n_threads = 2L,
   progress_bar = FALSE
 )
 }
@@ -48,7 +48,8 @@ resolution and a worse (better) time resolution.}
 This limits the maximal memory that is used. Defaults to roughly 4GB.
 The actual batch size is optimized for use with FFTW.}
 
-\item{nthreads}{Number of threads used by the computation, if supported by your platform.}
+\item{n_threads}{Number of threads used by the computation, if supported by your platform.
+Defaults to 2 threads (to accomodate CRAN requirements).}
 
 \item{progress_bar}{Monitoring progress can sometimes be useful when performing time consuming
 operations. Setting \code{progress_bar = TRUE} enables printing a progress

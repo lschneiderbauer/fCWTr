@@ -53,8 +53,9 @@
 #'  is less then \eqn{4 \Sigma_t}. Values that fall into that range are removed
 #'  if `remove_coi = TRUE`.
 #'
-#' @param nthreads
+#' @param n_threads
 #'  Number of threads used by the computation, if supported by your platform.
+#'  Defaults to 2 threads (to accomodate CRAN requirements).
 #'
 #' @return
 #'  The spectogram, a numeric real-valued matrix with dimensions
@@ -81,20 +82,20 @@ fcwt <- function(signal,
                  sigma = 1,
                  # abs = FALSE,
                  remove_coi = TRUE,
-                 nthreads = 8L) {
+                 n_threads = 2L) {
   stopifnot(is.numeric(signal))
   stopifnot(is.numeric(sample_freq), sample_freq > 0)
   stopifnot(is.numeric(freq_begin), freq_begin > 0)
   stopifnot(is.numeric(freq_end), freq_end > freq_begin)
   stopifnot(is.numeric(n_freqs), n_freqs > 0)
   stopifnot(is.numeric(sigma), sigma > 0)
-  stopifnot(is.numeric(nthreads))
+  stopifnot(is.numeric(n_threads))
   # stopifnot(is.logical(abs))
 
   output <-
     fcwt_raw(
       as.numeric(signal), as.integer(sample_freq), freq_begin, freq_end,
-      as.integer(n_freqs), sigma, as.integer(nthreads), FALSE,
+      as.integer(n_freqs), sigma, as.integer(n_threads), FALSE,
       abs = TRUE
     )
 

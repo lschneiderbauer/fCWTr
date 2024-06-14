@@ -73,7 +73,7 @@ fcwt_batch <- function(signal,
                        freq_end = sample_freq / 2,
                        sigma = 1,
                        max_batch_size = ceiling(4 * 10^9 / (n_freqs * 4)),
-                       nthreads = 8L,
+                       n_threads = 2L,
                        progress_bar = FALSE) {
   # From FFTW documentation:
   # FTW is best at handling sizes of the form 2^a 3^b 5^c 7^d 11^e 13^f,
@@ -113,7 +113,8 @@ fcwt_batch <- function(signal,
         freq_end = freq_end,
         n_freqs = n_freqs,
         sigma = sigma,
-        remove_coi = TRUE
+        remove_coi = TRUE,
+        n_threads = n_threads
       ) |>
       agg(n = reduced_n)
 
