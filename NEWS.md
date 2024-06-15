@@ -1,3 +1,3 @@
-# fcwtr 0.2.0
+# fcwtr 0.2.1
 
 * Initial CRAN submission.
