@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Enables the usage of the fast continuous wavelet transform, originally implemented in the C++ library fCWT by Lukas Arts. See Arts, P.A. and Van den Broek, E.L. (2022) &lt;doi:10.1038/s43588-021-00183-z&gt; for details. The package includes simple helpers such as a plotting function.">
-<title>Fast Continuous Wavelet Transform • fcwtr</title>
+<title>Fast Continuous Wavelet Transform • fCWTr</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -24,7 +24,7 @@
 
     <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
-    <a class="navbar-brand me-2" href="index.html">fcwtr</a>
+    <a class="navbar-brand me-2" href="index.html">fCWTr</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
@@ -61,12 +61,12 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="fcwtr">fcwtr<a class="anchor" aria-label="anchor" href="#fcwtr"></a>
+<div class="page-header"><h1 id="fcwtr">fCWTr<a class="anchor" aria-label="anchor" href="#fcwtr"></a>
 </h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>The R package fcwtr is a simple wrapper invoking the <a href="https://github.com/fastlib/fCWT" class="external-link">fcwt library</a>, a library implementing a <a href="https://en.wikipedia.org/wiki/Continuous_wavelet_transform" class="external-link">continuous wavelet transform</a> with a Morlet wavelet, utilizing the power of <a href="https://www.fftw.org/" class="external-link">fftw</a>, a fast fourier transform implementation.</p>
+<p>The R package fCWTr is a simple wrapper invoking the <a href="https://github.com/fastlib/fCWT" class="external-link">fCWT library</a>, a library implementing a <a href="https://en.wikipedia.org/wiki/Continuous_wavelet_transform" class="external-link">continuous wavelet transform</a> with a Morlet wavelet, utilizing the power of <a href="https://www.fftw.org/" class="external-link">fftw</a>, a fast fourier transform implementation.</p>
 <p>See the original paper by Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022). <a href="https://doi.org/10.1038/s43588-021-00183-z" class="external-link uri">https://doi.org/10.1038/s43588-021-00183-z</a></p>
 <div class="section level2">
 <h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
@@ -74,7 +74,7 @@
 <ul>
 <li>R &gt;= 4.1</li>
 <li>
-<a href="https://www.fftw.org/" class="external-link">fftw</a> library (used by fcwt)</li>
+<a href="https://www.fftw.org/" class="external-link">fftw</a> library (used by fCWT)</li>
 <li>Optional: a CPU/compiler supporting the <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" class="external-link">AVX</a> instruction set</li>
 <li>Optional: OpenMP
 <ul>
@@ -90,17 +90,17 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the latest CRAN release of fcwtr with:</p>
+<p>You can install the latest CRAN release of fCWTr with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fcwtr"</span><span class="op">)</span></span></code></pre></div>
-<p>Alternatively, you can install the development version of fcwtr like so (requiring installed <a href="https://devtools.r-lib.org/" class="external-link">devtools</a> package):</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fCWTr"</span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, you can install the development version of fCWTr like so (requiring installed <a href="https://devtools.r-lib.org/" class="external-link">devtools</a> package):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"lschneiderbauer/fcwtr"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"lschneiderbauer/fCWTr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example that invokes the fcwt library to calculate the continuous wavelet transform and plot the result.</p>
+<p>This is a basic example that invokes the fCWT library to calculate the continuous wavelet transform and plot the result.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lschneiderbauer.github.io/fcwtr/">fcwtr</a></span><span class="op">)</span></span>
 <span></span>
@@ -177,7 +177,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing fcwtr</a></li>
+<li><a href="authors.html#citation">Citing fCWTr</a></li>
 </ul>
 </div>
 
