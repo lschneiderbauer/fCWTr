@@ -74,8 +74,7 @@
 <ul>
 <li>R &gt;= 4.1</li>
 <li>
-<a href="https://www.fftw.org/" class="external-link">fftw</a> library (used by <a href="(https://github.com/fastlib/fCWT)" class="external-link">fCWT</a>
-</li>
+<a href="https://www.fftw.org/" class="external-link">fftw</a> library (used by <a href="https://github.com/fastlib/fCWT" class="external-link">fCWT</a>)</li>
 <li>Optional: a CPU/compiler supporting the <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" class="external-link">AVX</a> instruction set</li>
 <li>Optional: OpenMP
 <ul>
@@ -103,7 +102,7 @@
 </h2>
 <p>This is a basic example that invokes the fCWT library to calculate the continuous wavelet transform and plot the result.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lschneiderbauer.github.io/fcwtr/">fcwtr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lschneiderbauer.github.io/fCWTr/" class="external-link">fCWTr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># A signal encoded in a numeric vector.</span></span>
 <span><span class="co"># In this example we use some superimposed sin signals.</span></span>
@@ -122,20 +121,20 @@
 <span><span class="co"># The result is a numeric matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 6000  200</span></span></code></pre></div>
-<p>A conversion functions to a data frame is also provided:</p>
+<p>The result can be easily coerced into a data frame:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    time_ind freq value         time</span></span>
-<span><span class="co">#&gt; 1         0 2100    NA 0.000000e+00</span></span>
-<span><span class="co">#&gt; 2         1 2100    NA 2.267574e-05</span></span>
-<span><span class="co">#&gt; 3         2 2100    NA 4.535147e-05</span></span>
-<span><span class="co">#&gt; 4         3 2100    NA 6.802721e-05</span></span>
-<span><span class="co">#&gt; 5         4 2100    NA 9.070295e-05</span></span>
-<span><span class="co">#&gt; 6         5 2100    NA 1.133787e-04</span></span>
-<span><span class="co">#&gt; 7         6 2100    NA 1.360544e-04</span></span>
-<span><span class="co">#&gt; 8         7 2100    NA 1.587302e-04</span></span>
-<span><span class="co">#&gt; 9         8 2100    NA 1.814059e-04</span></span>
-<span><span class="co">#&gt; 10        9 2100    NA 2.040816e-04</span></span></code></pre></div>
+<span><span class="co">#&gt;    time_ind         time freq value</span></span>
+<span><span class="co">#&gt; 1         0 0.000000e+00 2100    NA</span></span>
+<span><span class="co">#&gt; 2         1 2.267574e-05 2100    NA</span></span>
+<span><span class="co">#&gt; 3         2 4.535147e-05 2100    NA</span></span>
+<span><span class="co">#&gt; 4         3 6.802721e-05 2100    NA</span></span>
+<span><span class="co">#&gt; 5         4 9.070295e-05 2100    NA</span></span>
+<span><span class="co">#&gt; 6         5 1.133787e-04 2100    NA</span></span>
+<span><span class="co">#&gt; 7         6 1.360544e-04 2100    NA</span></span>
+<span><span class="co">#&gt; 8         7 1.587302e-04 2100    NA</span></span>
+<span><span class="co">#&gt; 9         8 1.814059e-04 2100    NA</span></span>
+<span><span class="co">#&gt; 10        9 2.040816e-04 2100    NA</span></span></code></pre></div>
 <p>We can also directly plot the resulting scalogram:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>

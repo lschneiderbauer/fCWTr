@@ -146,7 +146,9 @@ bar to the console. Defaults to <code>FALSE</code>.</p></dd>
 
 <p>The spectogram, a numeric real-valued matrix with dimensions roughly
 <code>dim ~ c(length(signal) * time_resolution * sample_freq, n_freqs)</code>.
-The exact length of the output depends on boundary effect details.</p>
+The exact length of the output depends on boundary effect details.
+This matrix is wrapped into a S3-class <code>fcwtr_scalogram</code> so that plotting and
+coercion functions can be used conveniently.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
