@@ -28,3 +28,13 @@ Internally, the scalogram resulting from \code{\link[=fcwt]{fcwt()}} is represen
 a numeric matrix. This method coerces this matrix into a reasonable
 data frame. Note that this conversion has a significant run time cost.
 }
+\examples{
+fcwt(
+  sin((1:5000) * 2 * pi * 440 / 44100),
+  sample_freq = 44100,
+  n_freqs = 10
+) |>
+as.data.frame() |>
+head()
+
+}

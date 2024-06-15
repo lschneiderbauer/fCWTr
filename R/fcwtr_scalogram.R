@@ -139,6 +139,15 @@ rm_na_time_slices <- function(x) {
 #' }
 #'
 #' @inheritParams base::as.data.frame
+#' @examples
+#' fcwt(
+#'   sin((1:5000) * 2 * pi * 440 / 44100),
+#'   sample_freq = 44100,
+#'   n_freqs = 10
+#' ) |>
+#' as.data.frame() |>
+#' head()
+#'
 #' @export
 as.data.frame.fcwtr_scalogram <- function(x, ...) {
   df <- as.data.frame(as.table(x), stringsAsFactors = FALSE)
