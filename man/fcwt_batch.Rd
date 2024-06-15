@@ -59,6 +59,8 @@ bar to the console. Defaults to \code{FALSE}.}
 The spectogram, a numeric real-valued matrix with dimensions roughly
 \code{dim ~ c(length(signal) * time_resolution * sample_freq, n_freqs)}.
 The exact length of the output depends on boundary effect details.
+This matrix is wrapped into a S3-class \code{fcwtr_scalogram} so that plotting and
+coercion functions can be used conveniently.
 }
 \description{
 Performs a fast continuous wavelet transform on long sequences by sequentially
