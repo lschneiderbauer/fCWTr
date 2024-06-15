@@ -60,6 +60,8 @@
 #' @return
 #'  The spectogram, a numeric real-valued matrix with dimensions
 #'  `dim = c(length(signal), n_freqs)`.
+#'  This matrix is wrapped into a S3-class `fcwtr_scalogram` so that plotting and
+#'  coercion functions can be used conveniently.
 #'
 #' @examples
 #' ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)

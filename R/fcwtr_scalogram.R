@@ -121,10 +121,22 @@ rm_na_time_slices <- function(x) {
 #'
 #' Internally, the scalogram resulting from [fcwt()] is represented by
 #' a numeric matrix. This method coerces this matrix into a reasonable
-#' data frame. It is associated to a certain runtime cost.
+#' data frame. Note that this conversion has a significant run time cost.
 #'
 #' @param x
 #'  An object resulting from [fcwt()].
+#'
+#' @return
+#'  A [data.frame()] object representing the scalogram data with four columns:
+#' \describe{
+#'   \item{time_ind}{An integer index uniquely identifying time slices.}
+#'   \item{time}{The time difference to the first time slice in physical units.
+#'               The time unit is the inverse of the frequency unit chosen by the user
+#'               for the `sample_freq` argument of [fcwt()].}
+#'   \item{freq}{The frequency in the same units as the `sample_freq` argument
+#'               of [fcwt()].}
+#'   \item{value}{The fCWT result for the particular time-frequency combination.}
+#' }
 #'
 #' @inheritParams base::as.data.frame
 #' @export
@@ -136,7 +148,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 
   df[["time"]] <- df[["time_ind"]] / attr(x, "sample_freq")
 
-  df
+  df[, c("time_ind", "time", "freq", "value")]
 }
 
 #' Scalogram plotting
@@ -148,6 +160,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'  An object resulting from [fcwt()].
 #'
 #' @inheritParams autoplot.fcwtr_scalogram
+#' @return No return value, called for side effects.
 #'
 #' @importFrom graphics plot
 #' @export

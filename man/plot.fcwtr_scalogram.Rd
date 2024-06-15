@@ -15,6 +15,9 @@ steps that are plotted. Defaults to \code{n = 1000}.}
 
 \item{...}{other arguments passed to specific methods}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Plots the scalogram resulting from \code{\link[=fcwt]{fcwt()}}.
 Requires \href{https://ggplot2.tidyverse.org/}{ggplot2}.

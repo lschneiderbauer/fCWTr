@@ -11,8 +11,20 @@
 
 \item{...}{additional arguments to be passed to or from methods.}
 }
+\value{
+A \code{\link[=data.frame]{data.frame()}} object representing the scalogram data with four columns:
+\describe{
+\item{time_ind}{An integer index uniquely identifying time slices.}
+\item{time}{The time difference to the first time slice in physical units.
+The time unit is the inverse of the frequency unit chosen by the user
+for the \code{sample_freq} argument of \code{\link[=fcwt]{fcwt()}}.}
+\item{freq}{The frequency in the same units as the \code{sample_freq} argument
+of \code{\link[=fcwt]{fcwt()}}.}
+\item{value}{The fCWT result for the particular time-frequency combination.}
+}
+}
 \description{
 Internally, the scalogram resulting from \code{\link[=fcwt]{fcwt()}} is represented by
 a numeric matrix. This method coerces this matrix into a reasonable
-data frame. It is associated to a certain runtime cost.
+data frame. Note that this conversion has a significant run time cost.
 }

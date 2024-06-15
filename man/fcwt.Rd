@@ -53,6 +53,8 @@ Defaults to 2 threads (to accomodate CRAN requirements).}
 \value{
 The spectogram, a numeric real-valued matrix with dimensions
 \code{dim = c(length(signal), n_freqs)}.
+This matrix is wrapped into a S3-class \code{fcwtr_scalogram} so that plotting and
+coercion functions can be used conveniently.
 }
 \description{
 The core function of this package making use of the fcwt library. It processes
