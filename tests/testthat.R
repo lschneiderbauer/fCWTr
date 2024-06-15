@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(fcwtr)
+library(fCWTr)
 
-test_check("fcwtr")
+test_check("fCWTr")
