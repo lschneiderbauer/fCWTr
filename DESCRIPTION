@@ -35,6 +35,6 @@ SystemRequirements:
     fftw (>= 3.3.0),
     openmp (>= 15.0.0)
 Config/testthat/edition: 3
-URL: https://lschneiderbauer.github.io/fcwtr/, https://github.com/lschneiderbauer/fcwtr
+URL: https://lschneiderbauer.github.io/fCWTr/, https://github.com/lschneiderbauer/fCWTr
 Roxygen: list(markdown = TRUE)
-BugReports: https://github.com/lschneiderbauer/fcwtr/issues
+BugReports: https://github.com/lschneiderbauer/fCWTr/issues
