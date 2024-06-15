@@ -31,7 +31,7 @@ noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
 
 - R \>= 4.1
 - [fftw](https://www.fftw.org/) library (used by
-  [fCWT]((https://github.com/fastlib/fCWT))
+  [fCWT](https://github.com/fastlib/fCWT))
 - Optional: a CPU/compiler supporting the
   [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
@@ -75,7 +75,7 @@ This is a basic example that invokes the fCWT library to calculate the
 continuous wavelet transform and plot the result.
 
 ``` r
-library(fcwtr)
+library(fCWTr)
 
 # A signal encoded in a numeric vector.
 # In this example we use some superimposed sin signals.
@@ -96,21 +96,21 @@ dim(output)
 #> [1] 6000  200
 ```
 
-A conversion functions to a data frame is also provided:
+The result can be easily coerced into a data frame:
 
 ``` r
 head(as.data.frame(output), 10)
-#>    time_ind freq value         time
-#> 1         0 2100    NA 0.000000e+00
-#> 2         1 2100    NA 2.267574e-05
-#> 3         2 2100    NA 4.535147e-05
-#> 4         3 2100    NA 6.802721e-05
-#> 5         4 2100    NA 9.070295e-05
-#> 6         5 2100    NA 1.133787e-04
-#> 7         6 2100    NA 1.360544e-04
-#> 8         7 2100    NA 1.587302e-04
-#> 9         8 2100    NA 1.814059e-04
-#> 10        9 2100    NA 2.040816e-04
+#>    time_ind         time freq value
+#> 1         0 0.000000e+00 2100    NA
+#> 2         1 2.267574e-05 2100    NA
+#> 3         2 4.535147e-05 2100    NA
+#> 4         3 6.802721e-05 2100    NA
+#> 5         4 9.070295e-05 2100    NA
+#> 6         5 1.133787e-04 2100    NA
+#> 7         6 1.360544e-04 2100    NA
+#> 8         7 1.587302e-04 2100    NA
+#> 9         8 1.814059e-04 2100    NA
+#> 10        9 2.040816e-04 2100    NA
 ```
 
 We can also directly plot the resulting scalogram:

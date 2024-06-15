@@ -30,7 +30,7 @@ See the original paper by Arts, L.P.A., van den Broek, E.L. The fast continuous 
 ## Dependencies
 
 -   R \>= 4.1
--   [fftw](https://www.fftw.org/) library (used by [fCWT]((https://github.com/fastlib/fCWT))
+-   [fftw](https://www.fftw.org/) library (used by [fCWT](https://github.com/fastlib/fCWT))
 -   Optional: a CPU/compiler supporting the [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) instruction set
 -   Optional: OpenMP
     -   On Windows, OpenMP support is disabled since rtools decided to compile fftw without OpenMP support.
@@ -62,7 +62,7 @@ devtools::install_github("lschneiderbauer/fCWTr")
 This is a basic example that invokes the fCWT library to calculate the continuous wavelet transform and plot the result.
 
 ```{r example}
-library(fcwtr)
+library(fCWTr)
 
 # A signal encoded in a numeric vector.
 # In this example we use some superimposed sin signals.
@@ -82,7 +82,7 @@ output <-
 dim(output)
 ```
 
-A conversion functions to a data frame is also provided:
+The result can be easily coerced into a data frame:
 
 ```{r example_df}
 head(as.data.frame(output), 10)
