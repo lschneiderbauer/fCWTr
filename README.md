@@ -30,7 +30,8 @@ noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
 ## Dependencies
 
 - R \>= 4.1
-- [fftw](https://www.fftw.org/) library (used by fCWT)
+- [fftw](https://www.fftw.org/) library (used by
+  [fCWT]((https://github.com/fastlib/fCWT))
 - Optional: a CPU/compiler supporting the
   [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
