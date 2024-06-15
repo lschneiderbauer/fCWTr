@@ -2,7 +2,7 @@
 % Please edit documentation in R/fcwt_batch.R
 \name{fcwt_batch}
 \alias{fcwt_batch}
-\title{Fcwt batch processing}
+\title{Fast continuous wavelet transform - Batch processing}
 \usage{
 fcwt_batch(
   signal,

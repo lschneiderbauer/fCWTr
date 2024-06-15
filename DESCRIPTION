@@ -1,4 +1,4 @@
-Package: fcwtr
+Package: fCWTr
 Type: Package
 Title: Fast Continuous Wavelet Transform
 Version: 0.2.0

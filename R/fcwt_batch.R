@@ -1,4 +1,4 @@
-#' Fcwt batch processing
+#' Fast continuous wavelet transform - Batch processing
 #'
 #' Performs a fast continuous wavelet transform on long sequences by sequentially
 #' processing junks of the input signal and keeping only low-resolution output

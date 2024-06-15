@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# fcwtr
+# fCWTr
 
 <!-- badges: start -->
 
@@ -23,14 +23,14 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-The R package fcwtr is a simple wrapper invoking the [fcwt library](https://github.com/fastlib/fCWT), a library implementing a [continuous wavelet transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform) with a Morlet wavelet, utilizing the power of [fftw](https://www.fftw.org/), a fast fourier transform implementation.
+The R package fCWTr is a simple wrapper invoking the [fCWT library](https://github.com/fastlib/fCWT), a library implementing a [continuous wavelet transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform) with a Morlet wavelet, utilizing the power of [fftw](https://www.fftw.org/), a fast fourier transform implementation.
 
 See the original paper by Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022). <https://doi.org/10.1038/s43588-021-00183-z>
 
 ## Dependencies
 
 -   R \>= 4.1
--   [fftw](https://www.fftw.org/) library (used by fcwt)
+-   [fftw](https://www.fftw.org/) library (used by fCWT)
 -   Optional: a CPU/compiler supporting the [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) instruction set
 -   Optional: OpenMP
     -   On Windows, OpenMP support is disabled since rtools decided to compile fftw without OpenMP support.
@@ -45,21 +45,21 @@ CXXFLAGS = -mavx
 
 ## Installation
 
-You can install the latest CRAN release of fcwtr with:
+You can install the latest CRAN release of fCWTr with:
 
 ``` r
-install.packages("fcwtr")
+install.packages("fCWTr")
 ```
 
-Alternatively, you can install the development version of fcwtr like so (requiring installed [devtools](https://devtools.r-lib.org/) package):
+Alternatively, you can install the development version of fCWTr like so (requiring installed [devtools](https://devtools.r-lib.org/) package):
 
 ``` r
-devtools::install_github("lschneiderbauer/fcwtr")
+devtools::install_github("lschneiderbauer/fCWTr")
 ```
 
 ## Example
 
-This is a basic example that invokes the fcwt library to calculate the continuous wavelet transform and plot the result.
+This is a basic example that invokes the fCWT library to calculate the continuous wavelet transform and plot the result.
 
 ```{r example}
 library(fcwtr)

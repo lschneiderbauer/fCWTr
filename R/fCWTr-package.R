@@ -1,4 +1,4 @@
 ## usethis namespace: start
-#' @useDynLib fcwtr, .registration = TRUE
+#' @useDynLib fCWTr, .registration = TRUE
 ## usethis namespace: end
 NULL

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fcwtr
+# fCWTr
 
 <!-- badges: start -->
 
@@ -15,7 +15,7 @@ coverage](https://codecov.io/gh/lschneiderbauer/fcwtr/branch/master/graph/badge.
 
 <!-- badges: end -->
 
-The R package fcwtr is a simple wrapper invoking the [fcwt
+The R package fCWTr is a simple wrapper invoking the [fCWT
 library](https://github.com/fastlib/fCWT), a library implementing a
 [continuous wavelet
 transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform)
@@ -30,7 +30,7 @@ noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
 ## Dependencies
 
 - R \>= 4.1
-- [fftw](https://www.fftw.org/) library (used by fcwt)
+- [fftw](https://www.fftw.org/) library (used by fCWT)
 - Optional: a CPU/compiler supporting the
   [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
@@ -55,22 +55,22 @@ CXXFLAGS = -mavx
 
 ## Installation
 
-You can install the latest CRAN release of fcwtr with:
+You can install the latest CRAN release of fCWTr with:
 
 ``` r
-install.packages("fcwtr")
+install.packages("fCWTr")
 ```
 
-Alternatively, you can install the development version of fcwtr like so
+Alternatively, you can install the development version of fCWTr like so
 (requiring installed [devtools](https://devtools.r-lib.org/) package):
 
 ``` r
-devtools::install_github("lschneiderbauer/fcwtr")
+devtools::install_github("lschneiderbauer/fCWTr")
 ```
 
 ## Example
 
-This is a basic example that invokes the fcwt library to calculate the
+This is a basic example that invokes the fCWT library to calculate the
 continuous wavelet transform and plot the result.
 
 ``` r

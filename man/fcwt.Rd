@@ -57,7 +57,7 @@ This matrix is wrapped into a S3-class \code{fcwtr_scalogram} so that plotting a
 coercion functions can be used conveniently.
 }
 \description{
-The core function of this package making use of the fcwt library. It processes
+The core function of this package making use of the fCWT library. It processes
 an input signal in form of a real valued numeric vector interpreted as an
 evenly spaced time series and returns the absolute values of a spectogram,
 i.e. a graph with a time and a frequency dimension.
