@@ -1,6 +1,7 @@
 new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
-                                sigma, remove_coi) {
+                                freq_scale, sigma, remove_coi) {
   stopifnot(is.matrix(matrix))
+  stopifnot(freq_scale %in% c("linear", "log"))
 
   if (remove_coi) {
     dim_t <- dim(matrix)[[1]] # Time dimension
@@ -32,17 +33,36 @@ new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
       sample_freq = sample_freq,
       freq_begin = freq_begin,
       freq_end = freq_end,
+      freq_scale = freq_scale,
       sigma = sigma
     )
 
   dimnames(obj) <-
     list(
       seq_along(matrix[, 1]) - 1,
-      seq(freq_end, freq_begin, length.out = dim(matrix)[[2]])
+      seq2(
+        freq_end, freq_begin, length.out = dim(matrix)[[2]],
+        scale = freq_scale
+      )
     )
 
   obj
 }
+
+seq2 <- function(from = 1, to = 1, length.out, scale = c("linear", "log")) {
+  scale <- match.arg(scale)
+
+  if (scale == "log") {
+    # logarithmic spaced sequence
+    # blatantly stolen from library("emdbook"), because need only this
+    return(exp(seq(log(from), log(to), length.out = length.out)))
+  }
+
+  if (scale == "linear") {
+    return(seq(from, to, length.out = length.out))
+  }
+}
+
 
 # perform aggregation, if possible.
 # if it's not possible, be identity
@@ -67,6 +87,7 @@ agg <- function(x, n) {
     x_new,
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "freq_scale"),
     attr(x, "sigma"),
     remove_coi = FALSE
   )
@@ -88,6 +109,9 @@ tbind <- function(..., deparse.level = 1) {
   if (length(unique(lapply(args, \(arg) attr(arg, "freq_end")))) > 1) {
     stop("Frequency ranges need to be identical.")
   }
+  if (length(unique(lapply(args, \(arg) attr(arg, "freq_scale")))) > 1) {
+    stop("Frequency scales need to be identical.")
+  }
   if (length(unique(lapply(args, \(arg) attr(arg, "sigma")))) > 1) {
     stop("Sigma parameter needs to be identical.")
   }
@@ -98,6 +122,7 @@ tbind <- function(..., deparse.level = 1) {
     x_new,
     attr(args[[1]], "sample_freq"),
     attr(args[[1]], "freq_begin"), attr(args[[1]], "freq_end"),
+    attr(args[[1]], "freq_scale"),
     attr(args[[1]], "sigma"),
     remove_coi = FALSE
   )
@@ -112,6 +137,7 @@ rm_na_time_slices <- function(x) {
     x[-rows_to_remove, ],
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "freq_scale"),
     attr(x, "sigma"),
     remove_coi = FALSE
   )

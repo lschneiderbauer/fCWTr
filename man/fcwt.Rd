@@ -10,6 +10,7 @@ fcwt(
   n_freqs,
   freq_begin = 2 * sample_freq/length(signal),
   freq_end = sample_freq/2,
+  freq_scale = c("linear", "log"),
   sigma = 1,
   remove_coi = TRUE,
   n_threads = 2L
@@ -30,6 +31,9 @@ number of frequency bins.}
 specified the maximal meaningful frequency range, depending on the input signal,
 is taken.
 The range and \code{sample_freq} need to be specified in the same units.}
+
+\item{freq_scale}{Should the frequency scale be linear or logarithmic?
+"linear"  / "log" for linear / logarithmic.}
 
 \item{sigma}{Sets a dimensionless parameter modifying the wavelet spread which in the
 time-domain is roughly given by \eqn{\Sigma_t \sim \sqrt{2} \frac{\sigma}{f}}.

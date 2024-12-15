@@ -28,6 +28,7 @@ std::vector<double> fcwt_raw(
     int fn, // number of wavelets to generate across frequency range
     double sigma,
     int nthreads,
+    bool scaletype, // TRUE = linear, FALSE = log
     bool optplans,
     bool abs)
 {
@@ -68,7 +69,14 @@ std::vector<double> fcwt_raw(
   //f0        - beginning of frequency range
   //f1        - end of frequency range
   //fn        - number of wavelets to generate across frequency range
-  Scales scs(wavelet, FCWT_LINFREQS, fs, f0, f1, fn);
+  SCALETYPE st;
+
+  if (scaletype) {
+    st = FCWT_LINFREQS;
+  } else {
+    st = FCWT_LOGSCALES;
+  }
+  Scales scs(wavelet, st, fs, f0, f1, fn);
 
   //Perform a CWT
   //cwt(input, length, output, scales)

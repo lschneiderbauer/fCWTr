@@ -6,6 +6,7 @@ test_that("tbind() for fcwtr_scalogram", {
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
+      freq_scale = "log",
       sigma = 1
     )
 
@@ -16,6 +17,7 @@ test_that("tbind() for fcwtr_scalogram", {
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
+      freq_scale = "log",
       sigma = 1
     )
 
