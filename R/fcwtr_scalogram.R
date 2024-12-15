@@ -76,7 +76,7 @@ agg <- function(x, n) {
     return(x)
   }
 
-  x_new <- x[1:(poolsize * n), ]
+  x_new <- x[1:(poolsize * n), , drop = FALSE]
   dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
   x_new <- colMeans(x_new, dims = 1, na.rm = TRUE)
 
