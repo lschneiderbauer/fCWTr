@@ -64,11 +64,12 @@
 #'     sample_freq = 44100,
 #'     freq_begin = 100,
 #'     freq_end = 11000,
-#'     n_freqs = 10,
+#'     n_freqs = 30,
 #'     sigma = 10,
-#'     max_batch_size = 50000,
-#'     time_resolution = 0.001
+#'     time_resolution = 0.01
 #'   )
+#'
+#' plot(res)
 fcwt_batch <- function(signal,
                        sample_freq,
                        n_freqs,

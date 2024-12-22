@@ -103,6 +103,8 @@ sc_dim_time <- function(x) {
 #' @return Returns a vector of two values, the first and the last time index
 #' that guarantee that all data is available and trustable (no boundary effects).
 #' @noRd
+#' @importFrom utils head
+#' @importFrom utils tail
 sc_coi_time_interval <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
