@@ -239,13 +239,22 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
   aes <- ggplot2::aes
   geom_raster <- ggplot2::geom_raster
 
+  freq_scale <- attr(object, "freq_scale")
+
+  scale_y <-
+    if (freq_scale == "log") {
+      ggplot2::scale_y_log10
+    } else {
+      ggplot2::scale_y_continuous
+    }
+
   # first aggregate the time series,
   # since we cannot really see too much resolution anyways
-  as.data.frame(agg(object, n)) |>
+  as.data.frame(sc_agg(object, wnd_from_target_size(n, object))) |>
     ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
     geom_raster() +
     viridis::scale_fill_viridis(discrete = FALSE) +
-    ggplot2::scale_y_continuous(name = "Frequency") +
+    scale_y(name = "Frequency") +
     ggplot2::scale_x_time(name = "Time") +
     ggplot2::theme_minimal()
 }
