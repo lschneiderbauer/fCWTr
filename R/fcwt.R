@@ -122,7 +122,7 @@ fcwt <- function(signal,
   # }
 
   sc <-
-    new_fcwtr_scalogram(
+    fcwtr_scalogram(
       output, sample_freq, freq_begin, freq_end,
       freq_scale, sigma
     )

@@ -1,12 +1,11 @@
-new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
+new_fcwtr_scalogram <- function(matrix, coi_mask, sample_freq, freq_begin, freq_end,
                                 freq_scale, sigma) {
-  stopifnot(is.matrix(matrix))
-  stopifnot(freq_scale %in% c("linear", "log"))
 
   obj <-
     structure(
       matrix,
       class = c("fcwtr_scalogram", class(matrix)),
+      coi_mask = coi_mask,
       sample_freq = sample_freq,
       freq_begin = freq_begin,
       freq_end = freq_end,
@@ -26,6 +25,30 @@ new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
   obj
 }
 
+fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
+                            freq_scale, sigma) {
+
+  stopifnot(is.matrix(matrix))
+  stopifnot(freq_scale %in% c("linear", "log"))
+  stopifnot(is.numeric(sample_freq))
+  stopifnot(is.numeric(freq_begin))
+  stopifnot(is.numeric(freq_end))
+  stopifnot(is.numeric(sigma))
+
+  coi_mask <-
+    coi_mask(
+      dim_t = dim(matrix)[[1]],
+      dim_f = dim(matrix)[[2]],
+      sample_freq = sample_freq,
+      freq_begin = freq_begin,
+      freq_end = freq_end,
+      sigma = sigma
+    )
+
+  new_fcwtr_scalogram(matrix, coi_mask, sample_freq, freq_begin, freq_end,
+                      freq_scale, sigma)
+}
+
 sc_set_coi_na <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
@@ -34,26 +57,22 @@ sc_set_coi_na <- function(x) {
   x
 }
 
-#' @return A boolean matrix of the same dimensions as `x`. `TRUE` values
-#'         indicate values inside the boundary "cone of influence".
-#' @noRd
 sc_coi_mask <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
-  dim_t <- sc_dim_time(x) # Time dimension
-  dim_f <- sc_dim_freq(x) # Frequency dimension
+  attr(x, "coi_mask")
+}
 
-  sigma <- attr(x, "sigma")
-  freq_begin <- attr(x, "freq_begin")
-  freq_end <- attr(x, "freq_end")
-  sample_freq <- attr(x, "sample_freq")
-
+#' @return A boolean matrix of the same dimensions as `x`. `TRUE` values
+#'         indicate values inside the boundary "cone of influence".
+#' @noRd
+coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end, sigma) {
   # The standard deviation Σ of a the Gauß like wave packet at frequency f
   # and sampling frequency f_s with given σ is given by
   # Σ = σ / sqrt(2) f_s / f
   # we choose 4Σ to define the support of a wave packet
   # (and so boundary effects are expected to occur until 2Σ)
-  coi_pred <- \(f, t) t * f < sqrt(2) * attr(x, "sigma")
+  coi_pred <- \(f, t) t * f < sqrt(2) * sigma
 
   # express in dimensionless quantities
   t <- rep(1:dim_t, times = dim_f)
@@ -106,6 +125,7 @@ sc_rm_coi_time_slices <- function(x) {
 
   new_fcwtr_scalogram(
     x[rows_to_keep, ],
+    attr(x, "coi_mask")[rows_to_keep, ],
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
     attr(x, "freq_scale"),
@@ -148,7 +168,7 @@ sc_agg <- function(x, wnd) {
   # replace NaN by NA
   x_new[is.nan(x_new)] <- NA_real_
 
-  new_fcwtr_scalogram(
+  fcwtr_scalogram(
     x_new,
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end"),
@@ -181,9 +201,11 @@ tbind <- function(..., deparse.level = 1) {
   }
 
   x_new <- do.call(rbind, c(lapply(args, unclass), list(deparse.level = deparse.level)))
+  coi_mask_new <- do.call(rbind, c(lapply(args, sc_coi_mask), list(deparse.level = deparse.level)))
 
   new_fcwtr_scalogram(
     x_new,
+    coi_mask_new,
     attr(args[[1]], "sample_freq"),
     attr(args[[1]], "freq_begin"), attr(args[[1]], "freq_end"),
     attr(args[[1]], "freq_scale"),
