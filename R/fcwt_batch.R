@@ -14,8 +14,8 @@
 #' performed in one run.
 #' For instance, in case of processing a song of 10 minutes length (assuming
 #' a sampling rate of 44100 Hz), the size of the output vector is
-#' `10 * 60 seconds * 44100 Hz * nfreqs * 4 bytes`,
-#' which for e.g. `nfreqs = 200`, equals ~ 21 GB, hence
+#' `10 * 60 seconds * 44100 Hz * nfreqs * 8 bytes`,
+#' which for e.g. `nfreqs = 200`, equals ~ 42 GB, hence
 #' nowadays already at the limit of the hardware of a modern personal computer.
 #'
 #' In cases where the required output time-resolution is smaller than the time
@@ -33,8 +33,10 @@
 #'
 #' @param max_batch_size
 #'  The maximal batch size that is used for splitting up the input sequence.
-#'  This limits the maximal memory that is used. Defaults to roughly 4GB.
-#'  The actual batch size is optimized for use with FFTW.
+#'  This limits the maximal memory that is used. Defaults to roughly 1GB, being
+#'  conservative and taking into account that R might make copies when further
+#'  processing it.
+#'  The actual batch size depends on the requested `time_resolution`.
 #' @param time_resolution
 #'  The time resolution in inverse units of `sample_freq` of the result.
 #'  Memory consumption is directly related to that.
@@ -73,10 +75,16 @@ fcwt_batch <- function(signal,
                        time_resolution,
                        freq_begin = 2 * sample_freq / length(signal),
                        freq_end = sample_freq / 2,
+                       freq_scale = c("linear", "log"),
                        sigma = 1,
-                       max_batch_size = ceiling(4 * 10^9 / (n_freqs * 4)),
+                       # factor 4 as additional security measure
+                       max_batch_size = ceiling(1 * 10^9 / (n_freqs * 8) / 4),
                        n_threads = 2L,
                        progress_bar = FALSE) {
+
+  # aggregation window
+  w <- wnd_from_resolution(time_resolution, sample_freq)
+
   # From FFTW documentation:
   # FTW is best at handling sizes of the form 2^a 3^b 5^c 7^d 11^e 13^f,
   # where e+f is
@@ -85,7 +93,12 @@ fcwt_batch <- function(signal,
   # retains O(n lg n) performance, even for prime sizes).
   # Transforms whose sizes are powers of 2 are especially fast.
 
-  batch_size <- 2^floor(log2(max_batch_size))
+  # we also want the batch size to be a multiple of the
+  # window size
+  # batch_size <- 2^floor(log2(max_batch_size))
+  batch_size <- floor(max_batch_size / w$size_n) * w$size_n
+
+  signal_size <- w$size_n * floor(length(signal) / w$size_n) # cut off the rest
 
   total_result <- NULL
 
@@ -102,29 +115,24 @@ fcwt_batch <- function(signal,
   diff <- 0
   while (cursor < length(signal) - diff) {
     begin <- cursor + 1
-    end <- pmin(cursor + batch_size, length(signal))
+    end <- pmin(cursor + batch_size, signal_size)
 
-    n <- (1 + end - begin)
-    reduced_n <- ceiling(n / (sample_freq * time_resolution))
-
-    result_intermediate <-
+    result_raw <-
       fcwt(
         signal[begin:end],
         sample_freq = sample_freq,
         freq_begin = freq_begin,
         freq_end = freq_end,
         n_freqs = n_freqs,
+        freq_scale = freq_scale,
         sigma = sigma,
         remove_coi = TRUE,
         n_threads = n_threads
-      ) |>
-      agg(n = reduced_n)
+      )
 
-    result <-
-      result_intermediate |>
-      rm_na_time_slices() # we fully remove COI infected time slices
+    time_index_interval <- sc_coi_time_interval(result_raw)
 
-    if (dim(result)[[1]] < 1) {
+    if (any(is.na(time_index_interval))) {
       stop(paste0(
         "Removing COI yields empty result. Typically that happens if ",
         "the batch size is too small. ",
@@ -133,20 +141,25 @@ fcwt_batch <- function(signal,
       ))
     }
 
+    result_agg <-
+      result_raw |>
+      sc_agg(w) |>
+      sc_rm_coi_time_slices() # we fully remove COI infected time slices
+
     # take into account that some time records are lost due to boundary
     # effect cut off (that's why cursor is not just end + 1)
-    # TODO: check if this is really correct (so that we do not have time shifts ...)
-    cursor <- cursor + ceiling(dim(result)[[1]] * n / reduced_n)
+    # we have two compensate two times the half-boundary
+    cursor <- cursor + (1 + end - begin) - (2 * (time_index_interval[[1]] - 1))
     diff <- end - cursor
 
     if (!is.null(total_result)) {
       total_result <-
         tbind(
           total_result,
-          result
+          result_agg
         )
     } else {
-      total_result <- result
+      total_result <- result_agg
     }
 
     if (progress_bar) setTxtProgressBar(pb, cursor)

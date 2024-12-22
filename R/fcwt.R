@@ -121,8 +121,15 @@ fcwt <- function(signal,
   dim(output) <- c(length(signal), n_freqs)
   # }
 
-  new_fcwtr_scalogram(
-    output, sample_freq, freq_begin, freq_end,
-    freq_scale, sigma, remove_coi
-  )
+  sc <-
+    new_fcwtr_scalogram(
+      output, sample_freq, freq_begin, freq_end,
+      freq_scale, sigma
+    )
+
+  if (remove_coi) {
+    sc_set_coi_na(sc)
+  } else {
+    sc
+  }
 }

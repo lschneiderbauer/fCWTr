@@ -8,7 +8,7 @@ test_that("fcwt batching yields identical result in single-batch case", {
       n_freqs = 10,
       sigma = 1
     ) |>
-    rm_na_time_slices()
+    sc_rm_coi_time_slices()
 
   res_batch <-
     fcwt_batch(

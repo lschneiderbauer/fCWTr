@@ -1,5 +1,5 @@
 test_that("fcwt() returns a vector of expected length", {
-  expect_length(
+  res1 <-
     fcwt(
       ts_sin_440[1:1000],
       sample_freq = 44100,
@@ -7,21 +7,23 @@ test_that("fcwt() returns a vector of expected length", {
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1
-    ),
-    1000 * 10
-  )
+    )
 
-  expect_length(
+  expect_equal(sc_dim_freq(res1), 10)
+  expect_equal(sc_dim_time(res1), 1000)
+
+  res2 <-
     fcwt(
-      ts_sin_440[1:1000],
+      ts_sin_440[2001:2500],
       sample_freq = 44100,
-      freq_begin = 50,
-      freq_end = 1000,
-      n_freqs = 10,
+      freq_begin = 30,
+      freq_end = 1100,
+      n_freqs = 15,
       sigma = 10
-    ),
-    1000 * 10
-  )
+    )
+
+  expect_equal(sc_dim_freq(res2), 15)
+  expect_equal(sc_dim_time(res2), 500)
 })
 
 test_that("fcwt() optional arguments do work", {
@@ -31,6 +33,27 @@ test_that("fcwt() optional arguments do work", {
       sample_freq = 44100,
       n_freqs = 10
     )
+  )
+})
+
+test_that("fcwt() removing coi works", {
+  res <-
+    fcwt(
+      ts_sin_440[1:1000],
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      sigma = 1,
+      remove_coi = TRUE
+    )
+
+  # we have a time series that is 1000 / 44100 s long
+  # that means we can resolve at max 2*44.1 Hz
+  # so we expect all rows to be contaminated
+  expect_setequal(
+    sc_coi_time_interval(res),
+    c(NA, NA)
   )
 })
 

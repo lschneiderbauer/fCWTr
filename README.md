@@ -136,7 +136,7 @@ batch_result <-
     freq_end = 12000,
     n_freqs = 200,
     sigma = 4,
-    time_resolution = 1 / 44100
+    time_resolution = 0.01
   )
 
 plot(batch_result)

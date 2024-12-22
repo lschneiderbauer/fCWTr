@@ -69,49 +69,55 @@ test_that("ggplot2::autoplot() does not err", {
 test_that("as.data.frame() `time_ind` columns is reasonable", {
   time <-
     as.data.frame(
-    fcwt(
-      ts_sin_440[1:1000],
-      sample_freq = 44100,
-      freq_begin = 50,
-      freq_end = 1000,
-      n_freqs = 10,
-      sigma = 1
-    )
-  )[["time"]]
+      fcwt(
+        ts_sin_440[1:1000],
+        sample_freq = 44100,
+        freq_begin = 50,
+        freq_end = 1000,
+        n_freqs = 10,
+        sigma = 1
+      )
+    )[["time"]]
 
   expect_gte(min(time), 0)
   expect_lte(max(time), 1)
 })
 
 test_that("`agg()` does not err", {
+  prep <-
+    fcwt(
+      ts_sin_440[1:1000],
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 30,
+      sigma = 1
+    )
+
   expect_no_error(
     res <-
-      fcwt(
-        ts_sin_440[1:1000],
-        sample_freq = 44100,
-        freq_begin = 50,
-        freq_end = 1000,
-        n_freqs = 30,
-        sigma = 1
-      ) |>
-        agg(n = 10)
+      prep |>
+      sc_agg(wnd_from_target_size(10, prep))
   )
 
   expect_s3_class(res, "fcwtr_scalogram")
 })
 
 test_that("`agg()` check n_freqs = 1 edge case", {
+  prep <-
+    fcwt(
+      ts_sin_440[1:1000],
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 1,
+      sigma = 1
+    )
+
   expect_no_error(
     res <-
-      fcwt(
-        ts_sin_440[1:1000],
-        sample_freq = 44100,
-        freq_begin = 50,
-        freq_end = 1000,
-        n_freqs = 1,
-        sigma = 1
-      ) |>
-      agg(n = 10)
+      prep |>
+      sc_agg(wnd_from_target_size(10, prep))
   )
 
   expect_s3_class(res, "fcwtr_scalogram")

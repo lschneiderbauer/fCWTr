@@ -11,8 +11,9 @@ fcwt_batch(
   time_resolution,
   freq_begin = 2 * sample_freq/length(signal),
   freq_end = sample_freq/2,
+  freq_scale = c("linear", "log"),
   sigma = 1,
-  max_batch_size = ceiling(4 * 10^9/(n_freqs * 4)),
+  max_batch_size = ceiling(1 * 10^9/(n_freqs * 8)/4),
   n_threads = 2L,
   progress_bar = FALSE
 )
@@ -37,6 +38,9 @@ specified the maximal meaningful frequency range, depending on the input signal,
 is taken.
 The range and \code{sample_freq} need to be specified in the same units.}
 
+\item{freq_scale}{Should the frequency scale be linear or logarithmic?
+"linear"  / "log" for linear / logarithmic.}
+
 \item{sigma}{Sets a dimensionless parameter modifying the wavelet spread which in the
 time-domain is roughly given by \eqn{\Sigma_t \sim \sqrt{2} \frac{\sigma}{f}}.
 Changing this parameter adjusts the time/frequency uncertainty balance.
@@ -45,8 +49,10 @@ Larger (lower) value of sigma corresponds to a better (worse) frequency
 resolution and a worse (better) time resolution.}
 
 \item{max_batch_size}{The maximal batch size that is used for splitting up the input sequence.
-This limits the maximal memory that is used. Defaults to roughly 4GB.
-The actual batch size is optimized for use with FFTW.}
+This limits the maximal memory that is used. Defaults to roughly 1GB, being
+conservative and taking into account that R might make copies when further
+processing it.
+The actual batch size depends on the requested \code{time_resolution}.}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.
 Defaults to 2 threads (to accomodate CRAN requirements).}
@@ -77,8 +83,8 @@ sequence will not fit into the local memory and the fcwt cannot be
 performed in one run.
 For instance, in case of processing a song of 10 minutes length (assuming
 a sampling rate of 44100 Hz), the size of the output vector is
-\verb{10 * 60 seconds * 44100 Hz * nfreqs * 4 bytes},
-which for e.g. \code{nfreqs = 200}, equals ~ 21 GB, hence
+\verb{10 * 60 seconds * 44100 Hz * nfreqs * 8 bytes},
+which for e.g. \code{nfreqs = 200}, equals ~ 42 GB, hence
 nowadays already at the limit of the hardware of a modern personal computer.
 
 In cases where the required output time-resolution is smaller than the time

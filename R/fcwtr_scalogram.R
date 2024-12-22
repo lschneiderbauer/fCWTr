@@ -1,30 +1,7 @@
 new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
-                                freq_scale, sigma, remove_coi) {
+                                freq_scale, sigma) {
   stopifnot(is.matrix(matrix))
   stopifnot(freq_scale %in% c("linear", "log"))
-
-  if (remove_coi) {
-    dim_t <- dim(matrix)[[1]] # Time dimension
-    dim_f <- dim(matrix)[[2]] # Frequency dimension
-
-    # The standard deviation Σ of a the Gauß like wave packet at frequency f
-    # and sampling frequency f_s with given σ is given by
-    # Σ = σ / sqrt(2) f_s / f
-    # we choose 4Σ to define the support of a wave packet
-    # (and so boundary effects are expected to occur until 2Σ)
-    coi_pred <- \(f, t) t * f < sqrt(2) * sigma
-
-    # express in dimensionless quantities
-    t <- rep(1:dim_t, times = dim_f)
-    f <-
-      rep(
-        seq(freq_end, freq_begin, length.out = dim_f) / sample_freq,
-        each = dim_t
-      )
-
-    # check if points are inside / outside hyperbolic cone
-    matrix[coi_pred(f, t) | coi_pred(f, dim_t - t)] <- NA_real_
-  }
 
   obj <-
     structure(
@@ -49,6 +26,93 @@ new_fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
   obj
 }
 
+sc_set_coi_na <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  x[sc_coi_mask(x)] <- NA_real_
+
+  x
+}
+
+#' @return A boolean matrix of the same dimensions as `x`. `TRUE` values
+#'         indicate values inside the boundary "cone of influence".
+#' @noRd
+sc_coi_mask <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  dim_t <- sc_dim_time(x) # Time dimension
+  dim_f <- sc_dim_freq(x) # Frequency dimension
+
+  sigma <- attr(x, "sigma")
+  freq_begin <- attr(x, "freq_begin")
+  freq_end <- attr(x, "freq_end")
+  sample_freq <- attr(x, "sample_freq")
+
+  # The standard deviation Σ of a the Gauß like wave packet at frequency f
+  # and sampling frequency f_s with given σ is given by
+  # Σ = σ / sqrt(2) f_s / f
+  # we choose 4Σ to define the support of a wave packet
+  # (and so boundary effects are expected to occur until 2Σ)
+  coi_pred <- \(f, t) t * f < sqrt(2) * attr(x, "sigma")
+
+  # express in dimensionless quantities
+  t <- rep(1:dim_t, times = dim_f)
+  f <-
+    rep(
+      seq(freq_end, freq_begin, length.out = dim_f) / sample_freq,
+      each = dim_t
+    )
+
+  mask <- coi_pred(f, t) | coi_pred(f, dim_t - t)
+  dim(mask) <- c(dim_t, dim_f)
+
+  mask
+}
+
+sc_dim_freq <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  dim(x)[[2]]
+}
+
+sc_dim_time <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  dim(x)[[1]]
+}
+
+#' @return Returns a vector of two values, the first and the last time index
+#' that guarantee that all data is available and trustable (no boundary effects).
+#' @noRd
+sc_coi_time_interval <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  #unique(which(is.na(x), arr.ind = TRUE)[, 1])
+
+  full_info_rows <- which(rowSums(sc_coi_mask(x)) == 0)
+
+  if (length(full_info_rows) > 0) {
+    c(head(full_info_rows, n = 1), tail(full_info_rows, n = 1))
+  } else {
+    c(NA_integer_, NA_integer_)
+  }
+}
+
+sc_rm_coi_time_slices <- function(x) {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  interval <- sc_coi_time_interval(x)
+  rows_to_keep <- interval[[1]]:interval[[2]]
+
+  new_fcwtr_scalogram(
+    x[rows_to_keep, ],
+    attr(x, "sample_freq"),
+    attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "freq_scale"),
+    attr(x, "sigma")
+  )
+}
+
 seq2 <- function(from = 1, to = 1, length.out, scale = c("linear", "log")) {
   scale <- match.arg(scale)
 
@@ -66,10 +130,11 @@ seq2 <- function(from = 1, to = 1, length.out, scale = c("linear", "log")) {
 
 # perform aggregation, if possible.
 # if it's not possible, be identity
-agg <- function(x, n) {
+sc_agg <- function(x, wnd) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
-  poolsize <- floor(dim(x)[[1]] / n)
+  poolsize <- wnd$size_n
+  n <- floor(sc_dim_time(x) / poolsize)
 
   if (poolsize <= 1) {
     # do nothing in case we cannot aggregate
@@ -88,8 +153,7 @@ agg <- function(x, n) {
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end"),
     attr(x, "freq_scale"),
-    attr(x, "sigma"),
-    remove_coi = FALSE
+    attr(x, "sigma")
   )
 }
 
@@ -100,7 +164,7 @@ tbind <- function(..., deparse.level = 1) {
 
   # check if attributes are identical, otherwise combination
   # does not make sense
-  if (length(unique(lapply(args, \(arg) attr(arg, "sample_freq")))) > 1) {
+  if (length(unique(lapply(args, \(arg) round(attr(arg, "sample_freq"))))) > 1) {
     stop("Sampling frequencies need to be identical.")
   }
   if (length(unique(lapply(args, \(arg) attr(arg, "freq_begin")))) > 1) {
@@ -123,23 +187,7 @@ tbind <- function(..., deparse.level = 1) {
     attr(args[[1]], "sample_freq"),
     attr(args[[1]], "freq_begin"), attr(args[[1]], "freq_end"),
     attr(args[[1]], "freq_scale"),
-    attr(args[[1]], "sigma"),
-    remove_coi = FALSE
-  )
-}
-
-rm_na_time_slices <- function(x) {
-  stopifnot(inherits(x, "fcwtr_scalogram"))
-
-  rows_to_remove <- unique(which(is.na(x), arr.ind = TRUE)[, 1])
-
-  new_fcwtr_scalogram(
-    x[-rows_to_remove, ],
-    attr(x, "sample_freq"),
-    attr(x, "freq_begin"), attr(x, "freq_end"),
-    attr(x, "freq_scale"),
-    attr(x, "sigma"),
-    remove_coi = FALSE
+    attr(args[[1]], "sigma")
   )
 }
 
