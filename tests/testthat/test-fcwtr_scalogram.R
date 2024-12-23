@@ -66,21 +66,28 @@ test_that("ggplot2::autoplot() does not err", {
   expect_s3_class(ggplot2::autoplot(res), "ggplot")
 })
 
-test_that("as.data.frame() `time_ind` columns is reasonable", {
-  time <-
-    as.data.frame(
-      fcwt(
-        ts_sin_440[1:1000],
-        sample_freq = 44100,
-        freq_begin = 50,
-        freq_end = 1000,
-        n_freqs = 10,
-        sigma = 1
+test_that("as.data.frame() result has correct properties", {
+  expect_no_error(
+    res <-
+      as.data.frame(
+        fcwt(
+          ts_sin_440[1:1000],
+          sample_freq = 44100,
+          freq_begin = 50,
+          freq_end = 1000,
+          n_freqs = 10,
+          sigma = 1
+        )
       )
-    )[["time"]]
+  )
 
-  expect_gte(min(time), 0)
-  expect_lte(max(time), 1)
+  time <- res[["time"]]
+
+  expect_gte(min(time), u(0, "s"))
+  expect_lte(max(time), u(1, "s"))
+  expect_true(has_comp_unit(time, "s"))
+
+  expect_true(has_comp_unit(res[["freq"]], "Hz"))
 })
 
 test_that("`agg()` does not err", {

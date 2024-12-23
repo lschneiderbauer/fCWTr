@@ -31,7 +31,7 @@ wnd_from_secs <- function(secs, orig_sample_freq) {
 #' @noRd
 wnd_from_resolution <- function(target_resolution, orig_sample_freq) {
   wnd_from_dim(
-    floor(orig_sample_freq * target_resolution),
+    ddu(floor(orig_sample_freq * target_resolution)),
     orig_sample_freq
   )
 }

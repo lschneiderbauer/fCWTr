@@ -14,7 +14,7 @@
 \value{
 A \code{\link[=data.frame]{data.frame()}} object representing the scalogram data with four columns:
 \describe{
-\item{time_ind}{An integer index uniquely identifying time slices.}
+\item{time_index}{An integer index uniquely identifying time slices.}
 \item{time}{The time difference to the first time slice in physical units.
 The time unit is the inverse of the frequency unit chosen by the user
 for the \code{sample_freq} argument of \code{\link[=fcwt]{fcwt()}}.}
@@ -34,7 +34,7 @@ fcwt(
   sample_freq = 44100,
   n_freqs = 10
 ) |>
-as.data.frame() |>
-head()
+  as.data.frame() |>
+  head()
 
 }

@@ -1,6 +1,5 @@
 new_fcwtr_scalogram <- function(matrix, coi_mask, sample_freq, freq_begin, freq_end,
                                 freq_scale, sigma) {
-
   obj <-
     structure(
       matrix,
@@ -13,26 +12,16 @@ new_fcwtr_scalogram <- function(matrix, coi_mask, sample_freq, freq_begin, freq_
       sigma = sigma
     )
 
-  dimnames(obj) <-
-    list(
-      seq_along(matrix[, 1]) - 1,
-      seq2(
-        freq_end, freq_begin, length.out = dim(matrix)[[2]],
-        scale = freq_scale
-      )
-    )
-
   obj
 }
 
 fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
                             freq_scale, sigma) {
-
   stopifnot(is.matrix(matrix))
   stopifnot(freq_scale %in% c("linear", "log"))
-  stopifnot(is.numeric(sample_freq))
-  stopifnot(is.numeric(freq_begin))
-  stopifnot(is.numeric(freq_end))
+  stopifnot(inherits(sample_freq, "units"))
+  stopifnot(inherits(freq_begin, "units"))
+  stopifnot(inherits(freq_end, "units"))
   stopifnot(is.numeric(sigma))
 
   coi_mask <-
@@ -42,11 +31,14 @@ fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
       sample_freq = sample_freq,
       freq_begin = freq_begin,
       freq_end = freq_end,
+      freq_scale = freq_scale,
       sigma = sigma
     )
 
-  new_fcwtr_scalogram(matrix, coi_mask, sample_freq, freq_begin, freq_end,
-                      freq_scale, sigma)
+  new_fcwtr_scalogram(
+    matrix, coi_mask, sample_freq, freq_begin, freq_end,
+    freq_scale, sigma
+  )
 }
 
 sc_set_coi_na <- function(x) {
@@ -66,19 +58,20 @@ sc_coi_mask <- function(x) {
 #' @return A boolean matrix of the same dimensions as `x`. `TRUE` values
 #'         indicate values inside the boundary "cone of influence".
 #' @noRd
-coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end, sigma) {
+coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
+                     freq_scale, sigma) {
   # The standard deviation Σ of a the Gauß like wave packet at frequency f
   # and sampling frequency f_s with given σ is given by
   # Σ = σ / sqrt(2) f_s / f
   # we choose 4Σ to define the support of a wave packet
   # (and so boundary effects are expected to occur until 2Σ)
-  coi_pred <- \(f, t) t * f < sqrt(2) * sigma
+  coi_pred <- \(f, t) ddu(t * f) < sqrt(2) * sigma
 
   # express in dimensionless quantities
   t <- rep(1:dim_t, times = dim_f)
   f <-
     rep(
-      seq(freq_end, freq_begin, length.out = dim_f) / sample_freq,
+      seq2(freq_end, freq_begin, length.out = dim_f, scale = freq_scale) / sample_freq,
       each = dim_t
     )
 
@@ -108,7 +101,7 @@ sc_dim_time <- function(x) {
 sc_coi_time_interval <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
-  #unique(which(is.na(x), arr.ind = TRUE)[, 1])
+  # unique(which(is.na(x), arr.ind = TRUE)[, 1])
 
   full_info_rows <- which(rowSums(sc_coi_mask(x)) == 0)
 
@@ -227,7 +220,7 @@ tbind <- function(..., deparse.level = 1) {
 #' @return
 #'  A [data.frame()] object representing the scalogram data with four columns:
 #' \describe{
-#'   \item{time_ind}{An integer index uniquely identifying time slices.}
+#'   \item{time_index}{An integer index uniquely identifying time slices.}
 #'   \item{time}{The time difference to the first time slice in physical units.
 #'               The time unit is the inverse of the frequency unit chosen by the user
 #'               for the `sample_freq` argument of [fcwt()].}
@@ -243,19 +236,25 @@ tbind <- function(..., deparse.level = 1) {
 #'   sample_freq = 44100,
 #'   n_freqs = 10
 #' ) |>
-#' as.data.frame() |>
-#' head()
+#'   as.data.frame() |>
+#'   head()
 #'
 #' @export
 as.data.frame.fcwtr_scalogram <- function(x, ...) {
-  df <- as.data.frame(as.table(x), stringsAsFactors = FALSE)
-  names(df) <- c("time_ind", "freq", "value")
-  df[["time_ind"]] <- as.integer(df[["time_ind"]])
-  df[["freq"]] <- as.numeric(df[["freq"]])
+  dim_t <- seq_along(x[, 1])
+  dim_f <-
+    seq2(
+      attr(x, "freq_end"), attr(x, "freq_begin"),
+      length.out = dim(x)[[2]],
+      scale = attr(x, "freq_scale")
+    )
 
-  df[["time"]] <- df[["time_ind"]] / attr(x, "sample_freq")
-
-  df[, c("time_ind", "time", "freq", "value")]
+  data.frame(
+    time_index = dim_t[row(x)],
+    time = dim_t[row(x)] / attr(x, "sample_freq"),
+    freq = dim_f[col(x)],
+    value = c(x)
+  )
 }
 
 #' Scalogram plotting
@@ -313,20 +312,22 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
 
   freq_scale <- attr(object, "freq_scale")
 
-  scale_y <-
+  transform <-
     if (freq_scale == "log") {
-      ggplot2::scale_y_log10
+      "log10"
     } else {
-      ggplot2::scale_y_continuous
+      "identity"
     }
+
+  df <- as.data.frame(sc_agg(object, wnd_from_target_size(n, object)))
 
   # first aggregate the time series,
   # since we cannot really see too much resolution anyways
-  as.data.frame(sc_agg(object, wnd_from_target_size(n, object))) |>
+  df |>
     ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
     geom_raster() +
     viridis::scale_fill_viridis(discrete = FALSE) +
-    scale_y(name = "Frequency") +
-    ggplot2::scale_x_time(name = "Time") +
+    units::scale_x_units(name = "Time", unit = "s") +
+    units::scale_y_units(name = "Frequency", transform = transform) +
     ggplot2::theme_minimal()
 }
