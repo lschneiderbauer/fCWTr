@@ -97,9 +97,9 @@
 <span><span class="va">output</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/fcwt.html">fcwt</a></span><span class="op">(</span></span>
 <span>    <span class="va">signal</span>,</span>
-<span>    sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span>
-<span>    freq_begin <span class="op">=</span> <span class="fl">16</span>,</span>
-<span>    freq_end <span class="op">=</span> <span class="fl">2100</span>,</span>
+<span>    sample_freq <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span>
+<span>    freq_begin <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">16</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
+<span>    freq_end <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">2100</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>    n_freqs <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>    sigma <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span></span>
@@ -110,17 +110,17 @@
 <p>The result can be easily coerced into a data frame:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    time_ind         time freq value</span></span>
-<span><span class="co">#&gt; 1         0 0.000000e+00 2100    NA</span></span>
-<span><span class="co">#&gt; 2         1 2.267574e-05 2100    NA</span></span>
-<span><span class="co">#&gt; 3         2 4.535147e-05 2100    NA</span></span>
-<span><span class="co">#&gt; 4         3 6.802721e-05 2100    NA</span></span>
-<span><span class="co">#&gt; 5         4 9.070295e-05 2100    NA</span></span>
-<span><span class="co">#&gt; 6         5 1.133787e-04 2100    NA</span></span>
-<span><span class="co">#&gt; 7         6 1.360544e-04 2100    NA</span></span>
-<span><span class="co">#&gt; 8         7 1.587302e-04 2100    NA</span></span>
-<span><span class="co">#&gt; 9         8 1.814059e-04 2100    NA</span></span>
-<span><span class="co">#&gt; 10        9 2.040816e-04 2100    NA</span></span></code></pre></div>
+<span><span class="co">#&gt;    time_index               time      freq value</span></span>
+<span><span class="co">#&gt; 1           1 0.02267574 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 2           2 0.04535147 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 3           3 0.06802721 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 4           4 0.09070295 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 5           5 0.11337868 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 6           6 0.13605442 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 7           7 0.15873016 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 8           8 0.18140590 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 9           9 0.20408163 [1/kHz] 2100 [Hz]    NA</span></span>
+<span><span class="co">#&gt; 10         10 0.22675737 [1/kHz] 2100 [Hz]    NA</span></span></code></pre></div>
 <p>We can also directly plot the resulting scalogram:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
@@ -130,12 +130,12 @@
 <code class="sourceCode R"><span><span class="va">batch_result</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">ts_sin_sin</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>    sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span>
-<span>    freq_begin <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    freq_end <span class="op">=</span> <span class="fl">12000</span>,</span>
+<span>    sample_freq <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span>
+<span>    freq_begin <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
+<span>    freq_end <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">12</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span>
 <span>    n_freqs <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>    sigma <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>    time_resolution <span class="op">=</span> <span class="fl">0.01</span></span>
+<span>    time_resolution <span class="op">=</span> <span class="fu"><a href="reference/u.html">u</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">batch_result</span><span class="op">)</span></span></code></pre></div>
