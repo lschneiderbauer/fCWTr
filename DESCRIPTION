@@ -31,8 +31,8 @@ Suggests:
 LinkingTo: 
     cpp11
 SystemRequirements:
-    fftw (>= 3.3.0),
-    openmp (>= 15.0.0)
+    fftwf (>= 3.3.0),
+    fftw3f_omp
 Config/testthat/edition: 3
 URL: https://lschneiderbauer.github.io/fCWTr/, https://github.com/lschneiderbauer/fCWTr
 Roxygen: list(markdown = TRUE)
