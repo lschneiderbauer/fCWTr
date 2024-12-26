@@ -75,7 +75,7 @@ coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
       each = dim_t
     )
 
-  mask <- coi_pred(f, t) | coi_pred(f, dim_t - t)
+  mask <- coi_pred(f, t) | coi_pred(f, dim_t - t + 1)
   dim(mask) <- c(dim_t, dim_f)
 
   mask
