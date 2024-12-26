@@ -1,6 +1,6 @@
 # fcwtr 0.2.9999
 
--   Include improved physical unit treatment with the 'units' package. Frequency and time parameters can now be passed a bestowed unit.
+-   Include improved physical unit treatment with the 'units' package. Frequency and time parameters can now be "units" objects, created with `u()`. Allow user to adjust plot scales to use arbitrary time/freq units.
 
 -   Overhaul `fcwt_batch()`: in some cases, time slices were accidentally discarded, this should now be fixed.
 
