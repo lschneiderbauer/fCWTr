@@ -83,7 +83,6 @@ fcwt_batch <- function(signal,
                        max_batch_size = ceiling(1 * 10^9 / (n_freqs * 8) / 4),
                        n_threads = 2L,
                        progress_bar = FALSE) {
-
   time_resolution <- as_sec(time_resolution)
   sample_freq <- as_freq(sample_freq)
   freq_begin <- as_freq(freq_begin)
@@ -94,9 +93,6 @@ fcwt_batch <- function(signal,
     time_resolution >= 1 / sample_freq
   )
 
-  # aggregation window
-  w <- wnd_from_resolution(time_resolution, sample_freq)
-
   # From FFTW documentation:
   # FTW is best at handling sizes of the form 2^a 3^b 5^c 7^d 11^e 13^f,
   # where e+f is
@@ -105,31 +101,50 @@ fcwt_batch <- function(signal,
   # retains O(n lg n) performance, even for prime sizes).
   # Transforms whose sizes are powers of 2 are especially fast.
 
+  # aggregation window
+  w <- wnd_from_resolution(time_resolution, sample_freq)
+
+  # time steps we need to overlap because we need to remove the
+  # boundary effects
+  dt <- coi_invalid_time_steps(sample_freq, freq_begin, sigma)
+
   # we also want the batch size to be a multiple of the
   # window size
   # batch_size <- 2^floor(log2(max_batch_size))
-  batch_size <- floor(max_batch_size / w$size_n) * w$size_n
+
+  # we want (batch_size - 2 * dt) be a multiple of the window size
+  batch_size <- 2 * dt + floor((max_batch_size - 2 * dt) / w$size_n) * w$size_n
 
   signal_size <- w$size_n * floor(length(signal) / w$size_n) # cut off the rest
 
-  total_result <- NULL
+
+  if (2 * dt >= batch_size) {
+    stop(paste0(
+      "Removing COI yields empty result. Typically that happens if ",
+      "the batch size is too small. ",
+      "To avoid that you can either increase the batch size or raise the ",
+      "frequency range."
+    ))
+  }
 
   if (progress_bar) {
-    pb <- txtProgressBar(min = 0, max = length(signal), style = 3)
+    pb <- txtProgressBar(min = 0, max = signal_size, style = 3)
 
     on.exit({
-      setTxtProgressBar(pb, length(signal))
+      setTxtProgressBar(pb, signal_size)
       close(pb)
     })
   }
 
-  cursor <- 0
-  diff <- 0
-  while (cursor < length(signal) - diff) {
-    begin <- cursor + 1
-    end <- pmin(cursor + batch_size, signal_size)
+  lapply(
+    batches(batch_size, signal_size, dt),
+    function(batch) {
+      begin <- batch[[1]]
+      end <- batch[[2]]
+      actual_batch_size <- (end - begin + 1)
 
-    result_raw <-
+      if (progress_bar) setTxtProgressBar(pb, begin)
+
       fcwt(
         signal[begin:end],
         sample_freq = sample_freq,
@@ -138,44 +153,34 @@ fcwt_batch <- function(signal,
         n_freqs = n_freqs,
         freq_scale = freq_scale,
         sigma = sigma,
-        remove_coi = TRUE,
+        remove_coi = FALSE,
         n_threads = n_threads
-      )
-
-    time_index_interval <- sc_coi_time_interval(result_raw)
-
-    if (any(is.na(time_index_interval))) {
-      stop(paste0(
-        "Removing COI yields empty result. Typically that happens if ",
-        "the batch size is too small. ",
-        "To avoid that you can either increase the batch size or raise the ",
-        "frequency range."
-      ))
+      ) |>
+        # we fully remove COI infected time slices
+        sc_rm_time_slices(c(
+          1:dt,
+          (actual_batch_size - dt + 1):actual_batch_size
+        )) |>
+        # due to our choice of batch_size, the remaining number
+        # of time slices should be exactly a multiple of the window
+        # size (w$size_n)
+        sc_agg(w)
     }
+  ) |>
+    do.call(tbind, args = _)
+}
 
-    result_agg <-
-      result_raw |>
-      sc_agg(w) |>
-      sc_rm_coi_time_slices() # we fully remove COI infected time slices
-
-    # take into account that some time records are lost due to boundary
-    # effect cut off (that's why cursor is not just end + 1)
-    # we have two compensate two times the half-boundary
-    cursor <- cursor + (1 + end - begin) - (2 * (time_index_interval[[1]] - 1))
-    diff <- end - cursor
-
-    if (!is.null(total_result)) {
-      total_result <-
-        tbind(
-          total_result,
-          result_agg
-        )
-    } else {
-      total_result <- result_agg
-    }
-
-    if (progress_bar) setTxtProgressBar(pb, cursor)
+batches <- function(batch_size, signal_size, dt) {
+  if (batch_size > signal_size) {
+    return(list(c(1, signal_size)))
   }
 
-  return(total_result)
+  batch_starts <-
+    seq(1, signal_size, by = batch_size - 2 * dt)
+
+  batch_stops <-
+    c(seq(batch_size, signal_size, by = batch_size - 2 * dt), signal_size)
+
+  m <- matrix(c(batch_starts, batch_stops), ncol = 2)
+  split(m, row(m))
 }
