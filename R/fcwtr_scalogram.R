@@ -1,10 +1,14 @@
-new_fcwtr_scalogram <- function(matrix, coi_mask, sample_freq, freq_begin, freq_end,
+new_fcwtr_scalogram <- function(matrix, coi_mask,
+                                time_offset,
+                                sample_freq,
+                                freq_begin, freq_end,
                                 freq_scale, sigma) {
   obj <-
     structure(
       matrix,
       class = c("fcwtr_scalogram", class(matrix)),
       coi_mask = coi_mask,
+      time_offset = time_offset,
       sample_freq = sample_freq,
       freq_begin = freq_begin,
       freq_end = freq_end,
@@ -15,7 +19,8 @@ new_fcwtr_scalogram <- function(matrix, coi_mask, sample_freq, freq_begin, freq_
   obj
 }
 
-fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
+fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
+                            freq_begin, freq_end,
                             freq_scale, sigma) {
   stopifnot(is.matrix(matrix))
   stopifnot(freq_scale %in% c("linear", "log"))
@@ -36,7 +41,9 @@ fcwtr_scalogram <- function(matrix, sample_freq, freq_begin, freq_end,
     )
 
   new_fcwtr_scalogram(
-    matrix, coi_mask, sample_freq, freq_begin, freq_end,
+    matrix, coi_mask,
+    time_offset = time_offset,
+    sample_freq, freq_begin, freq_end,
     freq_scale, sigma
   )
 }
@@ -84,7 +91,7 @@ coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
 # invalid time steps on one side of the time series
 # invalid meaning: at least one frequency in that time range has invalid value
 coi_invalid_time_steps <- function(sample_freq, freq_begin, sigma) {
-  ddu(floor(sqrt(2) * sigma * sample_freq / freq_begin))
+  as.integer(ddu(floor(sqrt(2) * sigma * sample_freq / freq_begin)))
 }
 
 sc_dim_freq <- function(x) {
@@ -99,14 +106,25 @@ sc_dim_time <- function(x) {
   dim(x)[[1]]
 }
 
-sc_rm_time_slices <- function(x, slices) {
+#' @param n how many slices do we want to remove
+#' @noRd
+sc_rm_bdry_time_slices <- function(x, n) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
-  stopifnot(is.integer(slices))
-  stopifnot(all(slices > 0))
+  stopifnot(is.integer(n))
+
+  begin <- n + 1
+  end <- sc_dim_time(x) - n
+
+  if (end > begin) {
+    rows_to_keep <- begin:end
+  } else {
+    stop("All data removed. Are you sure you want that?")
+  }
 
   new_fcwtr_scalogram(
-    unclass(x)[-slices, ],
-    attr(x, "coi_mask")[-slices, ],
+    unclass(x)[rows_to_keep, ],
+    attr(x, "coi_mask")[rows_to_keep, ],
+    attr(x, "time_offset") + n / attr(x, "sample_freq"), # new time offset
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
     attr(x, "freq_scale"),
@@ -122,23 +140,7 @@ sc_rm_coi_time_slices <- function(x) {
       attr(x, "sample_freq"), attr(x, "freq_begin"), attr(x, "sigma")
     )
 
-  begin <- dt + 1
-  end <- sc_dim_time(x) - dt
-
-  if (end > begin) {
-    rows_to_keep <- begin:end
-  } else {
-    stop("All data removed. Are you sure you want that?")
-  }
-
-  new_fcwtr_scalogram(
-    unclass(x)[rows_to_keep, ],
-    attr(x, "coi_mask")[rows_to_keep, ],
-    attr(x, "sample_freq"),
-    attr(x, "freq_begin"), attr(x, "freq_end"),
-    attr(x, "freq_scale"),
-    attr(x, "sigma")
-  )
+  sc_rm_bdry_time_slices(x, dt)
 }
 
 seq2 <- function(from = 1, to = 1, length.out, scale = c("linear", "log")) {
@@ -178,6 +180,7 @@ sc_agg <- function(x, wnd) {
 
   fcwtr_scalogram(
     unclass(x_new),
+    attr(x, "time_offset"),
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end"),
     attr(x, "freq_scale"),
@@ -214,6 +217,7 @@ tbind <- function(..., deparse.level = 1) {
   new_fcwtr_scalogram(
     x_new,
     coi_mask_new,
+    attr(args[[1]], "time_offset"),
     attr(args[[1]], "sample_freq"),
     attr(args[[1]], "freq_begin"), attr(args[[1]], "freq_end"),
     attr(args[[1]], "freq_scale"),
@@ -263,8 +267,8 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
     )
 
   data.frame(
-    time_index = dim_t[row(x)],
-    time = dim_t[row(x)] / attr(x, "sample_freq"),
+    time_index = dim_t[row(x)] - 1,
+    time = attr(x, "time_offset") + (dim_t[row(x)] - 1) / attr(x, "sample_freq"),
     freq = dim_f[col(x)],
     value = c(x)
   )

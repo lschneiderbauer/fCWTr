@@ -131,7 +131,7 @@ fcwt <- function(signal,
 
   sc <-
     fcwtr_scalogram(
-      output, sample_freq, freq_begin, freq_end,
+      output, time_offset = u(0, "s"), sample_freq, freq_begin, freq_end,
       freq_scale, sigma
     )
 

@@ -141,7 +141,6 @@ fcwt_batch <- function(signal,
     function(batch) {
       begin <- batch[[1]]
       end <- batch[[2]]
-      actual_batch_size <- (end - begin + 1)
 
       if (progress_bar) setTxtProgressBar(pb, begin)
 
@@ -157,10 +156,7 @@ fcwt_batch <- function(signal,
         n_threads = n_threads
       ) |>
         # we fully remove COI infected time slices
-        sc_rm_time_slices(c(
-          1:dt,
-          (actual_batch_size - dt + 1):actual_batch_size
-        )) |>
+        sc_rm_bdry_time_slices(dt) |>
         # due to our choice of batch_size, the remaining number
         # of time slices should be exactly a multiple of the window
         # size (w$size_n)
