@@ -91,7 +91,7 @@ head(as.data.frame(output), 10)
 We can also directly plot the resulting scalogram:
 
 ```{r example_plot}
-plot(output)
+plot(output, time_unit = "ms")
 ```
 
 For long sequences, the required memory can exceed your local memory. In this case it can be useful to reduce the time resolution of the result and process the data in batches. This can be done with `fcwt_batch()`. In case the batch size is not explicitly provided, some heuristics are used to determine a batch size automatically:

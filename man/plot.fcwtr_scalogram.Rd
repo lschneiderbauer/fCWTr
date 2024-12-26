@@ -45,6 +45,6 @@ res <-
     sigma = 5
   )
 
-plot(res)
+plot(res, time_unit = "ms")
 \dontshow{\}) # examplesIf}
 }

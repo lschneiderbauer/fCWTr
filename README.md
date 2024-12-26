@@ -116,7 +116,7 @@ head(as.data.frame(output), 10)
 We can also directly plot the resulting scalogram:
 
 ``` r
-plot(output)
+plot(output, time_unit = "ms")
 ```
 
 <img src="man/figures/README-example_plot-1.png" width="100%" />
