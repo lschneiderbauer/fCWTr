@@ -301,8 +301,9 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'   )
 #'
 #' plot(res)
-plot.fcwtr_scalogram <- function(x, n = 1000, ...) {
-  print(autoplot.fcwtr_scalogram(x, n, ...))
+plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
+                                 ...) {
+  print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, ...))
 }
 
 #' Create a ggplot object resembling a scalogram
@@ -311,13 +312,23 @@ plot.fcwtr_scalogram <- function(x, n = 1000, ...) {
 #'  The plotting function reduces the time resolution by averaging
 #'  to generate a reasonable graphics format. `n` is the number of time
 #'  steps that are plotted. Defaults to `n = 1000`.
+#' @param time_unit
+#'  A time unit that is used for the x-axis scale. Default to "s" - seconds.
+#'  See `units::valid_udunits()` and `units::valid_udunits_prefixes()` for valid
+#'  expressions.
+#' @param freq_unit
+#'  A frequency unit that is used for the y-axis scale.
+#'  Defaults to "Hz" - "Hertz".
+#'  See `units::valid_udunits()` and `units::valid_udunits_prefixes()` for valid
+#'  expressions.
 #' @param ...
 #'  other arguments passed to specific methods
 #' @return
 #'  A ggplot object.
 #'
 #' @keywords internal
-autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
+autoplot.fcwtr_scalogram <- function(object, n = 1000,
+                                     time_unit = "s", freq_unit = "Hz", ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
   stopifnot(requireNamespace("rlang", quietly = TRUE))
@@ -344,7 +355,10 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000, ...) {
     ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
     geom_raster() +
     viridis::scale_fill_viridis(discrete = FALSE) +
-    units::scale_x_units(name = "Time", unit = "s") +
-    units::scale_y_units(name = "Frequency", transform = transform) +
+    units::scale_x_units(name = "Time", unit = time_unit) +
+    units::scale_y_units(
+      name = "Frequency", unit = freq_unit,
+      transform = transform
+    ) +
     ggplot2::theme_minimal()
 }

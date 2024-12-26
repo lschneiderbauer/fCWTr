@@ -4,12 +4,27 @@
 \alias{autoplot.fcwtr_scalogram}
 \title{Create a ggplot object resembling a scalogram}
 \usage{
-autoplot.fcwtr_scalogram(object, n = 1000, ...)
+autoplot.fcwtr_scalogram(
+  object,
+  n = 1000,
+  time_unit = "s",
+  freq_unit = "Hz",
+  ...
+)
 }
 \arguments{
 \item{n}{The plotting function reduces the time resolution by averaging
 to generate a reasonable graphics format. \code{n} is the number of time
 steps that are plotted. Defaults to \code{n = 1000}.}
+
+\item{time_unit}{A time unit that is used for the x-axis scale. Default to "s" - seconds.
+See \code{units::valid_udunits()} and \code{units::valid_udunits_prefixes()} for valid
+expressions.}
+
+\item{freq_unit}{A frequency unit that is used for the y-axis scale.
+Defaults to "Hz" - "Hertz".
+See \code{units::valid_udunits()} and \code{units::valid_udunits_prefixes()} for valid
+expressions.}
 
 \item{...}{other arguments passed to specific methods}
 }
