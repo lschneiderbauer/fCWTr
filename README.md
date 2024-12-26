@@ -100,17 +100,17 @@ The result can be easily coerced into a data frame:
 
 ``` r
 head(as.data.frame(output), 10)
-#>    time_index               time      freq value
-#> 1           1 0.02267574 [1/kHz] 2100 [Hz]    NA
-#> 2           2 0.04535147 [1/kHz] 2100 [Hz]    NA
-#> 3           3 0.06802721 [1/kHz] 2100 [Hz]    NA
-#> 4           4 0.09070295 [1/kHz] 2100 [Hz]    NA
-#> 5           5 0.11337868 [1/kHz] 2100 [Hz]    NA
-#> 6           6 0.13605442 [1/kHz] 2100 [Hz]    NA
-#> 7           7 0.15873016 [1/kHz] 2100 [Hz]    NA
-#> 8           8 0.18140590 [1/kHz] 2100 [Hz]    NA
-#> 9           9 0.20408163 [1/kHz] 2100 [Hz]    NA
-#> 10         10 0.22675737 [1/kHz] 2100 [Hz]    NA
+#>    time_index             time      freq value
+#> 1           0 0.000000e+00 [s] 2100 [Hz]    NA
+#> 2           1 2.267574e-05 [s] 2100 [Hz]    NA
+#> 3           2 4.535147e-05 [s] 2100 [Hz]    NA
+#> 4           3 6.802721e-05 [s] 2100 [Hz]    NA
+#> 5           4 9.070295e-05 [s] 2100 [Hz]    NA
+#> 6           5 1.133787e-04 [s] 2100 [Hz]    NA
+#> 7           6 1.360544e-04 [s] 2100 [Hz]    NA
+#> 8           7 1.587302e-04 [s] 2100 [Hz]    NA
+#> 9           8 1.814059e-04 [s] 2100 [Hz]    NA
+#> 10          9 2.040816e-04 [s] 2100 [Hz]    NA
 ```
 
 We can also directly plot the resulting scalogram:
@@ -130,9 +130,9 @@ used to determine a batch size automatically:
 ``` r
 batch_result <-
   fcwt_batch(
-    rep(ts_sin_sin, 10),
+    rep(ts_sin_sin, 5),
     sample_freq = u(44.1, "kHz"),
-    freq_begin = u(10, "Hz"),
+    freq_begin = u(100, "Hz"),
     freq_end = u(12, "kHz"),
     n_freqs = 200,
     sigma = 4,

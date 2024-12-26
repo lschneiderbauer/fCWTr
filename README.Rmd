@@ -99,9 +99,9 @@ For long sequences, the required memory can exceed your local memory. In this ca
 ```{r example_long_df, results='hide'}
 batch_result <-
   fcwt_batch(
-    rep(ts_sin_sin, 10),
+    rep(ts_sin_sin, 5),
     sample_freq = u(44.1, "kHz"),
-    freq_begin = u(10, "Hz"),
+    freq_begin = u(100, "Hz"),
     freq_end = u(12, "kHz"),
     n_freqs = 200,
     sigma = 4,
