@@ -1,4 +1,4 @@
-new_fcwtr_scalogram <- function(matrix, coi_mask,
+new_fcwtr_scalogram <- function(matrix,
                                 time_offset,
                                 sample_freq,
                                 freq_begin, freq_end,
@@ -7,7 +7,6 @@ new_fcwtr_scalogram <- function(matrix, coi_mask,
     structure(
       matrix,
       class = c("fcwtr_scalogram", class(matrix)),
-      coi_mask = coi_mask,
       time_offset = time_offset,
       sample_freq = sample_freq,
       freq_begin = freq_begin,
@@ -29,19 +28,8 @@ fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
   stopifnot(inherits(freq_end, "units"))
   stopifnot(is.numeric(sigma))
 
-  coi_mask <-
-    coi_mask(
-      dim_t = dim(matrix)[[1]],
-      dim_f = dim(matrix)[[2]],
-      sample_freq = sample_freq,
-      freq_begin = freq_begin,
-      freq_end = freq_end,
-      freq_scale = freq_scale,
-      sigma = sigma
-    )
-
   new_fcwtr_scalogram(
-    matrix, coi_mask,
+    matrix,
     time_offset = time_offset,
     sample_freq, freq_begin, freq_end,
     freq_scale, sigma
@@ -59,7 +47,15 @@ sc_set_coi_na <- function(x) {
 sc_coi_mask <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
-  attr(x, "coi_mask")
+  coi_mask(
+    dim_t = sc_dim_time(x),
+    dim_f = sc_dim_freq(x),
+    sample_freq = attr(x, "sample_freq"),
+    freq_begin = attr(x, "freq_begin"),
+    freq_end = attr(x, "freq_end"),
+    freq_scale = attr(x, "freq_scale"),
+    sigma = attr(x, "sigma")
+  )
 }
 
 #' @return A boolean matrix of the same dimensions as `x`. `TRUE` values
@@ -123,7 +119,6 @@ sc_rm_bdry_time_slices <- function(x, n) {
 
   new_fcwtr_scalogram(
     unclass(x)[rows_to_keep, ],
-    attr(x, "coi_mask")[rows_to_keep, ],
     attr(x, "time_offset") + n / attr(x, "sample_freq"), # new time offset
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
@@ -212,11 +207,9 @@ tbind <- function(..., deparse.level = 1) {
   }
 
   x_new <- do.call(rbind, c(lapply(args, unclass), list(deparse.level = deparse.level)))
-  coi_mask_new <- do.call(rbind, c(lapply(args, sc_coi_mask), list(deparse.level = deparse.level)))
 
   new_fcwtr_scalogram(
     x_new,
-    coi_mask_new,
     attr(args[[1]], "time_offset"),
     attr(args[[1]], "sample_freq"),
     attr(args[[1]], "freq_begin"), attr(args[[1]], "freq_end"),
@@ -300,7 +293,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'     sigma = 5
 #'   )
 #'
-#' plot(res)
+#' plot(res, time_unit = "ms")
 plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
                                  ...) {
   print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, ...))
