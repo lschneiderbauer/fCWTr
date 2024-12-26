@@ -34,7 +34,7 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.9999" id="fcwtr-029999">fcwtr 0.2.9999<a class="anchor" aria-label="anchor" href="#fcwtr-029999"></a></h2>
-<ul><li><p>Include improved physical unit treatment with the ‘units’ package. Frequency and time parameters can now be passed a bestowed unit.</p></li>
+<ul><li><p>Include improved physical unit treatment with the ‘units’ package. Frequency and time parameters can now be “units” objects, created with <code><a href="../reference/u.html">u()</a></code>. Allow user to adjust plot scales to use arbitrary time/freq units.</p></li>
 <li><p>Overhaul <code><a href="../reference/fcwt_batch.html">fcwt_batch()</a></code>: in some cases, time slices were accidentally discarded, this should now be fixed.</p></li>
 <li><p>Fix a bug where <code>fcwt(..., n_freqs = 1, ...)</code> leads to a faulty data representation.</p></li>
 <li><p><code><a href="../reference/fcwt.html">fcwt()</a></code>: added the option to choose between a linear or logarithmic frequency scale.</p></li>
