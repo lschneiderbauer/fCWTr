@@ -177,6 +177,10 @@ batches <- function(batch_size, signal_size, dt) {
   batch_stops <-
     c(seq(batch_size, signal_size, by = batch_size - 2 * dt), signal_size)
 
+  # if batch_stops is a size smaller than batch_starts, it means, that
+  # we can actually get rid of the last batch altogether.
+  batch_starts <- batch_starts[seq_along(batch_stops)]
+
   m <- matrix(c(batch_starts, batch_stops), ncol = 2)
   split(m, row(m))
 }
