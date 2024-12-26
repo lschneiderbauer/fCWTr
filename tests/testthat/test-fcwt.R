@@ -51,9 +51,8 @@ test_that("fcwt() removing coi works", {
   # we have a time series that is 1000 / 44100 s long
   # that means we can resolve at max 2*44.1 Hz
   # so we expect all rows to be contaminated
-  expect_setequal(
-    sc_coi_time_interval(res),
-    c(NA, NA)
+  expect_error(
+    sc_rm_coi_time_slices(res)
   )
 })
 

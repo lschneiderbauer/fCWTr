@@ -81,6 +81,12 @@ coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
   mask
 }
 
+# invalid time steps on one side of the time series
+# invalid meaning: at least one frequency in that time range has invalid value
+coi_invalid_time_steps <- function(sample_freq, freq_begin, sigma) {
+  ddu(floor(sqrt(2) * sigma * sample_freq / freq_begin))
+}
+
 sc_dim_freq <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
@@ -93,33 +99,40 @@ sc_dim_time <- function(x) {
   dim(x)[[1]]
 }
 
-#' @return Returns a vector of two values, the first and the last time index
-#' that guarantee that all data is available and trustable (no boundary effects).
-#' @noRd
-#' @importFrom utils head
-#' @importFrom utils tail
-sc_coi_time_interval <- function(x) {
+sc_rm_time_slices <- function(x, slices) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
+  stopifnot(is.integer(slices))
+  stopifnot(all(slices > 0))
 
-  # unique(which(is.na(x), arr.ind = TRUE)[, 1])
-
-  full_info_rows <- which(rowSums(sc_coi_mask(x)) == 0)
-
-  if (length(full_info_rows) > 0) {
-    c(head(full_info_rows, n = 1), tail(full_info_rows, n = 1))
-  } else {
-    c(NA_integer_, NA_integer_)
-  }
+  new_fcwtr_scalogram(
+    unclass(x)[-slices, ],
+    attr(x, "coi_mask")[-slices, ],
+    attr(x, "sample_freq"),
+    attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "freq_scale"),
+    attr(x, "sigma")
+  )
 }
 
 sc_rm_coi_time_slices <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
-  interval <- sc_coi_time_interval(x)
-  rows_to_keep <- interval[[1]]:interval[[2]]
+  dt <-
+    coi_invalid_time_steps(
+      attr(x, "sample_freq"), attr(x, "freq_begin"), attr(x, "sigma")
+    )
+
+  begin <- dt + 1
+  end <- sc_dim_time(x) - dt
+
+  if (end > begin) {
+    rows_to_keep <- begin:end
+  } else {
+    stop("All data removed. Are you sure you want that?")
+  }
 
   new_fcwtr_scalogram(
-    x[rows_to_keep, ],
+    unclass(x)[rows_to_keep, ],
     attr(x, "coi_mask")[rows_to_keep, ],
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
@@ -164,7 +177,7 @@ sc_agg <- function(x, wnd) {
   x_new[is.nan(x_new)] <- NA_real_
 
   fcwtr_scalogram(
-    x_new,
+    unclass(x_new),
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end"),
     attr(x, "freq_scale"),
