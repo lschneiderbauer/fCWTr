@@ -123,7 +123,7 @@
 <span><span class="co">#&gt; 10          9 2.040816e-04 [s] 2100 [Hz]    NA</span></span></code></pre></div>
 <p>We can also directly plot the resulting scalogram:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output</span>, time_unit <span class="op">=</span> <span class="st">"ms"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example_plot-1.png" width="100%"></p>
 <p>For long sequences, the required memory can exceed your local memory. In this case it can be useful to reduce the time resolution of the result and process the data in batches. This can be done with <code><a href="reference/fcwt_batch.html">fcwt_batch()</a></code>. In case the batch size is not explicitly provided, some heuristics are used to determine a batch size automatically:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
