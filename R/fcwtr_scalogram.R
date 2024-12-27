@@ -280,7 +280,7 @@ print.fcwtr_scalogram <- function(x, ...) {
   cat("<> Sigma: ", attr(x, "sigma"), "\n", sep = "")
 
   cat("Time/frequency matrix summary\n")
-  print(summary(as.matrix(x)))
+  print(summary(as.vector(as.matrix(x))))
 
   invisible(x)
 }
