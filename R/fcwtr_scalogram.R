@@ -226,10 +226,14 @@ tbind <- function(..., deparse.level = 1) {
 print.fcwtr_scalogram <- function(x, ...) {
   cat("_Scalogram_\n")
   cat("<> (Time/Frequency) dimension: [", sc_dim_time(x), ",",
-      sc_dim_freq(x), "]\n", sep = "")
+    sc_dim_freq(x), "]\n",
+    sep = ""
+  )
   cat("<> Sampling rate: ", format(attr(x, "sample_freq")), "\n", sep = "")
   cat("<> Frequency scale: ", format(attr(x, "freq_begin")), " - ",
-      format(attr(x, "freq_end")), ", ", attr(x, "freq_scale"), "\n", sep = "")
+    format(attr(x, "freq_end")), ", ", attr(x, "freq_scale"), "\n",
+    sep = ""
+  )
   cat("<> Time offset:", format(attr(x, "time_offset")), "\n")
   cat("<> Sigma: ", attr(x, "sigma"), "\n", sep = "")
 
@@ -400,6 +404,7 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #' @return
 #'  A ggplot object.
 #'
+#' @export
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
                                      time_unit = "s", freq_unit = "Hz", ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
