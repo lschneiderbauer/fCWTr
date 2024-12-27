@@ -11,6 +11,9 @@
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+Returns the argument \code{x} invisibly.
+}
 \description{
 \code{print()} prints its argument and returns it invisibly (via \code{invisible(x)}).
 }

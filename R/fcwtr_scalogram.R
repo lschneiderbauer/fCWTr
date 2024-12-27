@@ -262,6 +262,8 @@ rbind.fcwtr_scalogram <- function(...) {
 #' @param x The "fcwtr_scalogram" object resulting from [fcwt()] to print.
 #' @inheritParams base::print
 #'
+#' @return Returns the argument `x` invisibly.
+#'
 #' @export
 print.fcwtr_scalogram <- function(x, ...) {
   cat("_Scalogram_\n")
@@ -341,6 +343,8 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #' @param x
 #'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #' @inheritParams base::as.matrix
+#'
+#' @return A two dimensional numeric vector, inheriting the S3 class "matrix".
 #'
 #' @examples
 #' fcwt(
