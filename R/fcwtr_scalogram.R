@@ -344,7 +344,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #' @inheritParams base::as.matrix
 #'
-#' @return A two dimensional numeric vector, inheriting the S3 class "matrix".
+#' @return A two dimensional numeric vector, inheriting the class "matrix".
 #'
 #' @examples
 #' fcwt(
@@ -356,9 +356,13 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'
 #' @export
 as.matrix.fcwtr_scalogram <- function(x, ...) {
-  attributes(x) <- NULL
+  t <- sc_dim_time(x)
+  f <- sc_dim_freq(x)
 
-  unclass(x)
+  attributes(x) <- NULL
+  dim(x) <- c(t, f)
+
+  x
 }
 
 #' Extract parts of a scalogram

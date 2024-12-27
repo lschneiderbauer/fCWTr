@@ -90,6 +90,21 @@ test_that("as.data.frame() result has correct properties", {
   expect_true(has_comp_unit(res[["freq"]], "Hz"))
 })
 
+test_that("as.matrix() has the correct S3 class", {
+  expect_true(
+    fcwt(
+      ts_sin_440[1:1000],
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      sigma = 1
+    ) |>
+      as.matrix() |>
+      is.matrix()
+  )
+})
+
 test_that("`agg()` does not err", {
   prep <-
     fcwt(
