@@ -23,3 +23,24 @@ The scalograms are stitched together in chronological fashion (i.e. the first
 argument will the initial piece, etc.).
 Time offset information is kept from the first piece.
 }
+\examples{
+ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
+
+res <-
+  fcwt(
+    ts_sin_440,
+    sample_freq = u(44.1, "kHz"),
+    freq_begin = u(50, "Hz"),
+    freq_end = u(1000, "Hz"),
+    n_freqs = 10,
+    sigma = 5
+  )
+
+print(res)
+
+# doubled scalogram
+res_doubled <- rbind(res, res)
+
+print(res_doubled)
+
+}

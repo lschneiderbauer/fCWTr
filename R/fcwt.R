@@ -76,15 +76,14 @@
 #' @examples
 #' ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
 #'
-#' res <-
-#'   fcwt(
-#'     ts_sin_440,
-#'     sample_freq = u(44.1, "kHz"),
-#'     freq_begin = u(50, "Hz"),
-#'     freq_end = u(1000, "Hz"),
-#'     n_freqs = 10,
-#'     sigma = 5
-#'   )
+#' fcwt(
+#'   ts_sin_440,
+#'   sample_freq = u(44.1, "kHz"),
+#'   freq_begin = u(50, "Hz"),
+#'   freq_end = u(1000, "Hz"),
+#'   n_freqs = 10,
+#'   sigma = 5
+#' )
 #' @export
 fcwt <- function(signal,
                  sample_freq,
@@ -134,7 +133,8 @@ fcwt <- function(signal,
 
   sc <-
     fcwtr_scalogram(
-      output, time_offset = u(0, "s"), sample_freq, freq_begin, freq_end,
+      output,
+      time_offset = u(0, "s"), sample_freq, freq_begin, freq_end,
       freq_scale, sigma
     )
 

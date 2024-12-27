@@ -86,13 +86,12 @@ Nat Comput Sci 2, 47–58 (2022). \doi{10.1038/s43588-021-00183-z}
 \examples{
 ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
 
-res <-
-  fcwt(
-    ts_sin_440,
-    sample_freq = u(44.1, "kHz"),
-    freq_begin = u(50, "Hz"),
-    freq_end = u(1000, "Hz"),
-    n_freqs = 10,
-    sigma = 5
-  )
+fcwt(
+  ts_sin_440,
+  sample_freq = u(44.1, "kHz"),
+  freq_begin = u(50, "Hz"),
+  freq_end = u(1000, "Hz"),
+  n_freqs = 10,
+  sigma = 5
+)
 }

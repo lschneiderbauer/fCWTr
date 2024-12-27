@@ -15,3 +15,12 @@
 Strips attributes and class from a scalogram object to retrieve
 a pure matrix.
 }
+\examples{
+fcwt(
+  sin((1:5000) * 2 * pi * 440 / 44100),
+  sample_freq = 44100,
+  n_freqs = 10
+) |>
+  as.matrix()
+
+}

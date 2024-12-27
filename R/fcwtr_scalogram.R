@@ -196,6 +196,26 @@ sc_agg <- function(x, wnd) {
 #'
 #' @return Returns a new time-wise combined "fcwtr_scalogram" object.
 #'
+#' @examples
+#' ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
+#'
+#' res <-
+#'   fcwt(
+#'     ts_sin_440,
+#'     sample_freq = u(44.1, "kHz"),
+#'     freq_begin = u(50, "Hz"),
+#'     freq_end = u(1000, "Hz"),
+#'     n_freqs = 10,
+#'     sigma = 5
+#'   )
+#'
+#' print(res)
+#'
+#' # doubled scalogram
+#' res_doubled <- rbind(res, res)
+#'
+#' print(res_doubled)
+#'
 #' @export
 rbind.fcwtr_scalogram <- function(...) {
   args <- list(...)
@@ -322,6 +342,14 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #' @inheritParams base::as.matrix
 #'
+#' @examples
+#' fcwt(
+#'   sin((1:5000) * 2 * pi * 440 / 44100),
+#'   sample_freq = 44100,
+#'   n_freqs = 10
+#' ) |>
+#'   as.matrix()
+#'
 #' @export
 as.matrix.fcwtr_scalogram <- function(x, ...) {
   attributes(x) <- NULL
@@ -351,6 +379,13 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #'
 #' @return
 #'  Another "fcwtr_scalogram" object that contains only part of the data.
+#'
+#' @examples
+#' fcwt(
+#'   sin((1:5000) * 2 * pi * 440 / 44100),
+#'   sample_freq = 44100,
+#'   n_freqs = 10
+#' )[1:1000, 2:7]
 #'
 #' @export
 `[.fcwtr_scalogram` <- function(x, i, j) {
