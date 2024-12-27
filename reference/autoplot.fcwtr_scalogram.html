@@ -84,6 +84,24 @@ expressions.</p></dd>
     <p>A ggplot object.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fcwt.html">fcwt</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4410</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="fl">440</span> <span class="op">/</span> <span class="fl">44100</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span></span>
+<span class="r-in"><span>    freq_begin <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>    freq_end <span class="op">=</span> <span class="fl">1000</span>,</span></span>
+<span class="r-in"><span>    n_freqs <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>    sigma <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">res</span>, time_unit <span class="op">=</span> <span class="st">"ms"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="autoplot.fcwtr_scalogram-1.png" alt="" width="700" height="433"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
