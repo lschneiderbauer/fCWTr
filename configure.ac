@@ -1,4 +1,4 @@
-AC_INIT([fcwtr],[0.2.0])
+AC_INIT([fCWTr],[0.2.9999])
 
 
 
@@ -41,7 +41,7 @@ AC_SEARCH_LIBS(
   fftwf_free,
   fftw3f,
   [have_fftw=yes],
-  [AC_MSG_ERROR([The fftw3 library is required.])]
+  [AC_MSG_ERROR([The fftw3f library is required.])]
 )
 
 # Check for omp.h header
