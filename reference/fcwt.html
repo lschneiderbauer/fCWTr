@@ -147,15 +147,23 @@ Nat Comput Sci 2, 47–58 (2022). <a href="https://doi.org/10.1038/s43588-021-00
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ts_sin_440</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5000</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="fl">440</span> <span class="op">/</span> <span class="fl">44100</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">fcwt</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">ts_sin_440</span>,</span></span>
-<span class="r-in"><span>    sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    freq_begin <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    freq_end <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    n_freqs <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>    sigma <span class="op">=</span> <span class="fl">5</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fcwt</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">ts_sin_440</span>,</span></span>
+<span class="r-in"><span>  sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  freq_begin <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  freq_end <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  n_freqs <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  sigma <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; (Time/Frequency) dimension: [5000,10]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sampling rate: 44.1 [kHz]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 50 [Hz] - 1000 [Hz], linear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Time offset: 0 [s] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sigma: 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time/frequency matrix summary</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.000   0.000   0.000   0.086   0.004   0.728   18514 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
