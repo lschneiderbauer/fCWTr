@@ -7,7 +7,7 @@
 \method{as.data.frame}{fcwtr_scalogram}(x, ...)
 }
 \arguments{
-\item{x}{An object resulting from \code{\link[=fcwt]{fcwt()}}.}
+\item{x}{An "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
 
 \item{...}{additional arguments to be passed to or from methods.}
 }

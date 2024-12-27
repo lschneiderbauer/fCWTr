@@ -7,7 +7,7 @@
 \method{plot}{fcwtr_scalogram}(x, n = 1000, time_unit = "s", freq_unit = "Hz", ...)
 }
 \arguments{
-\item{x}{An object resulting from \code{\link[=fcwt]{fcwt()}}.}
+\item{x}{An "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
 
 \item{n}{The plotting function reduces the time resolution by averaging
 to generate a reasonable graphics format. \code{n} is the number of time

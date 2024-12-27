@@ -218,6 +218,31 @@ tbind <- function(..., deparse.level = 1) {
   )
 }
 
+#' Print the scalogram
+#'
+#' `print()` prints its argument and returns it invisibly (via `invisible(x)`).
+#'
+#' @param x The "fcwtr_scalogram" object resulting from [fcwt()] to print.
+#' @inheritParams base::print
+#'
+#' @export
+print.fcwtr_scalogram <- function(x, ...) {
+  cat("_Scalogram_\n")
+  cat("<> (Time/Frequency) dimension: [", sc_dim_time(x), ",",
+      sc_dim_freq(x), "]\n", sep = "")
+  cat("<> Sampling rate: ", format(attr(x, "sample_freq")), "\n", sep = "")
+  cat("<> Frequency scale: ", format(attr(x, "freq_begin")), " - ",
+      format(attr(x, "freq_end")), ", ", attr(x, "freq_scale"), "\n", sep = "")
+  cat("<> Time offset:", format(attr(x, "time_offset")), "\n")
+  cat("<> Sigma: ", attr(x, "sigma"), "\n", sep = "")
+
+  cat("Time/frequency matrix summary\n")
+  print(summary(as.matrix(x)))
+
+  invisible(x)
+}
+
+
 #' Coerce the scalogram matrix to a data frame
 #'
 #' Internally, the scalogram resulting from [fcwt()] is represented by
@@ -225,7 +250,7 @@ tbind <- function(..., deparse.level = 1) {
 #' data frame. Note that this conversion has a significant run time cost.
 #'
 #' @param x
-#'  An object resulting from [fcwt()].
+#'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #'
 #' @return
 #'  A [data.frame()] object representing the scalogram data with four columns:
@@ -267,8 +292,26 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
   )
 }
 
+#' Extract the data matrix from a scalogram
+#'
+#' Strips attributes and class from a scalogram object to retrieve
+#' a pure matrix.
+#'
+#' @param x
+#'  An "fcwtr_scalogram" object resulting from [fcwt()].
+#' @inheritParams base::as.matrix
+#'
+#' @export
+as.matrix.fcwtr_scalogram <- function(x, ...) {
+  attributes(x) <- NULL
+
+  unclass(x)
+}
+
 #' Extract parts of a scalogram
 #'
+#' @param x
+#'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #' @param i,j
 #'  Indices corresponding to time slices of the spectogram which specify
 #'  elements to extract. Indices are numeric vectors or empty (missing)
@@ -284,6 +327,9 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'  columns as there are dimensions of x; the result is then a vector with
 #'  elements corresponding to the sets of indices in each row of i.
 #'  An index value of NULL is treated as if it were integer(0).
+#'
+#' @return
+#'  Another "fcwtr_scalogram" object that contains only part of the data.
 #'
 #' @export
 `[.fcwtr_scalogram` <- function(x, i, j) {
@@ -309,7 +355,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #' Requires [ggplot2](https://ggplot2.tidyverse.org/).
 #'
 #' @param x
-#'  An object resulting from [fcwt()].
+#'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #'
 #' @inheritParams autoplot.fcwtr_scalogram
 #' @return No return value, called for side effects.
@@ -337,6 +383,8 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 
 #' Create a ggplot object resembling a scalogram
 #'
+#' @param object
+#'  A "fcwtr_scalogram" object resulting from [fcwt()].
 #' @param n
 #'  The plotting function reduces the time resolution by averaging
 #'  to generate a reasonable graphics format. `n` is the number of time
@@ -355,7 +403,6 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #' @return
 #'  A ggplot object.
 #'
-#' @keywords internal
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
                                      time_unit = "s", freq_unit = "Hz", ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))

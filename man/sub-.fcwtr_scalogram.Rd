@@ -7,6 +7,8 @@
 \method{[}{fcwtr_scalogram}(x, i, j)
 }
 \arguments{
+\item{x}{An "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
+
 \item{i, j}{Indices corresponding to time slices of the spectogram which specify
 elements to extract. Indices are numeric vectors or empty (missing)
 or NULL. Numeric values are coerced to integer or whole numbers as by as.integer
@@ -21,6 +23,9 @@ When indexing arrays by [ a single argument i can be a matrix with as many
 columns as there are dimensions of x; the result is then a vector with
 elements corresponding to the sets of indices in each row of i.
 An index value of NULL is treated as if it were integer(0).}
+}
+\value{
+Another "fcwtr_scalogram" object that contains only part of the data.
 }
 \description{
 Extract parts of a scalogram

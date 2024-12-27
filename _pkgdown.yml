@@ -7,16 +7,18 @@ reference:
     Functions for performing fast continuous wavelet transforms.
   contents:
   - starts_with("fcwt")
-- title: "Plotting"
-  desc: "Optional ggplot2 plotting methods (they only work if ggplot is installed)."
-  contents:
-  - plot.fcwtr_scalogram
-- title: "Data frame conversion"
-  contents:
-  - as.data.frame.fcwtr_scalogram
 - title: "Physical unit helper"
   contents:
   - u
+- title: "Scalogram S3 methods"
+  desc: "A data.frame conversion method, data extractors, and optional ggplot2 plotting methods (they only work if ggplot is installed)."
+  contents:
+  - as.data.frame.fcwtr_scalogram
+  - as.matrix.fcwtr_scalogram
+  - "`[.fcwtr_scalogram`"
+  - print.fcwtr_scalogram
+  - plot.fcwtr_scalogram
+  - autoplot.fcwtr_scalogram
 - title: "Sample data"
   desc: >
     Sample signal data mainly used to generate examples. The signals consist

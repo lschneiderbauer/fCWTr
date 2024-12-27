@@ -13,6 +13,8 @@ autoplot.fcwtr_scalogram(
 )
 }
 \arguments{
+\item{object}{A "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
+
 \item{n}{The plotting function reduces the time resolution by averaging
 to generate a reasonable graphics format. \code{n} is the number of time
 steps that are plotted. Defaults to \code{n = 1000}.}
@@ -34,4 +36,3 @@ A ggplot object.
 \description{
 Create a ggplot object resembling a scalogram
 }
-\keyword{internal}
