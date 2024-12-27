@@ -3,19 +3,16 @@ new_fcwtr_scalogram <- function(matrix,
                                 sample_freq,
                                 freq_begin, freq_end,
                                 freq_scale, sigma) {
-  obj <-
-    structure(
-      matrix,
-      class = c("fcwtr_scalogram", class(matrix)),
-      time_offset = time_offset,
-      sample_freq = sample_freq,
-      freq_begin = freq_begin,
-      freq_end = freq_end,
-      freq_scale = freq_scale,
-      sigma = sigma
-    )
-
-  obj
+  structure(
+    matrix,
+    class = c("fcwtr_scalogram", class(matrix)),
+    time_offset = time_offset,
+    sample_freq = sample_freq,
+    freq_begin = freq_begin,
+    freq_end = freq_end,
+    freq_scale = freq_scale,
+    sigma = sigma
+  )
 }
 
 fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
