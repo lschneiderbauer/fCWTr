@@ -347,6 +347,8 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #' @return A two dimensional numeric vector, inheriting the class "matrix".
 #'
 #' @examples
+#' options(max.print = 10)
+#'
 #' fcwt(
 #'   sin((1:5000) * 2 * pi * 440 / 44100),
 #'   sample_freq = 44100,

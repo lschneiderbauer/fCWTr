@@ -12,13 +12,15 @@
 \item{...}{additional arguments to be passed to or from methods.}
 }
 \value{
-A two dimensional numeric vector, inheriting the S3 class "matrix".
+A two dimensional numeric vector, inheriting the class "matrix".
 }
 \description{
 Strips attributes and class from a scalogram object to retrieve
 a pure matrix.
 }
 \examples{
+options(max.print = 10)
+
 fcwt(
   sin((1:5000) * 2 * pi * 440 / 44100),
   sample_freq = 44100,
