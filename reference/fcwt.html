@@ -125,9 +125,11 @@ Defaults to 2 threads (to accomodate CRAN requirements).</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The spectogram, a numeric real-valued matrix with dimensions
-<code>dim = c(length(signal), n_freqs)</code>.
+<code>dim = c(length(signal), n_freqs)</code>, curated with some additional properties.
 This matrix is wrapped into a S3-class <code>fcwtr_scalogram</code> so that plotting and
-coercion functions can be used conveniently.</p>
+coercion functions can be used conveniently. Use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> to strip
+the curated information. Or use <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> to convert to another
+data format.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
