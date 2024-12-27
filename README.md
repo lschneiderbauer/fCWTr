@@ -27,7 +27,7 @@ continuous wavelet transformation (fCWT) for real-time, high-quality,
 noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
 <https://doi.org/10.1038/s43588-021-00183-z>
 
-## Dependencies
+## System dependencies
 
 - R \>= 4.1
 - [fftw](https://www.fftw.org/) library (used by
@@ -121,11 +121,11 @@ plot(output, time_unit = "ms")
 
 <img src="man/figures/README-example_plot-1.png" width="100%" />
 
-For long sequences, the required memory can exceed your local memory. In
-this case it can be useful to reduce the time resolution of the result
-and process the data in batches. This can be done with `fcwt_batch()`.
-In case the batch size is not explicitly provided, some heuristics are
-used to determine a batch size automatically:
+For long sequences, the required memory can exceed your available local
+memory. In this case it can be useful to reduce the time resolution of
+the result and process the data in batches. This can be done with
+`fcwt_batch()`. In case the batch size is not explicitly provided, some
+heuristics are used to determine a batch size automatically:
 
 ``` r
 batch_result <-
