@@ -9,7 +9,7 @@ if test -z "${R_HOME}"; then
   exit 1
 fi
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS` `"${R_HOME}/bin/R" CMD config CXXPICFLAGS`
 CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS`"
 LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS`"
 AC_LANG(C++)
