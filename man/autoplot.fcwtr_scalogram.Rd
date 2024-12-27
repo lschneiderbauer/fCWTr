@@ -36,3 +36,20 @@ A ggplot object.
 \description{
 Create a ggplot object resembling a scalogram
 }
+\examples{
+\dontshow{if (requireNamespace("ggplot2", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+library(ggplot2)
+
+res <-
+  fcwt(
+    sin((1:4410) * 2 * pi * 440 / 44100),
+    sample_freq = 44100,
+    freq_begin = 50,
+    freq_end = 1000,
+    n_freqs = 10,
+    sigma = 5
+  )
+
+autoplot(res, time_unit = "ms")
+\dontshow{\}) # examplesIf}
+}

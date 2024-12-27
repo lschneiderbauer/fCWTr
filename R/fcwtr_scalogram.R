@@ -469,6 +469,21 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #' @return
 #'  A ggplot object.
 #'
+#' @examplesIf requireNamespace("ggplot2", quietly = TRUE)
+#' library(ggplot2)
+#'
+#' res <-
+#'   fcwt(
+#'     sin((1:4410) * 2 * pi * 440 / 44100),
+#'     sample_freq = 44100,
+#'     freq_begin = 50,
+#'     freq_end = 1000,
+#'     n_freqs = 10,
+#'     sigma = 5
+#'   )
+#'
+#' autoplot(res, time_unit = "ms")
+#'
 #' @export
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
                                      time_unit = "s", freq_unit = "Hz", ...) {
