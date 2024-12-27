@@ -1,17 +1,21 @@
-## Resubmission
-This is a resubmission. In this version I have:
+## New submission - Package was archived on CRAN
 
-* Added missing documentation for return values and being more elaborate with already existing return value documentation.
+This is a resubmission (after package being archived). In this version I have:
 
-* Added single quotes in the DESCRIPTION where appropriate.
-
-* Changed the package title from 'fcwtr' to 'fCWTr' to be more consistent with the original author's library name. Various URLs and package references were adjusted accordingly.
-
+-   Changed 'SystemRequirements' to directly refer to single precission 'fftwf' and changed 'openmp' to 'fftwf_omp'.
+-   I do not understand the comment 'does not test for it': ./configure.ac, line #40, contains a paragraph that tests for single precision functions. The configuration fails with a descriptive error message "The fftw3f library is required." in case it does not find a fitting library. I searched the "Writing R package" documentation for additional mandatory places, where a check should occur, to no avail.
+-   I also added other features, unrelated to the comments, since last submission/archiving.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors \| 0 warnings \| 2 notes
 
-* This is a new release.
-* Note: "Possibly misspelled words in DESCRIPTION: Broek (17:32) Lukas (16:57)." I double-checked the spelling and it is correct.
+-   New submission - Package was archived on CRAN
 
+-   Note: "Possibly misspelled words in DESCRIPTION: Broek (17:32) Lukas (16:57)."
+
+    -   Remark: I double-checked the spelling and it is correct.
+
+-   X-CRAN-Comment: Archived on 2024-07-01 as issues were not corrected in time.
+
+-   Incorrect 'SystemRequirements' (needs single-precision 'fftw' and does not test for it).
