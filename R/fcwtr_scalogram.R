@@ -166,7 +166,7 @@ sc_agg <- function(x, wnd) {
     return(x)
   }
 
-  x_new <- x[1:(poolsize * n), , drop = FALSE]
+  x_new <- unclass(x)[1:(poolsize * n), , drop = FALSE]
   dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
   x_new <- colMeans(x_new, dims = 1, na.rm = TRUE)
 
@@ -264,6 +264,42 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
     time = attr(x, "time_offset") + (dim_t[row(x)] - 1) / attr(x, "sample_freq"),
     freq = dim_f[col(x)],
     value = c(x)
+  )
+}
+
+#' Extract parts of a scalogram
+#'
+#' @param i,j
+#'  Indices corresponding to time slices of the spectogram which specify
+#'  elements to extract. Indices are numeric vectors or empty (missing)
+#'  or NULL. Numeric values are coerced to integer or whole numbers as by as.integer
+#'  or for large values by `trunc()` (and hence truncated towards zero).
+#'
+#'  The time offset of the scalogram is adjusted to correspond to `min(i)`.
+#'
+#'  For [-indexing only: i, j, ... can be logical vectors, indicating elements/slices
+#'  to select. Such vectors are recycled if necessary to match the corresponding extent.
+#'  i, j, ... can also be negative integers, indicating elements/slices to leave out of the selection.
+#'  When indexing arrays by [ a single argument i can be a matrix with as many
+#'  columns as there are dimensions of x; the result is then a vector with
+#'  elements corresponding to the sets of indices in each row of i.
+#'  An index value of NULL is treated as if it were integer(0).
+#'
+#' @export
+`[.fcwtr_scalogram` <- function(x, i, j) {
+  if (!missing(i)) {
+    time_offset <- attr(x, "time_offset") + (min(i) - 1) / attr(x, "sample_freq")
+  } else {
+    time_offset <- attr(x, "time_offset")
+  }
+
+  new_fcwtr_scalogram(
+    unclass(x)[i, j, drop = FALSE],
+    time_offset,
+    attr(x, "sample_freq"),
+    attr(x, "freq_begin"), attr(x, "freq_end"),
+    attr(x, "freq_scale"),
+    attr(x, "sigma")
   )
 }
 
