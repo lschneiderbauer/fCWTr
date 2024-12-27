@@ -163,7 +163,7 @@ fcwt_batch <- function(signal,
         sc_agg(w)
     }
   ) |>
-    do.call(tbind, args = _)
+    do.call(rbind, args = _)
 }
 
 batches <- function(batch_size, signal_size, dt) {

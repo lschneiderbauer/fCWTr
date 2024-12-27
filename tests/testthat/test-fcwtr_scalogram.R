@@ -1,4 +1,4 @@
-test_that("tbind() for fcwtr_scalogram", {
+test_that("rbind() for fcwtr_scalogram", {
   first <-
     fcwt(
       ts_sin_440[1:1000],
@@ -40,11 +40,11 @@ test_that("tbind() for fcwtr_scalogram", {
     "fcwtr_scalogram"
   )
   expect_s3_class(
-    tbind(first, second),
+    rbind(first, second),
     "fcwtr_scalogram"
   )
   expect_error(
-    tbind(first, third)
+    rbind(first, third)
   )
 })
 

@@ -16,6 +16,7 @@ reference:
   - as.data.frame.fcwtr_scalogram
   - as.matrix.fcwtr_scalogram
   - "`[.fcwtr_scalogram`"
+  - rbind.fcwtr_scalogram
   - print.fcwtr_scalogram
   - plot.fcwtr_scalogram
   - autoplot.fcwtr_scalogram
