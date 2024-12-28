@@ -41,7 +41,7 @@ AC_SEARCH_LIBS(
   fftwf_free,
   fftw3f,
   [have_fftw=yes],
-  [AC_MSG_ERROR([The fftw3f library is required.])]
+  [AC_MSG_ERROR([The fftw3f library is required. In case fftw is already installed, you might need to enable fftw's single precision support with './configure --enable-float'.])]
 )
 
 # Check for omp.h header
