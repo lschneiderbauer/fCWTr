@@ -1,15 +1,14 @@
 #' Bestow units to a number
 #'
-#' A wrapper around `units::set_unit()` mostly to have a short name to
+#' A wrapper around [units::set_units()] mostly to have a short name to
 #' create a dimensionful number.
 #'
 #' @param x A numeric value to be bestowed with a unit.
 #' @param unit
-#'  A character vector indicating the unit. See `units::valid_udunits()` for
-#'  possible units.
+#'  A character indicating the unit. See [units::valid_udunits()] and
+#'  [units::valid_udunits_prefixes()] for possible units.
 #'
-#' @seealso `units::set_units()`
-#' @export
+#' @seealso [units::set_units()]
 #' @examples
 #' u(10, "km") # 10 kilometer
 #' u(10, "mm") # 10 mm
@@ -17,6 +16,7 @@
 #' # comparison taking into account the unit
 #' u(100, "m") > u(1, "km")
 #'
+#' @export
 u <- function(x, unit) {
   stopifnot(is.numeric(x))
   stopifnot(is.character(unit))
@@ -25,6 +25,37 @@ u <- function(x, unit) {
 
   # mode required because we pass a string instead of an expression
   units::set_units(x, unit, mode = "standard")
+}
+
+#' Drop unit
+#'
+#' Drop units from a dimensionful quantity and retrieve a dimensionless number.
+#' The dimensionless number is defined by the ratio of `x` and one unit `u(1, unit)`.
+#'
+#' @param x
+#'  A dimensionful quantity (S3 class "units"), e.g. generated with [u()] or
+#'  subsequent calculations.
+#' @inheritParams u
+#' @return
+#'  A dimensionless number defined by the ratio of `x` and one unit `u(1, unit)`.
+#'
+#' @examples
+#'  x <- u(1, "km")
+#'
+#'  # retrieve a dimensionless number
+#'  # from x in units of "meter"
+#'  du(x, "m")
+#'
+#' @seealso [units::drop_units()]
+#' @export
+du <- function(x, unit) {
+  stopifnot(inherits(x, "units"))
+
+  if (has_comp_unit(x, unit)) {
+    units::drop_units(conv(x, unit))
+  } else {
+    stop("Units are not convertible.")
+  }
 }
 
 #' Drop unit if dimensionless

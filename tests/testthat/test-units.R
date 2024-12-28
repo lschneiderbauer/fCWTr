@@ -15,3 +15,10 @@ test_that("number extraction works", {
   expect_equal(hz(u(1, "kHz")), 1000)
   expect_error(hz(u(1, "m")))
 })
+
+test_that("du() works", {
+  x <- u(1, "km")
+
+  expect_equal(du(x, "m"), 1000)
+  expect_error(du(x, "Hz"))
+})

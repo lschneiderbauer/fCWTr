@@ -9,11 +9,11 @@ u(x, unit)
 \arguments{
 \item{x}{A numeric value to be bestowed with a unit.}
 
-\item{unit}{A character vector indicating the unit. See \code{units::valid_udunits()} for
-possible units.}
+\item{unit}{A character indicating the unit. See \code{\link[units:valid_udunits]{units::valid_udunits()}} and
+\code{\link[units:valid_udunits]{units::valid_udunits_prefixes()}} for possible units.}
 }
 \description{
-A wrapper around \code{units::set_unit()} mostly to have a short name to
+A wrapper around \code{\link[units:units]{units::set_units()}} mostly to have a short name to
 create a dimensionful number.
 }
 \examples{
@@ -25,5 +25,5 @@ u(100, "m") > u(1, "km")
 
 }
 \seealso{
-\code{units::set_units()}
+\code{\link[units:units]{units::set_units()}}
 }

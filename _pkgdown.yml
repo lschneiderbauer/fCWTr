@@ -10,6 +10,7 @@ reference:
 - title: "Physical unit helper"
   contents:
   - u
+  - du
 - title: "Scalogram S3 methods"
   desc: "A data.frame conversion method, data extractors, and optional ggplot2 plotting methods (they only work if ggplot is installed)."
   contents:
