@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-The R package fCWTr is a simple wrapper invoking the [fCWT library](https://github.com/fastlib/fCWT), a library implementing a [continuous wavelet transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform) with a Morlet wavelet, utilizing the power of [fftw](https://www.fftw.org/), a fast fourier transform implementation.
+The R package fCWTr wraps the [fCWT library](https://github.com/fastlib/fCWT), a library implementing a [continuous wavelet transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform) with a Morlet wavelet, utilizing the power of [fftw](https://www.fftw.org/), a fast fourier transform implementation. It provides an R-like functional interface and implements common S3 methods for convenience.
 
 See the original paper by Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022). <https://doi.org/10.1038/s43588-021-00183-z>
 
@@ -78,11 +78,14 @@ output <-
     sigma = 5
   )
 
-# The result is a numeric matrix
+# The result is basically a numeric matrix with time and frequency dimension
 dim(output)
+
+# Some meta data is recorded too
+output
 ```
 
-The result can be easily coerced into a data frame:
+The result can be converted into a data frame if need be:
 
 ```{r example_df}
 head(as.data.frame(output), 10)

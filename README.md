@@ -15,12 +15,14 @@ coverage](https://codecov.io/gh/lschneiderbauer/fCWTr/branch/master/graph/badge.
 
 <!-- badges: end -->
 
-The R package fCWTr is a simple wrapper invoking the [fCWT
+The R package fCWTr wraps the [fCWT
 library](https://github.com/fastlib/fCWT), a library implementing a
 [continuous wavelet
 transform](https://en.wikipedia.org/wiki/Continuous_wavelet_transform)
 with a Morlet wavelet, utilizing the power of
 [fftw](https://www.fftw.org/), a fast fourier transform implementation.
+It provides an R-like functional interface and implements common S3
+methods for convenience.
 
 See the original paper by Arts, L.P.A., van den Broek, E.L. The fast
 continuous wavelet transformation (fCWT) for real-time, high-quality,
@@ -91,12 +93,24 @@ output <-
     sigma = 5
   )
 
-# The result is a numeric matrix
+# The result is basically a numeric matrix with time and frequency dimension
 dim(output)
 #> [1] 6000  200
+
+# Some meta data is recorded too
+output
+#> _Scalogram_
+#> <> (Time/Frequency) dimension: [6000,200]
+#> <> Sampling rate: 44.1 [kHz]
+#> <> Frequency scale: 16 [Hz] - 2100 [Hz], linear
+#> <> Time offset: 0 [s] 
+#> <> Sigma: 5
+#> Time/frequency matrix summary
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#>    0.00    0.00    0.00    0.13    0.04    2.81  232338
 ```
 
-The result can be easily coerced into a data frame:
+The result can be converted into a data frame if need be:
 
 ``` r
 head(as.data.frame(output), 10)
