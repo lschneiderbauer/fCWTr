@@ -52,7 +52,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>The R package fCWTr is a simple wrapper invoking the <a href="https://github.com/fastlib/fCWT" class="external-link">fCWT library</a>, a library implementing a <a href="https://en.wikipedia.org/wiki/Continuous_wavelet_transform" class="external-link">continuous wavelet transform</a> with a Morlet wavelet, utilizing the power of <a href="https://www.fftw.org/" class="external-link">fftw</a>, a fast fourier transform implementation.</p>
+<p>The R package fCWTr wraps the <a href="https://github.com/fastlib/fCWT" class="external-link">fCWT library</a>, a library implementing a <a href="https://en.wikipedia.org/wiki/Continuous_wavelet_transform" class="external-link">continuous wavelet transform</a> with a Morlet wavelet, utilizing the power of <a href="https://www.fftw.org/" class="external-link">fftw</a>, a fast fourier transform implementation. It provides an R-like functional interface and implements common S3 methods for convenience.</p>
 <p>See the original paper by Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022). <a href="https://doi.org/10.1038/s43588-021-00183-z" class="external-link uri">https://doi.org/10.1038/s43588-021-00183-z</a></p>
 <div class="section level2">
 <h2 id="system-dependencies">System dependencies<a class="anchor" aria-label="anchor" href="#system-dependencies"></a>
@@ -104,10 +104,22 @@
 <span>    sigma <span class="op">=</span> <span class="fl">5</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co"># The result is a numeric matrix</span></span>
+<span><span class="co"># The result is basically a numeric matrix with time and frequency dimension</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 6000  200</span></span></code></pre></div>
-<p>The result can be easily coerced into a data frame:</p>
+<span><span class="co">#&gt; [1] 6000  200</span></span>
+<span></span>
+<span><span class="co"># Some meta data is recorded too</span></span>
+<span><span class="va">output</span></span>
+<span><span class="co">#&gt; _Scalogram_</span></span>
+<span><span class="co">#&gt; &lt;&gt; (Time/Frequency) dimension: [6000,200]</span></span>
+<span><span class="co">#&gt; &lt;&gt; Sampling rate: 44.1 [kHz]</span></span>
+<span><span class="co">#&gt; &lt;&gt; Frequency scale: 16 [Hz] - 2100 [Hz], linear</span></span>
+<span><span class="co">#&gt; &lt;&gt; Time offset: 0 [s] </span></span>
+<span><span class="co">#&gt; &lt;&gt; Sigma: 5</span></span>
+<span><span class="co">#&gt; Time/frequency matrix summary</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span></span>
+<span><span class="co">#&gt;    0.00    0.00    0.00    0.13    0.04    2.81  232338</span></span></code></pre></div>
+<p>The result can be converted into a data frame if need be:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    time_index             time      freq value</span></span>
