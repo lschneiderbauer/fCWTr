@@ -17,11 +17,12 @@ wnd_from_dim <- function(n, orig_sample_freq) {
   )
 }
 
-#' @param secs target window length in seconds. The exact window length
+#' @param time target window length in seconds or similar time units.
+#'              The exact window length
 #'             depends on the original sample frequency `orig_sample_freq`
 #' @noRd
-wnd_from_secs <- function(secs, orig_sample_freq) {
-  n <- round(secs * orig_sample_freq)
+wnd_from_time <- function(time, orig_sample_freq) {
+  n <- round(ddu(time * orig_sample_freq))
 
   wnd_from_dim(n, orig_sample_freq)
 }
