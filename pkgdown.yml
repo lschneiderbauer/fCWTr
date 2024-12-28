@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-12-28T14:19Z
+last_built: 2024-12-28T15:45Z
 urls:
   reference: https://lschneiderbauer.github.io/fcwtr/reference
   article: https://lschneiderbauer.github.io/fcwtr/articles
