@@ -13,7 +13,7 @@ i.e. a graph with a time and a frequency dimension."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">fCWTr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9999</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,7 +93,8 @@ interpreted in units of 'Hertz'.</p></dd>
 
 
 <dt id="arg-freq-scale">freq_scale<a class="anchor" aria-label="anchor" href="#arg-freq-scale"></a></dt>
-<dd><p>Should the frequency scale be linear or logarithmic?
+<dd><p>( <code>"freq"</code> | <code>"log"</code> )
+Should the frequency scale be linear or logarithmic?
 "linear"  / "log" for linear / logarithmic.</p></dd>
 
 
@@ -107,8 +108,9 @@ resolution and a worse (better) time resolution.</p></dd>
 
 
 <dt id="arg-remove-coi">remove_coi<a class="anchor" aria-label="anchor" href="#arg-remove-coi"></a></dt>
-<dd><p>Boundary effects can result in nonphysical artifacts. If <code>remove_coi = TRUE</code>,
-those are effectively removed by setting corresponding values to <code>NA</code>.
+<dd><p>( <a href="https://rdrr.io/r/base/logical.html" class="external-link">TRUE</a> | <a href="https://rdrr.io/r/base/logical.html" class="external-link">FALSE</a> )
+Boundary effects can result in nonphysical artifacts. If <code>remove_coi = TRUE</code>,
+those are effectively removed by setting corresponding values to <a href="https://rdrr.io/r/base/NA.html" class="external-link">NA</a>.
 We define the essential support of the
 (Gaussian) wavelet to be four times its standard deviation,
 \(4 \Sigma_t = 2 * \sqrt{2} \frac{\sigma}{f}\), and so a wavelet touches
