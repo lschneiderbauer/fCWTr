@@ -1,7 +1,7 @@
 Package: fCWTr
 Type: Package
 Title: Fast Continuous Wavelet Transform
-Version: 0.2.9999
+Version: 0.2.9000
 Authors@R: c(
     person("Lukas", "Schneiderbauer",
         email = "lukas.schneiderbauer@gmail.com",
