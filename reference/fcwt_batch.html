@@ -66,7 +66,7 @@ automatically discarded (and those potentially dominate for short signals).</p>
 <span>  freq_end <span class="op">=</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
 <span>  freq_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"log"</span><span class="op">)</span>,</span>
 <span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  max_batch_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">9</span><span class="op">/</span><span class="op">(</span><span class="va">n_freqs</span> <span class="op">*</span> <span class="fl">8</span><span class="op">)</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>  max_batch_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">9</span><span class="op">/</span><span class="op">(</span><span class="va">n_freqs</span> <span class="op">*</span> <span class="fl">8</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="fl">2L</span>,</span>
 <span>  progress_bar <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -129,7 +129,10 @@ resolution and a worse (better) time resolution.</p></dd>
 This limits the maximal memory that is used. Defaults to roughly 1GB, being
 conservative and taking into account that R might make copies when further
 processing it.
-The actual batch size depends on the requested <code>time_resolution</code>.</p></dd>
+The actual batch size depends on the requested <code>time_resolution</code>.
+You should aim to set the batch size as large as possible given your
+memory constrainty (boundary effects become larger the smaller the
+batch size).</p></dd>
 
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
@@ -140,7 +143,12 @@ Defaults to 2 threads (to accomodate CRAN requirements).</p></dd>
 <dt id="arg-progress-bar">progress_bar<a class="anchor" aria-label="anchor" href="#arg-progress-bar"></a></dt>
 <dd><p>Monitoring progress can sometimes be useful when performing time consuming
 operations. Setting <code>progress_bar = TRUE</code> enables printing a progress
-bar to the console. Defaults to <code>FALSE</code>.</p></dd>
+bar to the console and printing the "loss ratio" and the number of batches.
+The loss ratio is a number
+between 0 and 1 and indicates how much of the batch computation has to be
+thrown away due to boundary artefacts. The higher the batch size the smaller
+the loss ratio will be.
+Defaults to <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
