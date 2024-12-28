@@ -2,12 +2,12 @@
 % Please edit documentation in R/units.R
 \name{du}
 \alias{du}
-\title{Drop unit}
+\title{Drop physical units from a quantity}
 \usage{
 du(x, unit)
 }
 \arguments{
-\item{x}{A dimensionful quantity (S3 class "units"), e.g. generated with \code{\link[=u]{u()}} or
+\item{x}{A dimensionful numeric vector (S3 class "units"), e.g. generated with \code{\link[=u]{u()}} or
 subsequent calculations.}
 
 \item{unit}{A character indicating the unit. See \code{\link[units:valid_udunits]{units::valid_udunits()}} and

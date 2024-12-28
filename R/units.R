@@ -1,9 +1,9 @@
-#' Bestow units to a number
+#' Augment a quantity with a physical unit
 #'
 #' A wrapper around [units::set_units()] mostly to have a short name to
-#' create a dimensionful number.
+#' create a dimensionful quantity.
 #'
-#' @param x A numeric value to be bestowed with a unit.
+#' @param x A numeric vector to be augmented with a unit.
 #' @param unit
 #'  A character indicating the unit. See [units::valid_udunits()] and
 #'  [units::valid_udunits_prefixes()] for possible units.
@@ -27,13 +27,13 @@ u <- function(x, unit) {
   units::set_units(x, unit, mode = "standard")
 }
 
-#' Drop unit
+#' Drop physical units from a quantity
 #'
 #' Drop units from a dimensionful quantity and retrieve a dimensionless number.
 #' The dimensionless number is defined by the ratio of `x` and one unit `u(1, unit)`.
 #'
 #' @param x
-#'  A dimensionful quantity (S3 class "units"), e.g. generated with [u()] or
+#'  A dimensionful numeric vector (S3 class "units"), e.g. generated with [u()] or
 #'  subsequent calculations.
 #' @inheritParams u
 #' @return

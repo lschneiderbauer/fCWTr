@@ -2,19 +2,19 @@
 % Please edit documentation in R/units.R
 \name{u}
 \alias{u}
-\title{Bestow units to a number}
+\title{Augment a quantity with a physical unit}
 \usage{
 u(x, unit)
 }
 \arguments{
-\item{x}{A numeric value to be bestowed with a unit.}
+\item{x}{A numeric vector to be augmented with a unit.}
 
 \item{unit}{A character indicating the unit. See \code{\link[units:valid_udunits]{units::valid_udunits()}} and
 \code{\link[units:valid_udunits]{units::valid_udunits_prefixes()}} for possible units.}
 }
 \description{
 A wrapper around \code{\link[units:units]{units::set_units()}} mostly to have a short name to
-create a dimensionful number.
+create a dimensionful quantity.
 }
 \examples{
 u(10, "km") # 10 kilometer
