@@ -23,7 +23,7 @@
 #'  Sampling rate of input time series. This number primarily establishes
 #'  a connection to physical units which is used in other frequency definitions
 #'  as well as the units of the output data. Expects either a value with frequency
-#'  units, generated with `u()`, or a pure number, in which case it is
+#'  units, generated with [u()], or a pure number, in which case it is
 #'  interpreted in units of 'Hertz'.
 #'
 #' @param n_freqs
@@ -36,10 +36,10 @@
 #'  Optionally specifies the frequency range `[freq_end, freq_begin]`. If not
 #'  specified the maximal meaningful frequency range, depending on the input signal,
 #'  is taken.
-#'  A frequency-valued number, generated with `u()`, or a pure number, that is
+#'  A frequency-valued number, generated with [u()], or a pure number, that is
 #'  interpreted in units of 'Hertz'.
 #'
-#' @param freq_scale
+#' @param freq_scale ( `"freq"` | `"log"` )
 #' Should the frequency scale be linear or logarithmic?
 #'  "linear"  / "log" for linear / logarithmic.
 #'
@@ -51,9 +51,9 @@
 #'  Larger (lower) value of sigma corresponds to a better (worse) frequency
 #'  resolution and a worse (better) time resolution.
 #'
-#' @param remove_coi
+#' @param remove_coi ( [TRUE] | [FALSE] )
 #'  Boundary effects can result in nonphysical artifacts. If `remove_coi = TRUE`,
-#'  those are effectively removed by setting corresponding values to `NA`.
+#'  those are effectively removed by setting corresponding values to [NA].
 #'  We define the essential support of the
 #'  (Gaussian) wavelet to be four times its standard deviation,
 #'  \eqn{4 \Sigma_t = 2 * \sqrt{2} \frac{\sigma}{f}}, and so a wavelet touches
@@ -69,8 +69,8 @@
 #'  The spectogram, a numeric real-valued matrix with dimensions
 #'  `dim = c(length(signal), n_freqs)`, curated with some additional properties.
 #'  This matrix is wrapped into a S3-class `fcwtr_scalogram` so that plotting and
-#'  coercion functions can be used conveniently. Use `as.matrix()` to strip
-#'  the curated information. Or use `as.data.frame()` to convert to another
+#'  coercion functions can be used conveniently. Use [as.matrix()] to strip
+#'  the curated information. Or use [as.data.frame()] to convert to another
 #'  data format.
 #'
 #' @examples
