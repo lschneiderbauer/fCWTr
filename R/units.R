@@ -17,7 +17,7 @@
 #' u(100, "m") > u(1, "km")
 #'
 #' @export
-u <- function(x, unit) {
+u <- function(x, unit = "1") {
   stopifnot(is.numeric(x))
   stopifnot(is.character(unit))
   # x must be a pure number
@@ -46,9 +46,12 @@ u <- function(x, unit) {
 #'  # from x in units of "meter"
 #'  du(x, "m")
 #'
+#'  # drop the unit of a dimensionaless "unit" quantity
+#'  du(x / x)
+#'
 #' @seealso [units::drop_units()]
 #' @export
-du <- function(x, unit) {
+du <- function(x, unit = "1") {
   stopifnot(inherits(x, "units"))
 
   if (has_comp_unit(x, unit)) {

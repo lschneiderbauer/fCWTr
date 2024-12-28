@@ -4,7 +4,7 @@
 \alias{u}
 \title{Augment a quantity with a physical unit}
 \usage{
-u(x, unit)
+u(x, unit = "1")
 }
 \arguments{
 \item{x}{A numeric vector to be augmented with a unit.}

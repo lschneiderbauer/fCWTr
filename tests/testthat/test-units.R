@@ -21,4 +21,6 @@ test_that("du() works", {
 
   expect_equal(du(x, "m"), 1000)
   expect_error(du(x, "Hz"))
+
+  expect_equal(du(x/x), 1)
 })

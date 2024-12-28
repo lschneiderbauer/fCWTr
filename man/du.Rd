@@ -4,7 +4,7 @@
 \alias{du}
 \title{Drop physical units from a quantity}
 \usage{
-du(x, unit)
+du(x, unit = "1")
 }
 \arguments{
 \item{x}{A dimensionful numeric vector (S3 class "units"), e.g. generated with \code{\link[=u]{u()}} or
@@ -26,6 +26,9 @@ The dimensionless number is defined by the ratio of \code{x} and one unit \code{
  # retrieve a dimensionless number
  # from x in units of "meter"
  du(x, "m")
+
+ # drop the unit of a dimensionaless "unit" quantity
+ du(x / x)
 
 }
 \seealso{
