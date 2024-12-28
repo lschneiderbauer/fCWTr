@@ -13,7 +13,7 @@ fcwt_batch(
   freq_end = sample_freq/2,
   freq_scale = c("linear", "log"),
   sigma = 1,
-  max_batch_size = ceiling(1 * 10^9/(n_freqs * 8)/4),
+  max_batch_size = ceiling(1 * 10^9/(n_freqs * 8)/2),
   n_threads = 2L,
   progress_bar = FALSE
 )
@@ -57,14 +57,22 @@ resolution and a worse (better) time resolution.}
 This limits the maximal memory that is used. Defaults to roughly 1GB, being
 conservative and taking into account that R might make copies when further
 processing it.
-The actual batch size depends on the requested \code{time_resolution}.}
+The actual batch size depends on the requested \code{time_resolution}.
+You should aim to set the batch size as large as possible given your
+memory constrainty (boundary effects become larger the smaller the
+batch size).}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.
 Defaults to 2 threads (to accomodate CRAN requirements).}
 
 \item{progress_bar}{Monitoring progress can sometimes be useful when performing time consuming
 operations. Setting \code{progress_bar = TRUE} enables printing a progress
-bar to the console. Defaults to \code{FALSE}.}
+bar to the console and printing the "loss ratio" and the number of batches.
+The loss ratio is a number
+between 0 and 1 and indicates how much of the batch computation has to be
+thrown away due to boundary artefacts. The higher the batch size the smaller
+the loss ratio will be.
+Defaults to \code{FALSE}.}
 }
 \value{
 The spectogram, a numeric real-valued matrix with dimensions roughly

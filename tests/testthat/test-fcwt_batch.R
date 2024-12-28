@@ -99,3 +99,36 @@ test_that("fcwt_batch progress bar does not err", {
     )
   )
 })
+
+test_that("fcwt_batch should err if batch size is too small.", {
+  expect_error(
+    fcwt_batch(
+      ts_sin_440,
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      sigma = 1,
+      max_batch_size = 1000,
+      # no aggregation
+      time_resolution = 1 / 44100
+    )
+  )
+})
+
+test_that("fcwt_batch should warn if loss ratio is critical.", {
+  expect_warning(
+    fcwt_batch(
+      ts_sin_440,
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      sigma = 1,
+      max_batch_size = 7000,
+      # no aggregation
+      time_resolution = 1 / 44100
+    )
+  )
+})
+
