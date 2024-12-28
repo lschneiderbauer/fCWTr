@@ -78,7 +78,7 @@
 #'     time_resolution = 0.01
 #'   )
 #'
-#' plot(res)
+#' res
 fcwt_batch <- function(signal,
                        sample_freq,
                        n_freqs,

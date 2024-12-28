@@ -126,7 +126,7 @@ res <-
     time_resolution = 0.01
   )
 
-plot(res)
+res
 }
 \seealso{
 \code{\link[=fcwt]{fcwt()}}
