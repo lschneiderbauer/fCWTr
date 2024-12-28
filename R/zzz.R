@@ -59,4 +59,7 @@ s3_register <-
   if (requireNamespace("ggplot2", quietly = TRUE)) {
     s3_register("ggplot2::autoplot", "fcwtr_scalogram")
   }
+  if (requireNamespace("tibble", quietly = TRUE)) {
+    s3_register("tibble::as_tibble", "fcwtr_scalogram")
+  }
 }

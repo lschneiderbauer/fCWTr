@@ -1,6 +1,6 @@
 # fcwtr 0.2.9999
 
--   Add S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`.
+-   Add S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
 
 -   Include improved physical unit treatment with the 'units' package. Frequency and time parameters can now be "units" objects, created with `u()`. Allow user to adjust plot scales to use arbitrary time/freq units.
 

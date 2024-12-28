@@ -27,6 +27,7 @@ Suggests:
     ggplot2 (>= 3.3.0),
     viridis (>= 0.6.0),
     rlang (>= 1.0.0),
+    tibble (>= 3.0.0),
     testthat (>= 3.0.0)
 LinkingTo: 
     cpp11

@@ -335,6 +335,12 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
   )
 }
 
+as_tibble.fcwtr_scalogram <- function(x, ...) {
+  stopifnot(requireNamespace("tibble", quietly = TRUE))
+
+  tibble::as_tibble(as.data.frame(x))
+}
+
 #' Extract the data matrix from a scalogram
 #'
 #' Strips attributes and class from a scalogram object to retrieve
