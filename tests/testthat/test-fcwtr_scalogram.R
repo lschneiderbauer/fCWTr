@@ -62,8 +62,22 @@ test_that("ggplot2::autoplot() does not err", {
       sigma = 1
     )
 
-  expect_no_error(ggplot2::autoplot(res))
-  expect_s3_class(ggplot2::autoplot(res), "ggplot")
+  expect_no_error(ap <- ggplot2::autoplot(res))
+  expect_s3_class(ap, "ggplot")
+
+  res_log <-
+    fcwt(
+      ts_sin_440[1:1000],
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      freq_scale = "log",
+      sigma = 1
+    )
+
+  expect_no_error(ap_log <- ggplot2::autoplot(res_log))
+  expect_s3_class(ap_log, "ggplot")
 })
 
 test_that("as.data.frame() result has correct properties", {
@@ -88,6 +102,23 @@ test_that("as.data.frame() result has correct properties", {
   expect_true(has_comp_unit(time, "s"))
 
   expect_true(has_comp_unit(res[["freq"]], "Hz"))
+})
+
+test_that("[] works", {
+  res <-
+    fcwt(
+      ts_sin_440[1:1000],
+      sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      sigma = 1
+    )
+
+  res2 <- res[10:1000, 2:4]
+
+  expect_s3_class(res2, "fcwtr_scalogram")
+  expect_true(attr(res2, "time_offset") == 9 / u(44100, "Hz"))
 })
 
 test_that("tibble::as_tibble() does not err", {
