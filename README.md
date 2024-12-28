@@ -32,12 +32,14 @@ noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
 ## System dependencies
 
 - R \>= 4.1
-- [fftw](https://www.fftw.org/) library (used by
-  [fCWT](https://github.com/fastlib/fCWT))
+- [fftw](https://www.fftw.org/) library with [single-precision
+  support](https://www.fftw.org/faq/section2.html#singleprec) enabled
+  (used by [fCWT](https://github.com/fastlib/fCWT))
 - Optional: a CPU/compiler supporting the
   [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions)
   instruction set
-- Optional: OpenMP
+- Optional: OpenMP (and fftw built with [OpenMP
+  support](https://www.fftw.org/doc/Usage-of-Multi_002dthreaded-FFTW.html))
   - On Windows, OpenMP support is disabled since rtools decided to
     compile fftw without OpenMP support.
   - On Linux and MacOS the build scripts should automatically detect
