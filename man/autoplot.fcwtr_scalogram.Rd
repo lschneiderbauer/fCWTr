@@ -4,13 +4,7 @@
 \alias{autoplot.fcwtr_scalogram}
 \title{Create a ggplot object resembling a scalogram}
 \usage{
-autoplot.fcwtr_scalogram(
-  object,
-  n = 1000,
-  time_unit = "s",
-  freq_unit = "Hz",
-  ...
-)
+\method{autoplot}{fcwtr_scalogram}(object, n = 1000, time_unit = "s", freq_unit = "Hz", ...)
 }
 \arguments{
 \item{object}{A "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}

@@ -335,6 +335,7 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
   )
 }
 
+#' @exportS3Method tibble::as_tibble
 as_tibble.fcwtr_scalogram <- function(x, ...) {
   stopifnot(requireNamespace("tibble", quietly = TRUE))
 
@@ -490,7 +491,7 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #'
 #' autoplot(res, time_unit = "ms")
 #'
-#' @export
+#' @exportS3Method ggplot2::autoplot
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
                                      time_unit = "s", freq_unit = "Hz", ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
