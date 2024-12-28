@@ -60,9 +60,9 @@
 <ul>
 <li>R &gt;= 4.1</li>
 <li>
-<a href="https://www.fftw.org/" class="external-link">fftw</a> library (used by <a href="https://github.com/fastlib/fCWT" class="external-link">fCWT</a>)</li>
+<a href="https://www.fftw.org/" class="external-link">fftw</a> library with <a href="https://www.fftw.org/faq/section2.html#singleprec" class="external-link">single-precision support</a> enabled (used by <a href="https://github.com/fastlib/fCWT" class="external-link">fCWT</a>)</li>
 <li>Optional: a CPU/compiler supporting the <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" class="external-link">AVX</a> instruction set</li>
-<li>Optional: OpenMP
+<li>Optional: OpenMP (and fftw built with <a href="https://www.fftw.org/doc/Usage-of-Multi_002dthreaded-FFTW.html" class="external-link">OpenMP support</a>)
 <ul>
 <li>On Windows, OpenMP support is disabled since rtools decided to compile fftw without OpenMP support.</li>
 <li>On Linux and MacOS the build scripts should automatically detect whether OpenMP support is available.</li>
