@@ -73,6 +73,14 @@ Alternatively, you can install the development version of fCWTr like so
 devtools::install_github("lschneiderbauer/fCWTr")
 ```
 
+Note that the installation process might fail if the package needs to be
+compiled from source and system requirements are not satisfied. The
+error message should give you hints, however, on what’s missing on your
+system.
+
+- Common confusion: fftw is installed, but compiled without single
+  precision support. Please consult [fftw.org](fftw.org) for help.
+
 ## Example
 
 This is a basic example that invokes the fCWT library to calculate the
