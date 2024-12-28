@@ -107,9 +107,9 @@ public:
     ~Morlet() { free(mother); };
 
     void generate(int size); //frequency domain
-    void generate(float* real, float* imag, int size, float scale); //time domain
+    // void generate(float* real, float* imag, int size, float scale); //time domain
     int getSupport(float scale) { return (int)(fb*scale*3.0f); };
-    void getWavelet(float scale, complex<float>* pwav, int pn);
+    // void getWavelet(float scale, complex<float>* pwav, int pn);
     float fb;
 
 private:
@@ -120,8 +120,8 @@ class Scales {
 public:
     FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
 
-    void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
-    void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
+    // void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
+    // void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
 
     float* scales;
     int fs;
@@ -130,7 +130,7 @@ public:
 
 private:
     void calculate_logscale_array(float base, float four_wavl, int fs, float f0, float f1, int fn);
-    void calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn);
+    // void calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn);
     void calculate_linfreq_array(float four_wavl, int fs, float f0, float f1, int fn);
 };
 

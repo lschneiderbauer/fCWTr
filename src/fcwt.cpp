@@ -68,6 +68,8 @@ void Morlet::generate(int size) {
         mother[w] = (norm*exp(tmp1));
     }
 }
+
+/*
 void Morlet::generate(float* real, float* imag, int size, float scale) {
     //Time domain because we know size from scale
     float tmp1, tmp2;
@@ -106,6 +108,7 @@ void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
     free(real);
     free(imag);
 };
+*/
 
 //==============================================================//
 //================== Scales =====================================//
@@ -120,13 +123,14 @@ Scales::Scales(Wavelet *wav, SCALETYPE st, int afs, float af0, float af1, int af
 
     if(st==SCALETYPE::FCWT_LOGSCALES)
         calculate_logscale_array(2.0f, wav->four_wavelen, afs, af0, af1, afn);
-    else if(st==SCALETYPE::FCWT_LINSCALES)
-        calculate_linscale_array(wav->four_wavelen, afs, af0, af1, afn);
+    // else if(st==SCALETYPE::FCWT_LINSCALES)
+    //    calculate_linscale_array(wav->four_wavelen, afs, af0, af1, afn);
     else
         calculate_linfreq_array(wav->four_wavelen, afs, af0, af1, afn);
 
 }
 
+/*
 void Scales::getScales(float *pfreqs, int pnf) {
     for(int i=0;i<pnf;i++) {
         pfreqs[i]=scales[i];
@@ -138,6 +142,7 @@ void Scales::getFrequencies(float *pfreqs, int pnf) {
         pfreqs[i]=((float)fs)/scales[i];
     };
 };
+*/
 
 void Scales::calculate_logscale_array(float base, float four_wavl, int fs, float f0, float f1, int fn) {
 
@@ -182,6 +187,7 @@ void Scales::calculate_linfreq_array(float four_wavl, int fs, float f0, float f1
     }
 }
 
+/*
 void Scales::calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn) {
 
     float nf0 = f0;
@@ -202,7 +208,7 @@ void Scales::calculate_linscale_array(float four_wavl, int fs, float f0, float f
         scales[i] = (s0 + (ds/fn)*i);
     }
 }
-
+*/
 
 //==============================================================//
 //================== FCWT =====================================//
