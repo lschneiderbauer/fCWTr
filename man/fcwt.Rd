@@ -99,3 +99,6 @@ fcwt(
   sigma = 5
 )
 }
+\seealso{
+\code{\link[=fcwt_batch]{fcwt_batch()}}
+}
