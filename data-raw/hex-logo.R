@@ -1,6 +1,7 @@
 library(hexSticker)
 library(tidyverse)
 library(showtext)
+library(svglite) # to produce an svg
 
 ## Loading Google fonts (http://www.google.com/fonts)
 font_add_google("Tiny5", db_cache = FALSE)
@@ -39,9 +40,10 @@ sticker(
   h_fill = "white",
   h_color = "black",
   url = "fCWTr",
-  u_size = 26,
+  #u_size = 26, # 26 for png
+  u_size = 9, # for svg
   u_family = "Micro 5",
   u_x = 1.15,
   u_y = 0.23,
-  filename = "inst/figures/hex-logo.png"
+  filename = "inst/figures/hex-logo.svg"
 ) |> plot()

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fCWTr <a href="https://lschneiderbauer.github.io/fcwtr/"><img src="man/figures/logo.png" align="right" height="139" alt="fCWTr website" /></a>
+# fCWTr <a href="https://lschneiderbauer.github.io/fcwtr/"><img src="man/figures/logo.svg" align="right" height="139" alt="fCWTr website" /></a>
 
 <!-- badges: start -->
 
