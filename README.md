@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fCWTr <a href="https://lschneiderbauer.github.io/fcwtr/"><img src="man/figures/logo.svg" align="right" height="139" alt="fCWTr website" /></a>
+# fCWTr <a href="https://lschneiderbauer.github.io/fCWTr/"><img src="man/figures/logo.svg" align="right" height="139" alt="fCWTr website" /></a>
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/lschneiderbauer/fcwtr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lschneiderbauer/fCWTr/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/lschneiderbauer/fCWTr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lschneiderbauer/fCWTr/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
