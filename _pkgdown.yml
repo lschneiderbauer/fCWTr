@@ -4,7 +4,7 @@ template:
 reference:
 - title: "Fast continuous wavelet transform"
   desc: >
-    Functions for performing fast continuous wavelet transforms.
+    Functions for performing fast continuous wavelet transforms. These constitue the core functionality of this package.
   contents:
   - starts_with("fcwt")
 - title: "Physical unit helper"

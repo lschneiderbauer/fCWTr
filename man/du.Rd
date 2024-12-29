@@ -2,7 +2,7 @@
 % Please edit documentation in R/units.R
 \name{du}
 \alias{du}
-\title{Drop physical units from a quantity}
+\title{Drop physical unit}
 \usage{
 du(x, unit = "1")
 }

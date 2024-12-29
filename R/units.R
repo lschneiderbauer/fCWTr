@@ -1,4 +1,4 @@
-#' Augment a quantity with a physical unit
+#' Augment physical unit
 #'
 #' A wrapper around [units::set_units()] mostly to have a short name to
 #' create a dimensionful quantity.
@@ -27,7 +27,7 @@ u <- function(x, unit = "1") {
   units::set_units(x, unit, mode = "standard")
 }
 
-#' Drop physical units from a quantity
+#' Drop physical unit
 #'
 #' Drop units from a dimensionful quantity and retrieve a dimensionless number.
 #' The dimensionless number is defined by the ratio of `x` and one unit `u(1, unit)`.

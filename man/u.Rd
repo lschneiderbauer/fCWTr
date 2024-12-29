@@ -2,7 +2,7 @@
 % Please edit documentation in R/units.R
 \name{u}
 \alias{u}
-\title{Augment a quantity with a physical unit}
+\title{Augment physical unit}
 \usage{
 u(x, unit = "1")
 }
