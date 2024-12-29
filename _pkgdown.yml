@@ -21,9 +21,10 @@ reference:
   - print.fcwtr_scalogram
   - plot.fcwtr_scalogram
   - autoplot.fcwtr_scalogram
-- title: "Multithreading support"
+- title: "System support"
+  desc: "Helper functions that let you check if your platform provides OpenMP or AVX support."
   contents:
-  - openmp_enabled
+  - has_concept("sys_support")
 - title: "Sample data"
   desc: >
     Sample signal data mainly used to generate examples. The signals consist

@@ -4,6 +4,10 @@ has_openmp <- function() {
   .Call(`_fCWTr_has_openmp`)
 }
 
+has_avx <- function() {
+  .Call(`_fCWTr_has_avx`)
+}
+
 fcwt_raw <- function(signal, fs, f0, f1, fn, sigma, nthreads, scaletype, optplans, abs) {
   .Call(`_fCWTr_fcwt_raw`, signal, fs, f0, f1, fn, sigma, nthreads, scaletype, optplans, abs)
 }

@@ -29,6 +29,15 @@ cpp11::r_bool has_openmp() {
 }
 
 [[cpp11::register]]
+cpp11::r_bool has_avx() {
+  #ifdef AVX
+    return(false);
+  #else
+    return(true);
+  #endif
+}
+
+[[cpp11::register]]
 std::vector<double> fcwt_raw(
     std::vector<double> signal,
     int fs, // sample frequency
