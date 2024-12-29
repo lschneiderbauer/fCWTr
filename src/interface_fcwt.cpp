@@ -31,9 +31,9 @@ cpp11::r_bool has_openmp() {
 [[cpp11::register]]
 cpp11::r_bool has_avx() {
   #ifdef AVX
-    return(false);
-  #else
     return(true);
+  #else
+    return(false);
   #endif
 }
 
