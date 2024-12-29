@@ -1,18 +1,24 @@
 # fcwtr 0.2.9000
 
--   `fcwt()`
+-   `fcwt():`
 
     -   fix a bug where `fcwt(..., n_freqs = 1, ...)` leads to a faulty data representation.
 
     -   add `freq_scale` argument to choose between a linear or logarithmic frequency scale.
 
--   `fcwt_batch()`: in some cases, time slices were accidentally discarded, this should now be fixed. In general the batching mechanism should be much more reliable now.
+    -   allow (and prefer) `sample_freq`, `freq_begin`, `freq_end` arguments to be passed as a dimensionful quantities, via `u()`.
 
--   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
+-   `fcwt_batch()`:
+
+    -   allow (and prefer) `sample_freq`, `freq_begin`, `freq_end` and `time_resolution` arguments to be passed as a dimensionful quantities, via `u()`.
+
+    -   in some cases, the averaging procedure together with the batching could lead to accidentally dropped or duplicated time slices: the mechanism has been overhauled, every slice should be perfectly aligned now, even when averaged.
 
 -   new unit helper functions: `u()` and `du()`: include improved physical unit treatment with the [units](https://r-quantities.github.io/units/) package. Frequency and time parameters can now be "units" objects, created with `u()`. Allow user to adjust `plot()` scales to use arbitrary time/frequency units.
 
--   add a package logo
+-   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
+
+-   add a [package logo](https://lschneiderbauer.github.io/fCWTr/logo.svg)
 
 # fcwtr 0.2.1
 
