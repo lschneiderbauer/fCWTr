@@ -137,7 +137,9 @@ batch size).</p></dd>
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
 <dd><p>Number of threads used by the computation, if supported by your platform.
-Defaults to 2 threads (to accomodate CRAN requirements).</p></dd>
+Defaults to 2 threads (to accommodate CRAN requirements).
+If <code><a href="openmp_enabled.html">openmp_enabled()</a></code> returns <code>FALSE</code>, this argument is ignored, and
+only a single thread is used.</p></dd>
 
 
 <dt id="arg-progress-bar">progress_bar<a class="anchor" aria-label="anchor" href="#arg-progress-bar"></a></dt>
