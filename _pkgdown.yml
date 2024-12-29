@@ -21,6 +21,9 @@ reference:
   - print.fcwtr_scalogram
   - plot.fcwtr_scalogram
   - autoplot.fcwtr_scalogram
+- title: "Multithreading support"
+  contents:
+  - openmp_enabled
 - title: "Sample data"
   desc: >
     Sample signal data mainly used to generate examples. The signals consist

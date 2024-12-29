@@ -6,6 +6,13 @@
 #include <R_ext/Visibility.h>
 
 // interface_fcwt.cpp
+cpp11::r_bool has_openmp();
+extern "C" SEXP _fCWTr_has_openmp() {
+  BEGIN_CPP11
+    return cpp11::as_sexp(has_openmp());
+  END_CPP11
+}
+// interface_fcwt.cpp
 std::vector<double> fcwt_raw(std::vector<double> signal, int fs, double f0, double f1, int fn, double sigma, int nthreads, bool scaletype, bool optplans, bool abs);
 extern "C" SEXP _fCWTr_fcwt_raw(SEXP signal, SEXP fs, SEXP f0, SEXP f1, SEXP fn, SEXP sigma, SEXP nthreads, SEXP scaletype, SEXP optplans, SEXP abs) {
   BEGIN_CPP11
@@ -15,7 +22,8 @@ extern "C" SEXP _fCWTr_fcwt_raw(SEXP signal, SEXP fs, SEXP f0, SEXP f1, SEXP fn,
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_fCWTr_fcwt_raw", (DL_FUNC) &_fCWTr_fcwt_raw, 10},
+    {"_fCWTr_fcwt_raw",   (DL_FUNC) &_fCWTr_fcwt_raw,   10},
+    {"_fCWTr_has_openmp", (DL_FUNC) &_fCWTr_has_openmp,  0},
     {NULL, NULL, 0}
 };
 }

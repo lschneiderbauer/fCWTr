@@ -64,7 +64,9 @@ memory constrainty (boundary effects become larger the smaller the
 batch size).}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.
-Defaults to 2 threads (to accomodate CRAN requirements).}
+Defaults to 2 threads (to accommodate CRAN requirements).
+If \code{\link[=openmp_enabled]{openmp_enabled()}} returns \code{FALSE}, this argument is ignored, and
+only a single thread is used.}
 
 \item{progress_bar}{Monitoring progress can sometimes be useful when performing time consuming
 operations. Setting \code{progress_bar = TRUE} enables printing a progress

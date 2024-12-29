@@ -58,7 +58,9 @@ is less then \eqn{4 \Sigma_t}. Values that fall into that range are removed
 if \code{remove_coi = TRUE}.}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.
-Defaults to 2 threads (to accomodate CRAN requirements).}
+Defaults to 2 threads (to accommodate CRAN requirements).
+If \code{\link[=openmp_enabled]{openmp_enabled()}} returns \code{FALSE}, this argument is ignored, and
+only a single thread is used.}
 }
 \value{
 The spectogram, a numeric real-valued matrix with dimensions

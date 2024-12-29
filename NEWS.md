@@ -18,6 +18,8 @@
 
 -   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
 
+-   `openmp_enabled()`: new function to check for OpenMP support.
+
 -   add a [package logo](https://lschneiderbauer.github.io/fCWTr/logo.svg)
 
 # fcwtr 0.2.1

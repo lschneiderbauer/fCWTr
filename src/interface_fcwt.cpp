@@ -20,6 +20,15 @@ float dbl_to_float(const double &dbl) {
 }
 
 [[cpp11::register]]
+cpp11::r_bool has_openmp() {
+  #ifdef SINGLE_THREAD
+    return(false);
+  #else
+    return(true);
+  #endif
+}
+
+[[cpp11::register]]
 std::vector<double> fcwt_raw(
     std::vector<double> signal,
     int fs, // sample frequency
