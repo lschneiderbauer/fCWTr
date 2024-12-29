@@ -1,4 +1,4 @@
-# fcwtr 0.2.9000
+# fCWTr 0.2.9000
 
 -   `fcwt():`
 
@@ -18,10 +18,10 @@
 
 -   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
 
--   `openmp_enabled()`/`avx_enabled()` new function to check for system OpenMP/AVX support.
+-   `openmp_enabled()`/`avx_enabled()` new functions to check for system OpenMP/AVX support.
 
 -   add a [package logo](https://lschneiderbauer.github.io/fCWTr/logo.svg)
 
-# fcwtr 0.2.1
+# fCWTr 0.2.1
 
 -   Initial CRAN submission.
