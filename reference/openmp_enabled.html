@@ -32,7 +32,7 @@ the parameter n_threads of fcwt() is ignored."><meta property="og:image" content
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Check for OpenMP support</h1>
-      <small class="dont-index">Source: <a href="https://github.com/lschneiderbauer/fCWTr/blob/master/R/openmp.R" class="external-link"><code>R/openmp.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/lschneiderbauer/fCWTr/blob/master/R/sys_support.R" class="external-link"><code>R/sys_support.R</code></a></small>
       <div class="d-none name"><code>openmp_enabled.Rd</code></div>
     </div>
 
@@ -57,14 +57,21 @@ Returns <code>TRUE</code> if OpenMP support is enabled, <code>FALSE</code> other
     <p>OpenMP can be used by the underlying fCWT library if</p><ul><li><p>the fftw library on your platform was compiled with OpenMP support and</p></li>
 <li><p>the fCWTr package itself was compiled with OpenMP support.</p></li>
 </ul><p>When using pre-built package binaries (like it is typical when you are using
-R on Windows), whether or not these conditions are met, depend on the (CRAN)
-build server. They cannot be influenced by the package author.</p>
+R on Windows), it depends on the (CRAN) build server whether or not
+these conditions are met. They cannot be influenced by the package author.</p>
 <p>If the user is building the R package yourself, the user needs to make sure
 that the fftw library on her platform are built with OpenMP support.
 The fCWTr package is configured to use OpenMP if fftw-OpenMP support is
 available.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">openmp_enabled</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
