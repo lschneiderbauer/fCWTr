@@ -4,7 +4,14 @@
 \alias{autoplot.fcwtr_scalogram}
 \title{Create a ggplot object resembling a scalogram}
 \usage{
-\method{autoplot}{fcwtr_scalogram}(object, n = 1000, time_unit = "s", freq_unit = "Hz", ...)
+\method{autoplot}{fcwtr_scalogram}(
+  object,
+  n = 1000,
+  time_unit = "s",
+  freq_unit = "Hz",
+  transf = identity,
+  ...
+)
 }
 \arguments{
 \item{object}{A "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
@@ -21,6 +28,9 @@ expressions.}
 Defaults to "Hz" - "Hertz".
 See \code{units::valid_udunits()} and \code{units::valid_udunits_prefixes()} for valid
 expressions.}
+
+\item{transf}{A function, taking a vector and returning a vector, that is used to
+transform the scalogram values before plotting.}
 
 \item{...}{other arguments passed to specific methods}
 }

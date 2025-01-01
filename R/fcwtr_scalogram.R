@@ -450,8 +450,8 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #'
 #' plot(res, time_unit = "ms")
 plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
-                                 ...) {
-  print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, ...))
+                                 transf = identity, ...) {
+  print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, transf, ...))
 }
 
 #' Create a ggplot object resembling a scalogram
@@ -471,6 +471,9 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #'  Defaults to "Hz" - "Hertz".
 #'  See `units::valid_udunits()` and `units::valid_udunits_prefixes()` for valid
 #'  expressions.
+#' @param transf
+#'  A function, taking a vector and returning a vector, that is used to
+#'  transform the scalogram values before plotting.
 #' @param ...
 #'  other arguments passed to specific methods
 #' @return
@@ -493,7 +496,8 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #'
 #' @exportS3Method ggplot2::autoplot
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
-                                     time_unit = "s", freq_unit = "Hz", ...) {
+                                     time_unit = "s", freq_unit = "Hz",
+                                     transf = identity, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
   stopifnot(requireNamespace("rlang", quietly = TRUE))
@@ -512,10 +516,13 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000,
       "identity"
     }
 
-  df <- as.data.frame(sc_agg(object, wnd_from_target_size(n, object)))
-
   # first aggregate the time series,
   # since we cannot really see too much resolution anyways
+  df <- as.data.frame(sc_agg(object, wnd_from_target_size(n, object)))
+
+  # transform the value if requested
+  df[["value"]] <- transf(df[["value"]])
+
   df |>
     ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
     geom_raster() +
