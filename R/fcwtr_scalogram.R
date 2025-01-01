@@ -60,12 +60,12 @@ sc_coi_mask <- function(x) {
 #' @noRd
 coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
                      freq_scale, sigma) {
-  # The standard deviation Σ of a the Gauß like wave packet at frequency f
+  # The standard deviation Dt of a the Gauß like wave packet at frequency f
   # and sampling frequency f_s with given σ is given by
-  # Σ = σ / sqrt(2) f_s / f
+  # Dt = σ / f
   # we choose 4Σ to define the support of a wave packet
   # (and so boundary effects are expected to occur until 2Σ)
-  coi_pred <- \(f, t) ddu(t * f) < sqrt(2) * sigma
+  coi_pred <- \(f, t) ddu(t * f) < 2 * sigma
 
   # express in dimensionless quantities
   t <- rep(1:dim_t, times = dim_f)
@@ -84,7 +84,7 @@ coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
 # invalid time steps on one side of the time series
 # invalid meaning: at least one frequency in that time range has invalid value
 coi_invalid_time_steps <- function(sample_freq, freq_begin, sigma) {
-  as.integer(ddu(floor(sqrt(2) * sigma * sample_freq / freq_begin)))
+  as.integer(ddu(floor(2 * sigma * sample_freq / freq_begin)))
 }
 
 sc_dim_freq <- function(x) {

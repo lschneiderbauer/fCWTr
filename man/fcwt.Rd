@@ -56,9 +56,9 @@ Boundary effects can result in nonphysical artifacts. If \code{remove_coi = TRUE
 those are effectively removed by setting corresponding values to \link{NA}.
 We define the essential support of the
 (Gaussian) wavelet to be four times its standard deviation,
-\eqn{4 \Sigma_t = 2 * \sqrt{2} \frac{\sigma}{f}}, and so a wavelet touches
+\eqn{4 \Delta t = 4 \frac{\sigma}{f}}, and so a wavelet touches
 the boundary if the distance of the center of the wavelet to the boundary
-is less then \eqn{4 \Sigma_t}. Values that fall into that range are removed
+is less then \eqn{2 \Delta t}. Values that fall into that range are removed
 if \code{remove_coi = TRUE}.}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.
