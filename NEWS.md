@@ -16,6 +16,8 @@
 
 -   new unit helper functions: `u()` and `du()`: include improved physical unit treatment with the [units](https://r-quantities.github.io/units/) package. Frequency and time parameters can now be "units" objects, created with `u()`. Allow user to adjust `plot()` scales to use arbitrary time/frequency units.
 
+-   new helper functions to determine the correct value of sigma for a given use case: `sigma_resolution()`, `sigma_from_time_resolution()`, `sigma_from_frequency_resolution()`.
+
 -   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
 
 -   `openmp_enabled()`/`avx_enabled()` new functions to check for system OpenMP/AVX support.
