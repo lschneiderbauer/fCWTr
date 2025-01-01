@@ -11,7 +11,7 @@ fcwt(
   freq_begin = 2 * sample_freq/length(signal),
   freq_end = sample_freq/2,
   freq_scale = c("linear", "log"),
-  sigma = 1,
+  sigma = 2 * pi,
   remove_coi = TRUE,
   n_threads = 2L
 )
@@ -46,9 +46,9 @@ Changing this parameter adjusts the time/frequency uncertainty balance,
 Larger (lower) value of sigma corresponds to a better (worse) frequency
 resolution and a worse (better) time resolution.
 
-Defaults to 1. Note that there is not really a natural choice for sigma,
-it depends on the use case. So the default choice can very well be quite a
-bad choice. (It probably is for audio data, see
+Defaults to 2 \eqn{\pi}. Note that there is not really a natural choice for
+sigma, it depends on the use case. So the default choice can very well be
+quite a bad choice. (It probably is for audio data, see
 \code{vignette("sigma", package = "fCWTr")})}
 
 \item{remove_coi}{( \link{TRUE} | \link{FALSE} )

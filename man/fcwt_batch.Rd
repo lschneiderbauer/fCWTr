@@ -48,9 +48,9 @@ Changing this parameter adjusts the time/frequency uncertainty balance,
 Larger (lower) value of sigma corresponds to a better (worse) frequency
 resolution and a worse (better) time resolution.
 
-Defaults to 1. Note that there is not really a natural choice for sigma,
-it depends on the use case. So the default choice can very well be quite a
-bad choice. (It probably is for audio data, see
+Defaults to 2 \eqn{\pi}. Note that there is not really a natural choice for
+sigma, it depends on the use case. So the default choice can very well be
+quite a bad choice. (It probably is for audio data, see
 \code{vignette("sigma", package = "fCWTr")})}
 
 \item{time_resolution}{The time resolution of the output signal in physical units (by \code{\link[=u]{u()}}),
