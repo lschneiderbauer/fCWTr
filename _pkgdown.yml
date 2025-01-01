@@ -7,6 +7,9 @@ reference:
     Functions for performing fast continuous wavelet transforms. These constitue the core functionality of this package.
   contents:
   - starts_with("fcwt")
+- title: "Sigma helpers"
+  contents:
+  - has_concept("sigma")
 - title: "Physical unit helper"
   contents:
   - u
