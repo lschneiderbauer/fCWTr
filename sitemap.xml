@@ -1,6 +1,8 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/404.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/LICENSE.html</loc></url>
+<url><loc>https://lschneiderbauer.github.io/fcwtr/articles/index.html</loc></url>
+<url><loc>https://lschneiderbauer.github.io/fcwtr/articles/sigma.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/authors.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/index.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/news/index.html</loc></url>
@@ -16,7 +18,11 @@
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/plot.fcwtr_scalogram.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/print.fcwtr_scalogram.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/rbind.fcwtr_scalogram.html</loc></url>
+<url><loc>https://lschneiderbauer.github.io/fcwtr/reference/sigma_from_frequency_resolution.html</loc></url>
+<url><loc>https://lschneiderbauer.github.io/fcwtr/reference/sigma_from_time_resolution.html</loc></url>
+<url><loc>https://lschneiderbauer.github.io/fcwtr/reference/sigma_resolution.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/sub-.fcwtr_scalogram.html</loc></url>
+<url><loc>https://lschneiderbauer.github.io/fcwtr/reference/ts_piano_sample.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/ts_sin_440.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/ts_sin_sin.html</loc></url>
 <url><loc>https://lschneiderbauer.github.io/fcwtr/reference/ts_sin_superpos.html</loc></url>
