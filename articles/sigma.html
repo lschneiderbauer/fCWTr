@@ -103,9 +103,9 @@ adjust the parameter
 to increase (decrease) time resolution at the cost of decreasing
 (increasing) the frequency resolution. The “correct” balance depends on
 your use case.</p>
-<div class="section level3">
-<h3 id="example-piano-keys">Example: Piano keys<a class="anchor" aria-label="anchor" href="#example-piano-keys"></a>
-</h3>
+<div class="section level2">
+<h2 id="example-piano-keys">Example: Piano keys<a class="anchor" aria-label="anchor" href="#example-piano-keys"></a>
+</h2>
 <p>Let’s try to understand the meaning of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
 via an example: We would like to analyse piano music, and be able to at
@@ -155,9 +155,9 @@ have no problems doing that with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\sigma =10</annotation></semantics></math>,
 and even have some leeway.</p>
 <p>Let’s compare these two settings in practice:</p>
-<div class="section level4">
-<h4 id="sigma-1">Sigma = 1<a class="anchor" aria-label="anchor" href="#sigma-1"></a>
-</h4>
+<div class="section level3">
+<h3 id="sigma-1">Sigma = 1<a class="anchor" aria-label="anchor" href="#sigma-1"></a>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
@@ -177,9 +177,9 @@ and even have some leeway.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
-<div class="section level4">
-<h4 id="sigma-10">Sigma = 10<a class="anchor" aria-label="anchor" href="#sigma-10"></a>
-</h4>
+<div class="section level3">
+<h3 id="sigma-10">Sigma = 10<a class="anchor" aria-label="anchor" href="#sigma-10"></a>
+</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
@@ -197,9 +197,9 @@ and even have some leeway.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
-<div class="section level4">
-<h4 id="sigma-20">Sigma = 20<a class="anchor" aria-label="anchor" href="#sigma-20"></a>
-</h4>
+<div class="section level3">
+<h3 id="sigma-20">Sigma = 20<a class="anchor" aria-label="anchor" href="#sigma-20"></a>
+</h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">ts_piano_sample</span>,</span>

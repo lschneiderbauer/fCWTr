@@ -58,7 +58,7 @@ i.e. a graph with a time and a frequency dimension.</p>
 <span>  freq_begin <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">signal</span><span class="op">)</span>,</span>
 <span>  freq_end <span class="op">=</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
 <span>  freq_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"log"</span><span class="op">)</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>,</span>
 <span>  remove_coi <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="fl">2L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -107,9 +107,9 @@ Changing this parameter adjusts the time/frequency uncertainty balance,
 \(\Delta t = \frac{\sigma}{f}\), \(\Delta f = \frac{f}{2\pi \sigma}\).
 Larger (lower) value of sigma corresponds to a better (worse) frequency
 resolution and a worse (better) time resolution.</p>
-<p>Defaults to 1. Note that there is not really a natural choice for sigma,
-it depends on the use case. So the default choice can very well be quite a
-bad choice. (It probably is for audio data, see
+<p>Defaults to 2 \(\pi\). Note that there is not really a natural choice for
+sigma, it depends on the use case. So the default choice can very well be
+quite a bad choice. (It probably is for audio data, see
 <code><a href="../articles/sigma.html">vignette("sigma", package = "fCWTr")</a></code>)</p></dd>
 
 
