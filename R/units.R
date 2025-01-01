@@ -65,7 +65,7 @@ du <- function(x, unit = "1") {
 #' @noRd
 ddu <- function(x) {
   if (has_comp_unit(x, "1")) {
-    units::drop_units(x)
+    units::drop_units(conv(x, "1"))
   } else {
     x
   }
