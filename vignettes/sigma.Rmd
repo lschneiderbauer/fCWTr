@@ -24,7 +24,7 @@ For a particular time $t$ and a reference frequency $f$, the Gaussian envelope $
 
 The time-frequency uncertainty relation is always true, but we can adjust the parameter $\sigma$ to increase (decrease) time resolution at the cost of decreasing (increasing) the frequency resolution. The "correct" balance depends on your use case.
 
-### Example: Piano keys
+## Example: Piano keys
 
 Let's try to understand the meaning of $\sigma$ via an example: We would like to analyse piano music, and be able to at least distinguish different piano key frequencies.
 
@@ -54,7 +54,7 @@ That means, we can detect those frequencies with a time resolution of 22 millise
 
 Let's compare these two settings in practice:
 
-#### Sigma = 1
+### Sigma = 1
 
 ```{r}
 library(ggplot2)
@@ -73,7 +73,7 @@ fcwt_batch(
   plot()
 ```
 
-#### Sigma = 10
+### Sigma = 10
 
 ```{r}
 library(ggplot2)
@@ -92,7 +92,7 @@ fcwt_batch(
   plot()
 ```
 
-#### Sigma = 20
+### Sigma = 20
 
 ```{r}
 fcwt_batch(
