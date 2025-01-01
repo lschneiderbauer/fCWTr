@@ -12,3 +12,4 @@ config.status
 aclocal.m4
 configure~
 docs
+inst/doc

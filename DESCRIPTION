@@ -28,7 +28,9 @@ Suggests:
     viridis (>= 0.6.0),
     rlang (>= 1.0.0),
     tibble (>= 3.0.0),
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 LinkingTo: 
     cpp11
 SystemRequirements:
@@ -39,3 +41,4 @@ Roxygen: list(markdown = TRUE)
 BugReports: https://github.com/lschneiderbauer/fCWTr/issues
 Imports: 
     units (>= 0.8)
+VignetteBuilder: knitr

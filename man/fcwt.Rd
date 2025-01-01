@@ -40,12 +40,16 @@ interpreted in units of 'Hertz'.}
 Should the frequency scale be linear or logarithmic?
 "linear"  / "log" for linear / logarithmic.}
 
-\item{sigma}{Sets a dimensionless parameter modifying the wavelet spread which in the
-time-domain is roughly given by \eqn{\Sigma_t \sim \sqrt{2} \frac{\sigma}{f}}.
-Changing this parameter adjusts the time/frequency uncertainty balance.
-Defaults to 1.
+\item{sigma}{Sets a dimensionless parameter controlling the wavelet spread.
+Changing this parameter adjusts the time/frequency uncertainty balance,
+\eqn{\Delta t = \frac{\sigma}{f}}, \eqn{\Delta f = \frac{f}{2\pi \sigma}}.
 Larger (lower) value of sigma corresponds to a better (worse) frequency
-resolution and a worse (better) time resolution.}
+resolution and a worse (better) time resolution.
+
+Defaults to 1. Note that there is not really a natural choice for sigma,
+it depends on the use case. So the default choice can very well be quite a
+bad choice. (It probably is for audio data, see
+\code{vignette("sigma", package = "fCWTr")})}
 
 \item{remove_coi}{( \link{TRUE} | \link{FALSE} )
 Boundary effects can result in nonphysical artifacts. If \code{remove_coi = TRUE},
