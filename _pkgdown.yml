@@ -8,6 +8,8 @@ reference:
   contents:
   - starts_with("fcwt")
 - title: "Sigma helpers"
+  desc: >
+    Helpers to setup the correct wavelet spread parameter sigma.
   contents:
   - has_concept("sigma")
 - title: "Physical unit helper"
