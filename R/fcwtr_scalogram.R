@@ -267,19 +267,27 @@ rbind.fcwtr_scalogram <- function(...) {
 #' @export
 print.fcwtr_scalogram <- function(x, ...) {
   cat("_Scalogram_\n")
-  cat("<> (Time/Frequency) dimension: [", sc_dim_time(x), ",",
+  cat("* (Time/Frequency) dimension: [", sc_dim_time(x), ",",
     sc_dim_freq(x), "]\n",
     sep = ""
   )
-  cat("<> Sampling rate: ", format(attr(x, "sample_freq")), "\n", sep = "")
-  cat("<> Frequency scale: ", format(attr(x, "freq_begin")), " - ",
+  cat("* Sampling rate: ", format(attr(x, "sample_freq")), "\n", sep = "")
+  cat("* Frequency scale: ", format(attr(x, "freq_begin")), " - ",
     format(attr(x, "freq_end")), ", ", attr(x, "freq_scale"), "\n",
     sep = ""
   )
-  cat("<> Time offset:", format(attr(x, "time_offset")), "\n")
-  cat("<> Sigma: ", attr(x, "sigma"), "\n", sep = "")
+  cat("* Time offset:", format(attr(x, "time_offset")), "\n")
+  cat("* Sigma: ", attr(x, "sigma"), "\n", sep = "")
 
-  cat("Time/frequency matrix summary\n")
+  cat("  o Time resolution at ", format(attr(x, "freq_begin")), ": ",
+      format(sigma_res(attr(x, "sigma"), attr(x, "freq_begin"))$time) , "\n")
+  cat("  o Time resolution at ", format(attr(x, "freq_end")), ": ",
+      format(sigma_res(attr(x, "sigma"), attr(x, "freq_end"))$time) , "\n")
+
+  cat("  o Relative frequency resolution: ",
+      format(du(sigma_res(attr(x, "sigma"), u(1, "Hz"))$freq / u(1, "Hz"))) , "\n")
+
+  cat("* Time/frequency matrix summary\n")
   print(summary(as.vector(as.matrix(x))))
 
   invisible(x)
