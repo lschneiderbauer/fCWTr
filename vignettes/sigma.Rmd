@@ -31,9 +31,9 @@ The time-frequency uncertainty relation is true for any $\Sigma$ or frequency $f
 
 ## From uncertainty to resolution
 
-So which time and frequency resolution $\Delta t$ and $\Delta f$ can we expect from a certain value of $\Sigma$? The resolution is set by the Gaussian spread which in turn is quantified by the uncertainties $\sigma_t$ and $\sigma_f$.
+So which time and frequency resolution $\Delta t$ and $\Delta f$ can we expect from a certain value of $\Sigma$?
 
-Interpreting the Gaussian as a window function, we expect that in order to achieve a certain resolution $\Delta_t$ the window size needs to be at least equal (or smaller) than $\Delta t$. Since a Gaussian has infinite support, we need to make a more or less arbitrary decision where the exponential falloff of the Gaussian is close enough to zero for our liking.
+The resolution is set by the Gaussian spread which in turn is quantified by the uncertainties $\sigma_t$ and $\sigma_f$. Interpreting the Gaussian as a window function, we expect that in order to achieve a certain resolution $\Delta_t$ the window size needs to be at least equal (or smaller) than $\Delta t$. Since a Gaussian has infinite support, we need to make a more or less arbitrary decision where the exponential falloff of the Gaussian is close enough to zero for our liking.
 
 [![Ainali, CC BY-SA 3.0 \<https://creativecommons.org/licenses/by-sa/3.0\>, via Wikimedia Commons](images/Standard_deviation_diagram.svg){width="100%"}](https://upload.wikimedia.org/wikipedia/commons/3/3a/Standard_deviation_diagram_micro.svg)
 
