@@ -10,7 +10,7 @@ fcwt(
   n_freqs,
   freq_begin = 2 * sample_freq/length(signal),
   freq_end = sample_freq/2,
-  freq_scale = c("linear", "log"),
+  freq_scale = c("log", "linear"),
   sigma = 2 * pi,
   remove_coi = TRUE,
   n_threads = 2L
@@ -38,7 +38,9 @@ interpreted in units of 'Hertz'.}
 
 \item{freq_scale}{( \code{"freq"} | \code{"log"} )
 Should the frequency scale be linear or logarithmic?
-"linear"  / "log" for linear / logarithmic.}
+"linear"  / "log" for linear / logarithmic.
+The default scale is logarithmic, since frequency resolution decreases
+with increasing frequency and a linear scale contains superficial information.}
 
 \item{sigma}{Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
 Changing this parameter adjusts the time/frequency uncertainty balance,

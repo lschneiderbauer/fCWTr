@@ -42,6 +42,8 @@
 #' @param freq_scale ( `"freq"` | `"log"` )
 #' Should the frequency scale be linear or logarithmic?
 #'  "linear"  / "log" for linear / logarithmic.
+#' The default scale is logarithmic, since frequency resolution decreases
+#' with increasing frequency and a linear scale contains superficial information.
 #'
 #' @param sigma
 #'  Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
@@ -99,7 +101,7 @@ fcwt <- function(signal,
                  n_freqs,
                  freq_begin = 2 * sample_freq / length(signal),
                  freq_end = sample_freq / 2,
-                 freq_scale = c("linear", "log"),
+                 freq_scale = c("log", "linear"),
                  sigma = 2 * pi,
                  # abs = FALSE,
                  remove_coi = TRUE,

@@ -88,7 +88,7 @@ fcwt_batch <- function(signal,
                        n_freqs,
                        freq_begin = 2 * sample_freq / length(signal),
                        freq_end = sample_freq / 2,
-                       freq_scale = c("linear", "log"),
+                       freq_scale = c("log", "linear"),
                        sigma = 1,
                        # factor 2 as additional security measure
                        time_resolution,
