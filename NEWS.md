@@ -18,7 +18,7 @@
 
 -   new helper functions to determine the correct value of sigma for a given use case: `sigma_resolution()`, `sigma_from_time_resolution()`, `sigma_from_frequency_resolution()`.
 
--   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `as_tibble()`.
+-   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `tibble::as_tibble()`.
 
 -   `openmp_enabled()`/`avx_enabled()` new functions to check for system OpenMP/AVX support.
 
