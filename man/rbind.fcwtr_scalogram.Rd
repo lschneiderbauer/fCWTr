@@ -29,7 +29,7 @@ ts_sin_440 <- sin((1:5000) * 2 * pi * 440 / 44100)
 res <-
   fcwt(
     ts_sin_440,
-    sample_freq = u(44.1, "kHz"),
+    x_sample_freq = u(44.1, "kHz"),
     freq_begin = u(50, "Hz"),
     freq_end = u(1000, "Hz"),
     n_freqs = 10,

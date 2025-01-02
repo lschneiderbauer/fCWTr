@@ -28,6 +28,7 @@ Note that the relative frequency resolution does not depend on the frequency
 itself, in contrast to the absolute frequency resolution.
 }
 \examples{
+ref_freq <- u(440, "Hz")
 sigma <- sigma_from_freq_res_rel(0.2)
 
 sigma_res(sigma, ref_freq)

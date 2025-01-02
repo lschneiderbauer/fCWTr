@@ -138,6 +138,7 @@ sigma_from_time_res <- function(res, freq) {
 #'  corresponding to the `sigma` argument in [fcwt()].
 #'
 #' @examples
+#' ref_freq <- u(440, "Hz")
 #' sigma <- sigma_from_freq_res_rel(0.2)
 #'
 #' sigma_res(sigma, ref_freq)

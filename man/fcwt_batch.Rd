@@ -126,10 +126,10 @@ sequence is lost. (The amount depends on the minimal frequency captured \code{mi
 \examples{
 fcwt_batch(
   ts_sin_sin,
-  x_sample_freq = u(44.1, "kHz")
+  x_sample_freq = u(44.1, "kHz"),
   y_sample_freq = u(100, "Hz"),
-  freq_begin = u(100, "Hz")
-  freq_end = u(11000, "Hz")
+  freq_begin = u(100, "Hz"),
+  freq_end = u(11000, "Hz"),
   n_freqs = 30,
   sigma = 10
 )
