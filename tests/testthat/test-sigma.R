@@ -2,19 +2,19 @@ test_that("uncertinaty principle", {
   res <- sigma_resolution(10, u(20, "Hz"))
   res2 <- sigma_resolution(1, u(30, "Hz"))
 
-  expect_equal(du(res$time * res$freq), 1/(2 * pi))
-  expect_equal(du(res2$time * res2$freq), 1/(2 * pi))
+  expect_equal(du(res$time * res$freq), 8/( pi))
+  expect_equal(du(res2$time * res2$freq), 8/(pi))
 })
 
 test_that("sigma calculator", {
   expect_equal(
     sigma_from_frequency_resolution(u(1, "Hz"), u(10, "Hz")),
-    1.5915,
+    6.366198,
     tolerance = 10^-4
   )
   expect_equal(
     sigma_from_time_resolution(u(1, "s"), u(10, "Hz")),
-    10
+    2.5
   )
 })
 

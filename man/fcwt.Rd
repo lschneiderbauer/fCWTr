@@ -40,25 +40,26 @@ interpreted in units of 'Hertz'.}
 Should the frequency scale be linear or logarithmic?
 "linear"  / "log" for linear / logarithmic.}
 
-\item{sigma}{Sets a dimensionless parameter controlling the wavelet spread.
+\item{sigma}{Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
 Changing this parameter adjusts the time/frequency uncertainty balance,
-\eqn{\Delta t = \frac{\sigma}{f}}, \eqn{\Delta f = \frac{f}{2\pi \sigma}}.
+\eqn{\Delta t = 4 \frac{\Sigma}{f}}, \eqn{\Delta f = 4 \frac{f}{2\pi \Sigma}}.
 Larger (lower) value of sigma corresponds to a better (worse) frequency
 resolution and a worse (better) time resolution.
 
-Defaults to 2 \eqn{\pi}. Note that there is not really a natural choice for
+For more information, see \code{vignette("sigma", package = "fCWTr")}).
+
+Defaults to \eqn{2\pi}. Note that there is not really a natural choice for
 sigma, it depends on the use case. So the default choice can very well be
-quite a bad choice. (It probably is for audio data, see
-\code{vignette("sigma", package = "fCWTr")})}
+quite a bad choice (it probably is for audio data).}
 
 \item{remove_coi}{( \link{TRUE} | \link{FALSE} )
 Boundary effects can result in nonphysical artifacts. If \code{remove_coi = TRUE},
 those are effectively removed by setting corresponding values to \link{NA}.
 We define the essential support of the
 (Gaussian) wavelet to be four times its standard deviation,
-\eqn{4 \Delta t = 4 \frac{\sigma}{f}}, and so a wavelet touches
+\eqn{\Delta t = \frac{\sigma}{f}}, and so a wavelet touches
 the boundary if the distance of the center of the wavelet to the boundary
-is less then \eqn{2 \Delta t}. Values that fall into that range are removed
+is less then \eqn{\Delta t /2}. Values that fall into that range are removed
 if \code{remove_coi = TRUE}.}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.

@@ -42,16 +42,17 @@ interpreted in units of 'Hertz'.}
 Should the frequency scale be linear or logarithmic?
 "linear"  / "log" for linear / logarithmic.}
 
-\item{sigma}{Sets a dimensionless parameter controlling the wavelet spread.
+\item{sigma}{Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
 Changing this parameter adjusts the time/frequency uncertainty balance,
-\eqn{\Delta t = \frac{\sigma}{f}}, \eqn{\Delta f = \frac{f}{2\pi \sigma}}.
+\eqn{\Delta t = 4 \frac{\Sigma}{f}}, \eqn{\Delta f = 4 \frac{f}{2\pi \Sigma}}.
 Larger (lower) value of sigma corresponds to a better (worse) frequency
 resolution and a worse (better) time resolution.
 
-Defaults to 2 \eqn{\pi}. Note that there is not really a natural choice for
+For more information, see \code{vignette("sigma", package = "fCWTr")}).
+
+Defaults to \eqn{2\pi}. Note that there is not really a natural choice for
 sigma, it depends on the use case. So the default choice can very well be
-quite a bad choice. (It probably is for audio data, see
-\code{vignette("sigma", package = "fCWTr")})}
+quite a bad choice (it probably is for audio data).}
 
 \item{time_resolution}{The time resolution of the output signal in physical units (by \code{\link[=u]{u()}}),
 or a pure number, which is interpreted in unit of seconds.

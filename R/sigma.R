@@ -16,7 +16,7 @@
 #'
 #' @return
 #'  A named list with two elements: "time" and "freq", in time and frequency
-#'  units. They obey the property \eqn{time \times freq = \frac{1]{2 \pi}}}.
+#'  units. They obey the property \eqn{time \times freq = \frac{8]{\pi}}}.
 #'
 #' @examples
 #' sigma_resolution(1, u(440, "Hz"))
@@ -29,8 +29,8 @@ sigma_resolution <- function(sigma, freq) {
   stopifnot(inherits(freq, "units"), has_comp_unit(freq, "Hz"))
 
   list(
-    time = sigma / freq,
-    freq = 1 / (2 * pi) * freq / sigma
+    time = 4 * sigma / freq,
+    freq = 4 * 1 / (2 * pi) * freq / sigma
   )
 }
 
@@ -72,7 +72,7 @@ sigma_from_frequency_resolution <- function(resolution, freq) {
   stopifnot(resolution > u(0, "Hz"))
   stopifnot(freq > u(0, "Hz"))
 
-  ddu(1 / (2 * pi) * freq / resolution)
+  ddu(4 / (2 * pi) * freq / resolution)
 }
 
 #' Determine Sigma from a time resolution requirement
@@ -113,5 +113,5 @@ sigma_from_time_resolution <- function(resolution, freq) {
   stopifnot(resolution > u(0, "s"))
   stopifnot(freq > u(0, "Hz"))
 
-  ddu(freq * resolution)
+  ddu(freq * resolution / 4)
 }
