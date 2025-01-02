@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Controlling the wavelet spread • fCWTr</title>
+<title>Controlling the time/frequency resolution • fCWTr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Controlling the wavelet spread">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Controlling the time/frequency resolution">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/sigma.html">Controlling the wavelet spread</a></li>
+<li><a class="dropdown-item" href="../articles/sigma.html">Controlling the time/frequency resolution</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -55,7 +55,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.svg" class="logo" alt=""><h1>Controlling the wavelet spread</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Controlling the time/frequency resolution</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/lschneiderbauer/fCWTr/blob/master/vignettes/sigma.Rmd" class="external-link"><code>vignettes/sigma.Rmd</code></a></small>
@@ -83,26 +83,66 @@ than the window size.&lt;/p&gt;"><sup>1</sup></a></p>
 and a reference frequency
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
 the Gaussian envelope
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>,</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(t, f)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(t)</annotation></semantics></math>
 of the wavelet is given by
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>,</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><msup><mi>e</mi><mrow><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>t</mi><mi>f</mi></mrow><mrow><mn>2</mn><mi>σ</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msup></mrow><annotation encoding="application/x-tex">g(t, f) \sim e^{-\left( \frac{t f}{2 \sigma} \right)^2}</annotation></semantics></math>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><msup><mi>e</mi><mrow><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>t</mi><mi>f</mi></mrow><mrow><mn>2</mn><mi>Σ</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msup></mrow><annotation encoding="application/x-tex">g(t) \sim e^{-\left( \frac{t f}{2 \Sigma} \right)^2}</annotation></semantics></math>
 with variance in time
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi><mo>=</mo><mfrac><mi>σ</mi><mi>f</mi></mfrac></mrow><annotation encoding="application/x-tex">\Delta t=\frac{\sigma}{f}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>t</mi></msub><mo>=</mo><mfrac><mi>Σ</mi><mi>f</mi></mfrac></mrow><annotation encoding="application/x-tex">\sigma_t=\frac{\Sigma}{f}</annotation></semantics></math>
 which also sets the scale for the effective time resolution of the CWT
 at frequency
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>.
-The corresponding frequency resolution is given by the spreading of the
-Gaussian envelope in Fourier space:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>f</mi><mo>=</mo><mfrac><mi>f</mi><mrow><mn>2</mn><mi>π</mi><mi>σ</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\Delta f = \frac{f}{2\pi \sigma}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+and a dimensionless parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>,.
+The corresponding frequency uncertainty is given by the spreading of the
+Gaussian in Fourier space:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>f</mi></msub><mo>=</mo><mfrac><mi>f</mi><mrow><mn>2</mn><mi>π</mi><mi>Σ</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma_f = \frac{f}{2\pi \Sigma}</annotation></semantics></math>.
 The time and frequency resolution satisfy the famous time-frequency
 uncertainty relation
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi><mi>Δ</mi><mi>f</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>π</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\Delta t \Delta f=\frac{1}{2\pi}</annotation></semantics></math>.</p>
-<p>The time-frequency uncertainty relation is always true, but we can
-adjust the parameter
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
-to increase (decrease) time resolution at the cost of decreasing
-(increasing) the frequency resolution. The “correct” balance depends on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>t</mi></msub><msub><mi>σ</mi><mi>f</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>π</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma_t \sigma_f=\frac{1}{2\pi}</annotation></semantics></math>.</p>
+<p>The time-frequency uncertainty relation is true for any
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
+or frequency
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
+but we can adjust the parameter
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
+to increase (decrease) time uncertainty at the cost of decreasing
+(increasing) the frequency uncertainty. The “correct” balance depends on
 your use case.</p>
+<div class="section level2">
+<h2 id="from-uncertainty-to-resolution">From uncertainty to resolution<a class="anchor" aria-label="anchor" href="#from-uncertainty-to-resolution"></a>
+</h2>
+<p>So what time and frequency resolution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">\Delta f</annotation></semantics></math>
+can we expect from a certain value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>?
+The resolution is set by the Gaussian spread which in turn is quantified
+by the uncertainties
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>t</mi></msub><annotation encoding="application/x-tex">\sigma_t</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>f</mi></msub><annotation encoding="application/x-tex">\sigma_f</annotation></semantics></math>.</p>
+<p>Interpreting the Gaussian as a window function, we expect that in
+order to achieve a certain resolution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mi>t</mi></msub><annotation encoding="application/x-tex">\Delta_t</annotation></semantics></math>
+the window size needs to be at least equal (or smaller) than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math>.
+Since a Gaussian has infinite support, we need to make a more or less
+arbitrary decision on where the exponential falloff of the Gaussian is
+close enough to zero for our liking.</p>
+<div class="float">
+<img src="images%2FStandard_deviation_diagram.svg" style="width:100.0%" alt="Von M. W. Toews - Eigenes Werk, based (in concept) on figure by Jeremy Kemp, on 2005-02-09, CC BY 2.5, https://commons.wikimedia.org/w/index.php?curid=1903871"><div class="figcaption">Von M. W. Toews - Eigenes Werk, based (in
+concept) on figure by Jeremy Kemp, on 2005-02-09, CC BY 2.5, <a href="https://commons.wikimedia.org/w/index.php?curid=1903871" class="external-link uri">https://commons.wikimedia.org/w/index.php?curid=1903871</a>
+</div>
+</div>
+<p>In our case we decide that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mspace width="0.167em"></mspace><mi>σ</mi></mrow><annotation encoding="application/x-tex">4\,\sigma</annotation></semantics></math>
+is the effective width of our window function, and so we expect an
+effective resolution of</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi><mo>:=</mo><mn>4</mn><mfrac><mi>Σ</mi><mi>f</mi></mfrac></mrow><annotation encoding="application/x-tex">\Delta t:=4\frac{Σ}{f}</annotation></semantics></math></p>
+<p>and</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>f</mi><mo>:=</mo><mn>4</mn><mfrac><mi>f</mi><mrow><mn>2</mn><mi>π</mi><mi>Σ</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\Delta f:=4\frac{f}{2πΣ}</annotation></semantics></math></p>
+</div>
 <div class="section level2">
 <h2 id="example-piano-keys">Example: Piano keys<a class="anchor" aria-label="anchor" href="#example-piano-keys"></a>
 </h2>
@@ -119,44 +159,42 @@ formulas above:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_resolution.html">sigma_resolution</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">1</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $time</span></span>
-<span><span class="co">#&gt; 0.002272727 [1/Hz]</span></span>
+<span><span class="co">#&gt; 0.009090909 [1/Hz]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $freq</span></span>
-<span><span class="co">#&gt; 70.02817 [Hz]</span></span></code></pre></div>
+<span><span class="co">#&gt; 280.1127 [Hz]</span></span></code></pre></div>
 <p>We see now, with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>,
-our frequency resolution at 440 Hz is only 70 Hz! The spreading is way
+our frequency resolution at 440 Hz is only 280 Hz! The spreading is way
 too high to be able to distinguish different keys (the next key A#4 is
 at 466 Hz and the previous key Ab4 is at 415 Hz), we need to able at
-least to resolve the difference, 15 Hz. Let’s be sure and make it half
-of that, 7 Hz. We can use another helper function to check what the
-corresponding
+least to resolve the difference, 15 Hz. We can use another helper
+function to check what the corresponding
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
 should be:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_from_frequency_resolution.html">sigma_from_frequency_resolution</a></span><span class="op">(</span><span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">7</span>, <span class="st">"Hz"</span><span class="op">)</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 10.00402</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_from_frequency_resolution.html">sigma_from_frequency_resolution</a></span><span class="op">(</span><span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"Hz"</span><span class="op">)</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 18.67418</span></span></code></pre></div>
 <p>and it tells us we need
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\sigma=10</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">\sigma=19</annotation></semantics></math>
 or higher. Let’s double-check what that implies for the time
 resolution:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_resolution.html">sigma_resolution</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">10</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_resolution.html">sigma_resolution</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">19</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $time</span></span>
-<span><span class="co">#&gt; 0.02272727 [1/Hz]</span></span>
+<span><span class="co">#&gt; 0.1727273 [1/Hz]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $freq</span></span>
-<span><span class="co">#&gt; 7.002817 [Hz]</span></span></code></pre></div>
+<span><span class="co">#&gt; 14.74277 [Hz]</span></span></code></pre></div>
 <p>That means, we can detect those frequencies with a time resolution of
-22 milliseconds. A typical very fast piano beat is around 180 beats per
+170 milliseconds. A typical very fast piano beat is around 180 beats per
 minutes (&gt; Prestissimo), that means, 3 beats per seconds, and the
-required time resolution to detect that is at least 330 milliseconds: we
-have no problems doing that with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\sigma =10</annotation></semantics></math>,
-and even have some leeway.</p>
+required time resolution to detect that is at least 330 milliseconds:
+our time resolution is still below that, so we are on the safe side.</p>
 <p>Let’s compare these two settings in practice:</p>
 <div class="section level3">
-<h3 id="sigma-1">Sigma = 1<a class="anchor" aria-label="anchor" href="#sigma-1"></a>
+<h3 id="sigma-1">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\Sigma = 1</annotation></semantics></math><a class="anchor" aria-label="anchor" href="#sigma-1"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -178,7 +216,8 @@ and even have some leeway.</p>
 <p><img src="sigma_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="sigma-10">Sigma = 10<a class="anchor" aria-label="anchor" href="#sigma-10"></a>
+<h3 id="sigma-20">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\Sigma = 20</annotation></semantics></math><a class="anchor" aria-label="anchor" href="#sigma-20"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -190,7 +229,7 @@ and even have some leeway.</p>
 <span>  freq_end <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>,</span>
 <span>  <span class="co"># 5 octaves, 12 keys per octave, 3 frequencies per key</span></span>
 <span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  freq_scale <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  time_resolution <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -198,7 +237,8 @@ and even have some leeway.</p>
 <p><img src="sigma_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="sigma-20">Sigma = 20<a class="anchor" aria-label="anchor" href="#sigma-20"></a>
+<h3 id="sigma-40">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">\Sigma = 40</annotation></semantics></math><a class="anchor" aria-label="anchor" href="#sigma-40"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
@@ -208,18 +248,18 @@ and even have some leeway.</p>
 <span>  freq_end <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>,</span>
 <span>  <span class="co"># 5 octaves, 12 keys per octave, 3 frequencies per key</span></span>
 <span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  freq_scale <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  time_resolution <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>In some way,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
 can be thought of the exposure time of a camera that has to adjusted
 manually. Is the exposure time too long the picture becomes blurry, is
 it too short, the picture becomes too dark to see anything. A good
-balance is the key to a good picture.</p>
+balance is the key to a good photo.</p>
 </div>
 </div>
 

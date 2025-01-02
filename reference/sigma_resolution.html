@@ -20,7 +20,7 @@ the expected time and frequency resolution respectively."><meta property="og:ima
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/sigma.html">Controlling the wavelet spread</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/sigma.html">Controlling the time/frequency resolution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -64,7 +64,7 @@ calculated. Must be a quantity with frequency units (see <code><a href="u.html">
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A named list with two elements: "time" and "freq", in time and frequency
-units. They obey the property \(time \times freq = \frac{1]{2 \pi}}\).</p>
+units. They obey the property \(time \times freq = \frac{8]{\pi}}\).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -83,10 +83,10 @@ FCWT scales the wavelet spread depending on the frequency in a natural way.
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">sigma_resolution</span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $time</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.002272727 [1/Hz]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.009090909 [1/Hz]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $freq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70.02817 [Hz]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 280.1127 [Hz]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
