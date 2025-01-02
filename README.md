@@ -117,7 +117,7 @@ output
 #> <> Sigma: 5
 #> Time/frequency matrix summary
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-#>    0.00    0.00    0.00    0.13    0.04    2.81  232338
+#>    0.00    0.00    0.00    0.13    0.03    2.81  302028
 ```
 
 The result can be converted into a data frame if need be:
