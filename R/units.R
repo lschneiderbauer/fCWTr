@@ -93,18 +93,6 @@ as_freq <- function(x) {
   }
 }
 
-as_sec <- function(x) {
-  stopifnot(is.numeric(x))
-
-  if (inherits(x, "units")) {
-    stopifnot(has_comp_unit(x, "s") )
-
-    x
-  } else {
-    u(x, "s")
-  }
-}
-
 conv <- function(x, unit) {
   stopifnot(has_comp_unit(x, unit))
 
