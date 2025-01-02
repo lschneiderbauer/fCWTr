@@ -52,12 +52,13 @@ i.e. a graph with a time and a frequency dimension.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fcwt</span><span class="op">(</span></span>
-<span>  <span class="va">signal</span>,</span>
-<span>  <span class="va">sample_freq</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">x_sample_freq</span>,</span>
+<span>  y_sample_freq <span class="op">=</span> <span class="va">x_sample_freq</span>,</span>
 <span>  <span class="va">n_freqs</span>,</span>
-<span>  freq_begin <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">signal</span><span class="op">)</span>,</span>
-<span>  freq_end <span class="op">=</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
-<span>  freq_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"log"</span><span class="op">)</span>,</span>
+<span>  freq_begin <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">x_sample_freq</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  freq_end <span class="op">=</span> <span class="va">x_sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
+<span>  freq_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log"</span>, <span class="st">"linear"</span><span class="op">)</span>,</span>
 <span>  sigma <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>,</span>
 <span>  remove_coi <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="fl">2L</span></span>
@@ -68,16 +69,22 @@ i.e. a graph with a time and a frequency dimension.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-signal">signal<a class="anchor" aria-label="anchor" href="#arg-signal"></a></dt>
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>Real-valued time series. The time steps are assumed to be evenly spaced.</p></dd>
 
 
-<dt id="arg-sample-freq">sample_freq<a class="anchor" aria-label="anchor" href="#arg-sample-freq"></a></dt>
-<dd><p>Sampling rate of input time series. This number primarily establishes
+<dt id="arg-x-sample-freq">x_sample_freq<a class="anchor" aria-label="anchor" href="#arg-x-sample-freq"></a></dt>
+<dd><p>Sampling rate of input time series <code>x</code>. This number primarily establishes
 a connection to physical units which is used in other frequency definitions
 as well as the units of the output data. Expects either a value with frequency
 units, generated with <code><a href="u.html">u()</a></code>, or a pure number, in which case it is
 interpreted in units of 'Hertz'.</p></dd>
+
+
+<dt id="arg-y-sample-freq">y_sample_freq<a class="anchor" aria-label="anchor" href="#arg-y-sample-freq"></a></dt>
+<dd><p>Sampling rate of output time series. This defaults to the input sampling
+rate <code>x_sample_freq</code>, but can be reduced if a lower resolution output
+signal is required (saves memory).</p></dd>
 
 
 <dt id="arg-n-freqs">n_freqs<a class="anchor" aria-label="anchor" href="#arg-n-freqs"></a></dt>
@@ -98,7 +105,9 @@ interpreted in units of 'Hertz'.</p></dd>
 <dt id="arg-freq-scale">freq_scale<a class="anchor" aria-label="anchor" href="#arg-freq-scale"></a></dt>
 <dd><p>( <code>"freq"</code> | <code>"log"</code> )
 Should the frequency scale be linear or logarithmic?
-"linear"  / "log" for linear / logarithmic.</p></dd>
+"linear"  / "log" for linear / logarithmic.
+The default scale is logarithmic, since frequency resolution decreases
+with increasing frequency and a linear scale contains superficial information.</p></dd>
 
 
 <dt id="arg-sigma">sigma<a class="anchor" aria-label="anchor" href="#arg-sigma"></a></dt>
@@ -135,7 +144,7 @@ only a single thread is used.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The spectogram, a numeric real-valued matrix with dimensions
-<code>dim = c(length(signal), n_freqs)</code>, curated with some additional properties.
+<code>dim = c(length(x), n_freqs)</code>, curated with some additional properties.
 This matrix is wrapped into a S3-class <code>fcwtr_scalogram</code> so that plotting and
 coercion functions can be used conveniently. Use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> to strip
 the curated information. Or use <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> to convert to another
@@ -163,7 +172,7 @@ Nat Comput Sci 2, 47–58 (2022). <a href="https://doi.org/10.1038/s43588-021-00
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">fcwt</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">ts_sin_440</span>,</span></span>
-<span class="r-in"><span>  sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x_sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  freq_begin <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">50</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  freq_end <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  n_freqs <span class="op">=</span> <span class="fl">10</span>,</span></span>
@@ -172,12 +181,12 @@ Nat Comput Sci 2, 47–58 (2022). <a href="https://doi.org/10.1038/s43588-021-00
 <span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; (Time/Frequency) dimension: [5000,10]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sampling rate: 44.1 [kHz]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 50 [Hz] - 1000 [Hz], linear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 50 [Hz] - 1000 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Time offset: 0 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sigma: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.000   0.000   0.000   0.086   0.002   0.728   23446 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0.00    0.00    0.00    0.00    0.00    0.01   34218 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

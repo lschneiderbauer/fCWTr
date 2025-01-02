@@ -78,18 +78,18 @@ An index value of NULL is treated as if it were integer(0).</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="fcwt.html">fcwt</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5000</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="fl">440</span> <span class="op">/</span> <span class="fl">44100</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span></span>
+<span class="r-in"><span>  x_sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span></span>
 <span class="r-in"><span>  n_freqs <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; (Time/Frequency) dimension: [1000,6]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sampling rate: 44100 [Hz]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 17.64 [Hz] - 22050 [Hz], linear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 17.64 [Hz] - 22050 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Time offset: 0 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sigma: 6.283185</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.00000 0.00000 0.00000 0.00000 0.00000 0.00026     273 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.0000  0.0000  0.0000  0.0001  0.0001  0.0016    3044 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

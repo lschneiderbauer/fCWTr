@@ -61,14 +61,14 @@ automatically discarded (and those potentially dominate for short signals).</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fcwt_batch</span><span class="op">(</span></span>
-<span>  <span class="va">signal</span>,</span>
-<span>  <span class="va">sample_freq</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">x_sample_freq</span>,</span>
+<span>  y_sample_freq <span class="op">=</span> <span class="va">x_sample_freq</span>,</span>
 <span>  <span class="va">n_freqs</span>,</span>
-<span>  freq_begin <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">signal</span><span class="op">)</span>,</span>
-<span>  freq_end <span class="op">=</span> <span class="va">sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
-<span>  freq_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"log"</span><span class="op">)</span>,</span>
+<span>  freq_begin <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">x_sample_freq</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  freq_end <span class="op">=</span> <span class="va">x_sample_freq</span><span class="op">/</span><span class="fl">2</span>,</span>
+<span>  freq_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log"</span>, <span class="st">"linear"</span><span class="op">)</span>,</span>
 <span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  <span class="va">time_resolution</span>,</span>
 <span>  max_batch_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">9</span><span class="op">/</span><span class="op">(</span><span class="va">n_freqs</span> <span class="op">*</span> <span class="fl">8</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>  n_threads <span class="op">=</span> <span class="fl">2L</span>,</span>
 <span>  progress_bar <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -79,16 +79,22 @@ automatically discarded (and those potentially dominate for short signals).</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-signal">signal<a class="anchor" aria-label="anchor" href="#arg-signal"></a></dt>
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>Real-valued time series. The time steps are assumed to be evenly spaced.</p></dd>
 
 
-<dt id="arg-sample-freq">sample_freq<a class="anchor" aria-label="anchor" href="#arg-sample-freq"></a></dt>
-<dd><p>Sampling rate of input time series. This number primarily establishes
+<dt id="arg-x-sample-freq">x_sample_freq<a class="anchor" aria-label="anchor" href="#arg-x-sample-freq"></a></dt>
+<dd><p>Sampling rate of input time series <code>x</code>. This number primarily establishes
 a connection to physical units which is used in other frequency definitions
 as well as the units of the output data. Expects either a value with frequency
 units, generated with <code><a href="u.html">u()</a></code>, or a pure number, in which case it is
 interpreted in units of 'Hertz'.</p></dd>
+
+
+<dt id="arg-y-sample-freq">y_sample_freq<a class="anchor" aria-label="anchor" href="#arg-y-sample-freq"></a></dt>
+<dd><p>Sampling rate of output time series. This defaults to the input sampling
+rate <code>x_sample_freq</code>, but can be reduced if a lower resolution output
+signal is required (saves memory).</p></dd>
 
 
 <dt id="arg-n-freqs">n_freqs<a class="anchor" aria-label="anchor" href="#arg-n-freqs"></a></dt>
@@ -109,7 +115,9 @@ interpreted in units of 'Hertz'.</p></dd>
 <dt id="arg-freq-scale">freq_scale<a class="anchor" aria-label="anchor" href="#arg-freq-scale"></a></dt>
 <dd><p>( <code>"freq"</code> | <code>"log"</code> )
 Should the frequency scale be linear or logarithmic?
-"linear"  / "log" for linear / logarithmic.</p></dd>
+"linear"  / "log" for linear / logarithmic.
+The default scale is logarithmic, since frequency resolution decreases
+with increasing frequency and a linear scale contains superficial information.</p></dd>
 
 
 <dt id="arg-sigma">sigma<a class="anchor" aria-label="anchor" href="#arg-sigma"></a></dt>
@@ -124,23 +132,13 @@ sigma, it depends on the use case. So the default choice can very well be
 quite a bad choice (it probably is for audio data).</p></dd>
 
 
-<dt id="arg-time-resolution">time_resolution<a class="anchor" aria-label="anchor" href="#arg-time-resolution"></a></dt>
-<dd><p>The time resolution of the output signal in physical units (by <code><a href="u.html">u()</a></code>),
-or a pure number, which is interpreted in unit of seconds.
-The time resolution of the high-resolution result will be reduced to
-<code>time_resolution</code> by averaging fixed time slice windows.
-Memory consumption is directly related to that.
-<code>time_resolution</code> cannot be higher than the time resolution
-of the input signal.</p></dd>
-
-
 <dt id="arg-max-batch-size">max_batch_size<a class="anchor" aria-label="anchor" href="#arg-max-batch-size"></a></dt>
 <dd><p>The maximal batch size that is used for splitting up the input sequence.
 This limits the maximal memory that is used. Defaults to roughly 1GB, being
 conservative and taking into account that R might make copies when further
 processing it.
 The actual batch size is the largest batch size that is smaller than
-<code>max_batch_size</code> and compatible with the requested <code>time_resolution</code>.
+<code>max_batch_size</code> and compatible with the requested <code>y_sample_freq</code>.
 You should aim to set the batch size as large as possible given your
 memory constraints (boundary effects become larger the smaller the
 batch size).</p></dd>
@@ -167,7 +165,7 @@ Defaults to <code>FALSE</code>.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The spectogram, a numeric real-valued matrix with dimensions roughly
-<code>dim ~ c(length(signal) * time_resolution * sample_freq, n_freqs)</code>.
+<code>dim ~ c(length(x) * x_sample_freq / y_sample_freq, n_freqs)</code>.
 The exact length of the output depends on boundary effect details.
 This matrix is wrapped into a S3-class "fcwtr_scalogram" so that plotting and
 coercion functions can be used conveniently.</p>
@@ -202,22 +200,22 @@ sequence is lost. (The amount depends on the minimal frequency captured <code>mi
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">fcwt_batch</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">ts_sin_sin</span>,</span></span>
-<span class="r-in"><span>  sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span></span>
-<span class="r-in"><span>  freq_begin <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>  freq_end <span class="op">=</span> <span class="fl">11000</span>,</span></span>
+<span class="r-in"><span>  x_sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  y_sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  freq_begin <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  freq_end <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">11000</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  n_freqs <span class="op">=</span> <span class="fl">30</span>,</span></span>
-<span class="r-in"><span>  sigma <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>  time_resolution <span class="op">=</span> <span class="fl">0.01</span></span></span>
+<span class="r-in"><span>  sigma <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; (Time/Frequency) dimension: [60,30]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sampling rate: 100 [Hz]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 100 [Hz] - 11000 [Hz], linear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sampling rate: 0.1 [kHz]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Frequency scale: 100 [Hz] - 11000 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Time offset: 0.2 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;&gt; Sigma: 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0000000 0.0000041 0.0000116 0.0256150 0.0000365 0.9354089 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0000000 0.0000041 0.0000083 0.0087071 0.0000205 0.9054898 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
