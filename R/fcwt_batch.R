@@ -37,19 +37,10 @@
 #'  conservative and taking into account that R might make copies when further
 #'  processing it.
 #'  The actual batch size is the largest batch size that is smaller than
-#'  `max_batch_size` and compatible with the requested `time_resolution`.
+#'  `max_batch_size` and compatible with the requested `y_sample_freq`.
 #'  You should aim to set the batch size as large as possible given your
 #'  memory constraints (boundary effects become larger the smaller the
 #'  batch size).
-#'
-#' @param time_resolution
-#'  The time resolution of the output signal in physical units (by [u()]),
-#'  or a pure number, which is interpreted in unit of seconds.
-#'  The time resolution of the high-resolution result will be reduced to
-#'  `time_resolution` by averaging fixed time slice windows.
-#'  Memory consumption is directly related to that.
-#'  `time_resolution` cannot be higher than the time resolution
-#'  of the input signal.
 #'
 #' @param progress_bar
 #'  Monitoring progress can sometimes be useful when performing time consuming
@@ -63,7 +54,7 @@
 #'
 #' @return
 #'  The spectogram, a numeric real-valued matrix with dimensions roughly
-#'  `dim ~ c(length(signal) * time_resolution * sample_freq, n_freqs)`.
+#'  `dim ~ c(length(x) * x_sample_freq / y_sample_freq, n_freqs)`.
 #'  The exact length of the output depends on boundary effect details.
 #'  This matrix is wrapped into a S3-class "fcwtr_scalogram" so that plotting and
 #'  coercion functions can be used conveniently.
@@ -73,36 +64,36 @@
 #' @examples
 #' fcwt_batch(
 #'   ts_sin_sin,
-#'   sample_freq = 44100,
-#'   freq_begin = 100,
-#'   freq_end = 11000,
+#'   x_sample_freq = u(44.1, "kHz")
+#'   y_sample_freq = u(100, "Hz"),
+#'   freq_begin = u(100, "Hz")
+#'   freq_end = u(11000, "Hz")
 #'   n_freqs = 30,
-#'   sigma = 10,
-#'   time_resolution = 0.01
+#'   sigma = 10
 #' )
 #'
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
-fcwt_batch <- function(signal,
-                       sample_freq,
+fcwt_batch <- function(x,
+                       x_sample_freq,
+                       y_sample_freq = x_sample_freq,
                        n_freqs,
-                       freq_begin = 2 * sample_freq / length(signal),
-                       freq_end = sample_freq / 2,
+                       freq_begin = 2 * x_sample_freq / length(x),
+                       freq_end = x_sample_freq / 2,
                        freq_scale = c("log", "linear"),
                        sigma = 1,
                        # factor 2 as additional security measure
-                       time_resolution,
                        max_batch_size = ceiling(1 * 10^9 / (n_freqs * 8) / 2),
                        n_threads = 2L,
                        progress_bar = FALSE) {
-  time_resolution <- as_sec(time_resolution)
-  sample_freq <- as_freq(sample_freq)
+  x_sample_freq <- as_freq(x_sample_freq)
+  y_sample_freq <- as_freq(y_sample_freq)
   freq_begin <- as_freq(freq_begin)
   freq_end <- as_freq(freq_end)
 
   stopifnot(
-    time_resolution > u(0, "s"),
-    time_resolution >= 1 / sample_freq
+    y_sample_freq > u(0, "Hz"),
+    y_sample_freq <= x_sample_freq
   )
 
   # From FFTW documentation:
@@ -114,11 +105,11 @@ fcwt_batch <- function(signal,
   # Transforms whose sizes are powers of 2 are especially fast.
 
   # aggregation window
-  w <- wnd_from_resolution(time_resolution, sample_freq)
+  w <- wnd_from_target_sample_freq(y_sample_freq, x_sample_freq)
 
   # time steps we need to overlap because we need to remove the
   # boundary effects
-  dt <- coi_invalid_time_steps(sample_freq, freq_begin, sigma)
+  dt <- coi_invalid_time_steps(x_sample_freq, freq_begin, sigma)
 
   # we also want the batch size to be a multiple of the
   # window size
@@ -127,7 +118,7 @@ fcwt_batch <- function(signal,
   # we want (batch_size - 2 * dt) be a multiple of the window size
   batch_size <- 2 * dt + floor((max_batch_size - 2 * dt) / w$size_n) * w$size_n
 
-  signal_size <- w$size_n * floor(length(signal) / w$size_n) # cut off the rest
+  signal_size <- w$size_n * floor(length(x) / w$size_n) # cut off the rest
 
   loss_ratio <- 2 * dt / batch_size
 
@@ -171,8 +162,9 @@ fcwt_batch <- function(signal,
       if (progress_bar) setTxtProgressBar(pb, begin)
 
       fcwt(
-        signal[begin:end],
-        sample_freq = sample_freq,
+        x[begin:end],
+        x_sample_freq = x_sample_freq,
+        #y_sample_freq = y_sample_freq,
         freq_begin = freq_begin,
         freq_end = freq_end,
         n_freqs = n_freqs,

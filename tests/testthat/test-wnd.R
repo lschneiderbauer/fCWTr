@@ -20,11 +20,18 @@ test_that("wnd_from_resolution works", {
   expect_true(w$size_time == u(1, "s"))
 })
 
+test_that("wnd_from_target_sample_freq works", {
+  w <- wnd_from_target_sample_freq(u(10, "Hz"), u(100, "Hz"))
+
+  expect_equal(w$size_n, 10)
+  expect_true(w$size_time == u(0.1, "s"))
+})
+
 test_that("wnd_from_target_size works", {
   res <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,

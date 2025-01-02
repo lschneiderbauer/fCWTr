@@ -2,7 +2,7 @@ test_that("rbind() for fcwtr_scalogram", {
   first <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -13,7 +13,7 @@ test_that("rbind() for fcwtr_scalogram", {
   second <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -24,7 +24,7 @@ test_that("rbind() for fcwtr_scalogram", {
   third <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 22100,
+      x_sample_freq = 22100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -55,7 +55,7 @@ test_that("ggplot2::autoplot() does not err", {
   res <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -68,7 +68,7 @@ test_that("ggplot2::autoplot() does not err", {
   res_log <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -86,7 +86,7 @@ test_that("as.data.frame() result has correct properties", {
       as.data.frame(
         fcwt(
           ts_sin_440[1:1000],
-          sample_freq = 44100,
+          x_sample_freq = 44100,
           freq_begin = 50,
           freq_end = 1000,
           n_freqs = 10,
@@ -108,7 +108,7 @@ test_that("[] works", {
   res <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -127,7 +127,7 @@ test_that("tibble::as_tibble() does not err", {
   res <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -142,7 +142,7 @@ test_that("as.matrix() has the correct S3 class", {
   expect_true(
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -157,7 +157,7 @@ test_that("`agg()` does not err", {
   prep <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 30,
@@ -177,7 +177,7 @@ test_that("`agg()` check n_freqs = 1 edge case", {
   prep <-
     fcwt(
       ts_sin_440[1:1000],
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 1,

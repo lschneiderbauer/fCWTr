@@ -2,7 +2,7 @@ test_that("fcwt batching yields identical result in single-batch case", {
   res0 <-
     fcwt(
       ts_sin_440,
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -13,41 +13,37 @@ test_that("fcwt batching yields identical result in single-batch case", {
   res_batch <-
     fcwt_batch(
       ts_sin_440,
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1,
       # no aggregation
-      time_resolution = 1 / 44100
+      y_sample_freq = 44100
     )
 
   res_batch_2 <-
     fcwt_batch(
       ts_sin_440,
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1,
       # 2 batches
-      max_batch_size = 30000,
-      # no aggregation
-      time_resolution = 1 / 44100
+      max_batch_size = 30000
     )
 
   res_batch_3 <-
     fcwt_batch(
       ts_sin_440,
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1,
       # 3 batches
-      max_batch_size = 20000,
-      # no aggregation
-      time_resolution = 1 / 44100
+      max_batch_size = 20000
     )
 
   expect_equal(
@@ -87,13 +83,11 @@ test_that("fcwt_batch progress bar does not err", {
     capture.output(
       fcwt_batch(
         ts_sin_440,
-        sample_freq = 44100,
+        x_sample_freq = 44100,
         freq_begin = 50,
         freq_end = 1000,
         n_freqs = 10,
         sigma = 1,
-        # no aggregation
-        time_resolution = 1 / 44100,
         progress_bar = TRUE
       )
     )
@@ -104,14 +98,12 @@ test_that("fcwt_batch should err if batch size is too small.", {
   expect_error(
     fcwt_batch(
       ts_sin_440,
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1,
-      max_batch_size = 1000,
-      # no aggregation
-      time_resolution = 1 / 44100
+      max_batch_size = 1000
     )
   )
 })
@@ -120,14 +112,12 @@ test_that("fcwt_batch should warn if loss ratio is critical.", {
   expect_warning(
     fcwt_batch(
       ts_sin_440,
-      sample_freq = 44100,
+      x_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1,
-      max_batch_size = 7000,
-      # no aggregation
-      time_resolution = 1 / 44100
+      max_batch_size = 7000
     )
   )
 })

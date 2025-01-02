@@ -75,7 +75,7 @@ signal <- ts_sin_superpos
 output <-
   fcwt(
     signal,
-    sample_freq = u(44.1, "kHz"),
+    x_sample_freq = u(44.1, "kHz"),
     freq_begin = u(16, "Hz"),
     freq_end = u(2100, "Hz"),
     n_freqs = 200,
@@ -108,13 +108,13 @@ For long sequences, the required memory can exceed your available local memory. 
 batch_result <-
   fcwt_batch(
     rep(ts_sin_sin, 5),
-    sample_freq = u(44.1, "kHz"),
+    x_sample_freq = u(44.1, "kHz"),
+    y_sample_freq = u(100, "Hz"),
     freq_begin = u(100, "Hz"),
     freq_end = u(12, "kHz"),
     n_freqs = 200,
     freq_scale = "linear",
-    sigma = 4,
-    time_resolution = u(10, "ms")
+    sigma = 4
   )
 
 plot(batch_result)

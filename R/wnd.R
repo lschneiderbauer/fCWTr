@@ -37,6 +37,13 @@ wnd_from_resolution <- function(target_resolution, orig_sample_freq) {
   )
 }
 
+wnd_from_target_sample_freq <- function(target_sample_freq, orig_sample_freq) {
+  wnd_from_dim(
+    ddu(floor(orig_sample_freq / target_sample_freq)),
+    orig_sample_freq
+  )
+}
+
 #' @param target_size New total target size of `sc`.
 #' @noRd
 wnd_from_target_size <- function(target_size, sc) {
