@@ -1,8 +1,8 @@
 ---
-title: "Controlling the wavelet spread"
+title: "Controlling the time/frequency resolution"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Controlling the wavelet spread}
+  %\VignetteIndexEntry{Controlling the time/frequency resolution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,9 +20,25 @@ In contrast to the [Short Time Fourier Transform](https://en.wikipedia.org/wiki/
 
 [^1]: That is of course one of the selling points of the CWT: it works for all frequency ranges, while the fixed window size in the Short Time Fourier Transform will break down when probing modes whose wavelength approach the window size, at the same time it lacks a reasonable time resolutions for modes whose wavelength is much smaller than the window size.
 
-For a particular time $t$ and a reference frequency $f$, the Gaussian envelope $g(t, f)$ of the wavelet is given by $$g(t, f) \sim e^{-\left( \frac{t f}{2 \sigma} \right)^2}$$ with variance in time $\Delta t=\frac{\sigma}{f}$ which also sets the scale for the effective time resolution of the CWT at frequency $f$. The corresponding frequency resolution is given by the spreading of the Gaussian envelope in Fourier space: $\Delta f = \frac{f}{2\pi \sigma}$. The time and frequency resolution satisfy the famous time-frequency uncertainty relation $\Delta t \Delta f=\frac{1}{2\pi}$.
+For a particular time $t$ and a reference frequency $f$, the Gaussian envelope $g(t)$ of the wavelet is given by $$g(t) \sim e^{-\left( \frac{t f}{2 \Sigma} \right)^2}$$ with variance in time $\sigma_t=\frac{\Sigma}{f}$ which also sets the scale for the effective time resolution of the CWT at frequency $f$ and a dimensionless parameter $\Sigma$,. The corresponding frequency uncertainty is given by the spreading of the Gaussian in Fourier space: $\sigma_f = \frac{f}{2\pi \Sigma}$. The time and frequency resolution satisfy the famous time-frequency uncertainty relation $\sigma_t \sigma_f=\frac{1}{2\pi}$.
 
-The time-frequency uncertainty relation is always true, but we can adjust the parameter $\sigma$ to increase (decrease) time resolution at the cost of decreasing (increasing) the frequency resolution. The "correct" balance depends on your use case.
+The time-frequency uncertainty relation is true for any $\Sigma$ or frequency $f$, but we can adjust the parameter $\Sigma$ to increase (decrease) time uncertainty at the cost of decreasing (increasing) the frequency uncertainty. The "correct" balance depends on your use case.
+
+## From uncertainty to resolution
+
+So what time and frequency resolution $\Delta t$ and $\Delta f$ can we expect from a certain value of $\Sigma$? The resolution is set by the Gaussian spread which in turn is quantified by the uncertainties $\sigma_t$ and $\sigma_f$.
+
+Interpreting the Gaussian as a window function, we expect that in order to achieve a certain resolution $\Delta_t$ the window size needs to be at least equal (or smaller) than $\Delta t$. Since a Gaussian has infinite support, we need to make a more or less arbitrary decision on where the exponential falloff of the Gaussian is close enough to zero for our liking.
+
+![Von M. W. Toews - Eigenes Werk, based (in concept) on figure by Jeremy Kemp, on 2005-02-09, CC BY 2.5, https://commons.wikimedia.org/w/index.php?curid=1903871](images/Standard_deviation_diagram.svg){width="100%"}
+
+In our case we decide that $4\,\sigma$ is the effective width of our window function, and so we expect an effective resolution of
+
+$$\Delta t:=4\frac{Σ}{f}$$
+
+and
+
+$$\Delta f:=4\frac{f}{2πΣ}$$
 
 ## Example: Piano keys
 
@@ -38,23 +54,23 @@ library(fCWTr)
 sigma_resolution(sigma = 1, u(440, "Hz"))
 ```
 
-We see now, with $\sigma=1$, our frequency resolution at 440 Hz is only 70 Hz! The spreading is way too high to be able to distinguish different keys (the next key A#4 is at 466 Hz and the previous key Ab4 is at 415 Hz), we need to able at least to resolve the difference, 15 Hz. Let's be sure and make it half of that, 7 Hz. We can use another helper function to check what the corresponding $\sigma$ should be:
+We see now, with $\sigma=1$, our frequency resolution at 440 Hz is only 280 Hz! The spreading is way too high to be able to distinguish different keys (the next key A#4 is at 466 Hz and the previous key Ab4 is at 415 Hz), we need to able at least to resolve the difference, 15 Hz. We can use another helper function to check what the corresponding $\sigma$ should be:
 
 ```{r}
-sigma_from_frequency_resolution(u(7, "Hz"), u(440, "Hz"))
+sigma_from_frequency_resolution(u(15, "Hz"), u(440, "Hz"))
 ```
 
-and it tells us we need $\sigma=10$ or higher. Let's double-check what that implies for the time resolution:
+and it tells us we need $\sigma=19$ or higher. Let's double-check what that implies for the time resolution:
 
 ```{r}
-sigma_resolution(sigma = 10, u(440, "Hz"))
+sigma_resolution(sigma = 19, u(440, "Hz"))
 ```
 
-That means, we can detect those frequencies with a time resolution of 22 milliseconds. A typical very fast piano beat is around 180 beats per minutes (\> Prestissimo), that means, 3 beats per seconds, and the required time resolution to detect that is at least 330 milliseconds: we have no problems doing that with $\sigma =10$, and even have some leeway.
+That means, we can detect those frequencies with a time resolution of 170 milliseconds. A typical very fast piano beat is around 180 beats per minutes (\> Prestissimo), that means, 3 beats per seconds, and the required time resolution to detect that is at least 330 milliseconds: our time resolution is still below that, so we are on the safe side.
 
 Let's compare these two settings in practice:
 
-### Sigma = 1
+### $\Sigma = 1$
 
 ```{r}
 library(ggplot2)
@@ -73,28 +89,11 @@ fcwt_batch(
   plot()
 ```
 
-### Sigma = 10
+### $\Sigma = 20$
 
 ```{r}
 library(ggplot2)
 
-fcwt_batch(
-  ts_piano_sample,
-  sample_freq = u(44.1, "kHz") / 4,
-  freq_begin = u(220, "Hz"),
-  freq_end = u(440, "Hz") * 4,
-  # 5 octaves, 12 keys per octave, 3 frequencies per key
-  n_freqs = 12 * 5 * 3,
-  sigma = 10,
-  freq_scale = "log",
-  time_resolution = u(100, "ms")
-) |>
-  plot()
-```
-
-### Sigma = 20
-
-```{r}
 fcwt_batch(
   ts_piano_sample,
   sample_freq = u(44.1, "kHz") / 4,
@@ -109,4 +108,21 @@ fcwt_batch(
   plot()
 ```
 
-In some way, $\sigma$ can be thought of the exposure time of a camera that has to adjusted manually. Is the exposure time too long the picture becomes blurry, is it too short, the picture becomes too dark to see anything. A good balance is the key to a good picture.
+### $\Sigma = 40$
+
+```{r}
+fcwt_batch(
+  ts_piano_sample,
+  sample_freq = u(44.1, "kHz") / 4,
+  freq_begin = u(220, "Hz"),
+  freq_end = u(440, "Hz") * 4,
+  # 5 octaves, 12 keys per octave, 3 frequencies per key
+  n_freqs = 12 * 5 * 3,
+  sigma = 40,
+  freq_scale = "log",
+  time_resolution = u(100, "ms")
+) |>
+  plot()
+```
+
+In some way, $\Sigma$ can be thought of the exposure time of a camera that has to adjusted manually. Is the exposure time too long the picture becomes blurry, is it too short, the picture becomes too dark to see anything. A good balance is the key to a good photo.
