@@ -84,15 +84,15 @@ and a reference frequency
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
 the Gaussian envelope
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(t)</annotation></semantics></math>
-of the wavelet is given by
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><msup><mi>e</mi><mrow><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>t</mi><mi>f</mi></mrow><mrow><mn>2</mn><mi>Σ</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msup></mrow><annotation encoding="application/x-tex">g(t) \sim e^{-\left( \frac{t f}{2 \Sigma} \right)^2}</annotation></semantics></math>
-with variance in time
+of the wavelet is given by</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><msup><mi>e</mi><mrow><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>t</mi><mi>f</mi></mrow><mrow><mn>2</mn><mi>Σ</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msup></mrow><annotation encoding="application/x-tex">g(t) \sim e^{-\left( \frac{t f}{2 \Sigma} \right)^2}</annotation></semantics></math></p>
+<p>with variance in time
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>t</mi></msub><mo>=</mo><mfrac><mi>Σ</mi><mi>f</mi></mfrac></mrow><annotation encoding="application/x-tex">\sigma_t=\frac{\Sigma}{f}</annotation></semantics></math>
 which also sets the scale for the effective time resolution of the CWT
 at frequency
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
 and a dimensionless parameter
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>,.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>.
 The corresponding frequency uncertainty is given by the spreading of the
 Gaussian in Fourier space:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>f</mi></msub><mo>=</mo><mfrac><mi>f</mi><mrow><mn>2</mn><mi>π</mi><mi>Σ</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma_f = \frac{f}{2\pi \Sigma}</annotation></semantics></math>.
@@ -273,7 +273,7 @@ we can not resolve the beats between second 12 and 18 anymore:</p>
 <span>  freq_end <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>,</span>
 <span>  <span class="co"># 5 octaves, 12 keys per octave, 3 frequencies per key</span></span>
 <span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  freq_scale <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  time_resolution <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
