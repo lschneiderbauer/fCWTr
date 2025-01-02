@@ -1,9 +1,12 @@
 library(tuneR)
 
-fn = 'a440hz_2.wav'
+fn <- 'a440hz_2.wav'
+fn <- '/home/lukas/Documents/sync/audioproc/a440hz_2.wav'
 
 data <- tuneR::readWave(fn)
-ts <- mono(data)@left / (2^(data@bit/2))
+
+# mono-average + normalize
+ts <- tuneR::mono(data)@left / (2^data@bit/2)
 
 # make dividable by 4
 ts <- ts[1:(floor(length(ts) / 4) * 4)]
