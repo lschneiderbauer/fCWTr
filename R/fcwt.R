@@ -2,8 +2,9 @@
 #'
 #' The core function of this package making use of the fCWT library. It processes
 #' an input signal in form of a real valued numeric vector interpreted as an
-#' evenly spaced time series and returns the absolute values of a spectogram,
-#' i.e. a graph with a time and a frequency dimension.
+#' evenly spaced time series and returns the absolute values of the continuous
+#' wavelet transform,  i.e. a real valued positive matrix with a time and a
+#' frequency dimension.
 #'
 #' @details
 #' The wavelet used in this calculation is the so called Morlet wavelet,
