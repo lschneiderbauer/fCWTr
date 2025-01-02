@@ -79,6 +79,7 @@ output <-
     freq_begin = u(16, "Hz"),
     freq_end = u(2100, "Hz"),
     n_freqs = 200,
+    freq_scale = "linear",
     sigma = 5
   )
 
@@ -111,6 +112,7 @@ batch_result <-
     freq_begin = u(100, "Hz"),
     freq_end = u(12, "kHz"),
     n_freqs = 200,
+    freq_scale = "linear",
     sigma = 4,
     time_resolution = u(10, "ms")
   )
