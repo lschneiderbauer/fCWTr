@@ -111,12 +111,15 @@ dim(output)
 # Some meta data is recorded too
 output
 #> _Scalogram_
-#> <> (Time/Frequency) dimension: [6000,200]
-#> <> Sampling rate: 44.1 [kHz]
-#> <> Frequency scale: 16 [Hz] - 2100 [Hz], linear
-#> <> Time offset: 0 [s] 
-#> <> Sigma: 5
-#> Time/frequency matrix summary
+#> * (Time/Frequency) dimension: [6000,200]
+#> * Sampling rate: 44.1 [kHz]
+#> * Frequency scale: 16 [Hz] - 2100 [Hz], linear
+#> * Time offset: 0 [s] 
+#> * Sigma: 5
+#>   o Time resolution at  16 [Hz] :  1.25 [1/Hz] 
+#>   o Time resolution at  2100 [Hz] :  0.00952381 [1/Hz] 
+#>   o Relative frequency resolution:  0.127324 
+#> * Time/frequency matrix summary
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 #>    0.00    0.00    0.00    0.13    0.03    2.81  302028
 ```
