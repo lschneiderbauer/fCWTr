@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  out.width = "100%"
 )
 ```
 
@@ -30,7 +31,7 @@ So what time and frequency resolution $\Delta t$ and $\Delta f$ can we expect fr
 
 Interpreting the Gaussian as a window function, we expect that in order to achieve a certain resolution $\Delta_t$ the window size needs to be at least equal (or smaller) than $\Delta t$. Since a Gaussian has infinite support, we need to make a more or less arbitrary decision on where the exponential falloff of the Gaussian is close enough to zero for our liking.
 
-![Von M. W. Toews - Eigenes Werk, based (in concept) on figure by Jeremy Kemp, on 2005-02-09, CC BY 2.5, https://commons.wikimedia.org/w/index.php?curid=1903871](images/Standard_deviation_diagram.svg){width="100%"}
+[![Ainali, CC BY-SA 3.0 \<https://creativecommons.org/licenses/by-sa/3.0\>, via Wikimedia Commons](images/Standard_deviation_diagram.svg){width="100%"}](https://upload.wikimedia.org/wikipedia/commons/3/3a/Standard_deviation_diagram_micro.svg)
 
 In our case we decide that $4\,\sigma$ is the effective width of our window function, and so we expect an effective resolution of
 
@@ -42,9 +43,9 @@ $$\Delta f:=4\frac{f}{2πΣ}$$
 
 ## Example: Piano keys
 
-Let's try to understand the meaning of $\sigma$ via an example: We would like to analyse piano music, and be able to at least distinguish different piano key frequencies.
+Let's try to understand the meaning of $\Sigma$ via an example: We would like to analyse piano music, and be able to at least distinguish different piano key frequencies.
 
-We can for example check what the resolutions corresponding to $\sigma=1$ at the key A4 (440 Hz) is with helper functions that implement the formulas above:
+We can for example check what the resolutions corresponding to $\Sigma=1$ at the key A4 (440 Hz) is with helper functions that implement the formulas above:
 
 ```{r setup}
 library(fCWTr)
@@ -54,23 +55,29 @@ library(fCWTr)
 sigma_resolution(sigma = 1, u(440, "Hz"))
 ```
 
-We see now, with $\sigma=1$, our frequency resolution at 440 Hz is only 280 Hz! The spreading is way too high to be able to distinguish different keys (the next key A#4 is at 466 Hz and the previous key Ab4 is at 415 Hz), we need to able at least to resolve the difference, 15 Hz. We can use another helper function to check what the corresponding $\sigma$ should be:
+We see now, with $\Sigma=1$, our frequency resolution at 440 Hz is only 280 Hz! The spreading is way too high to be able to distinguish different keys (the next key A#4 is at 466 Hz and the previous key Ab4 is at 415 Hz), we need to able at least to resolve the difference, 15 Hz. We can use another helper function to check what the corresponding $\Sigma$ should be:
 
 ```{r}
 sigma_from_frequency_resolution(u(15, "Hz"), u(440, "Hz"))
 ```
 
-and it tells us we need $\sigma=19$ or higher. Let's double-check what that implies for the time resolution:
+and it tells us we need $\Sigma=19$ or higher. Let's double-check what that implies for the time resolution:
 
 ```{r}
 sigma_resolution(sigma = 19, u(440, "Hz"))
 ```
 
-That means, we can detect those frequencies with a time resolution of 170 milliseconds. A typical very fast piano beat is around 180 beats per minutes (\> Prestissimo), that means, 3 beats per seconds, and the required time resolution to detect that is at least 330 milliseconds: our time resolution is still below that, so we are on the safe side.
+That means, we can detect those frequencies with a time resolution of 170 milliseconds. A typical very fast piano beat is around 180 beats per minutes (\> Prestissimo), that means, 3 beats per seconds, and the required time resolution to detect that is at least 330 milliseconds: our time resolution is still below that, so we are on the safe side.[^2]
 
-Let's compare these two settings in practice:
+[^2]: As an interesting side note, we do not have a whole lot of leeway, and when playing a fast piano piece we are already at the edge of what we we can resolve (that is, when only playing a single frequency note, when playing a lot of different notes, we probably can still resolve a faster beat).
 
-### $\Sigma = 1$
+Let's compare these settings in practice. As an example serves a simple piano sample playing a couple of 440 Hz notes in the beginning and some simple chords in the end.
+
+### High time resolution, low frequency resolution
+
+```{r}
+sigma_resolution(sigma = 1, u(440, "Hz"))
+```
 
 ```{r}
 library(ggplot2)
@@ -89,7 +96,11 @@ fcwt_batch(
   plot()
 ```
 
-### $\Sigma = 20$
+### Good middle ground
+
+```{r}
+sigma_resolution(sigma = 19, u(440, "Hz"))
+```
 
 ```{r}
 library(ggplot2)
@@ -108,7 +119,15 @@ fcwt_batch(
   plot()
 ```
 
-### $\Sigma = 40$
+### Low time resolution, high frequency resolution
+
+Note that with $\Sigma=100$ we have
+
+```{r}
+sigma_resolution(sigma = 100, u(440, "Hz"))
+```
+
+and so we barely have a time resolution of one second. As we can see we can not resolve the beats between second 12 and 18 anymore:
 
 ```{r}
 fcwt_batch(
