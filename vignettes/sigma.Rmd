@@ -137,7 +137,7 @@ fcwt_batch(
   freq_end = u(440, "Hz") * 4,
   # 5 octaves, 12 keys per octave, 3 frequencies per key
   n_freqs = 12 * 5 * 3,
-  sigma = 40,
+  sigma = 100,
   freq_scale = "log",
   time_resolution = u(100, "ms")
 ) |>
