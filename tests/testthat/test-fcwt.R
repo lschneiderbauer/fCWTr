@@ -68,3 +68,15 @@ test_that("fcwt() errs if frequency specs are higher than Nyquist frequency", {
     )
   )
 })
+
+test_that("fcwt() works with linear scale", {
+  expect_no_error(
+    fcwt(
+      ts_sin_440[1:1000],
+      x_sample_freq = 44100,
+      freq_scale = "linear",
+      n_freqs = 10,
+      sigma = 1
+    )
+  )
+})
