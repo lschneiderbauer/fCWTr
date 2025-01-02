@@ -130,11 +130,7 @@ the window size needs to be at least equal (or smaller) than
 Since a Gaussian has infinite support, we need to make a more or less
 arbitrary decision on where the exponential falloff of the Gaussian is
 close enough to zero for our liking.</p>
-<div class="float">
-<img src="images%2FStandard_deviation_diagram.svg" style="width:100.0%" alt="Von M. W. Toews - Eigenes Werk, based (in concept) on figure by Jeremy Kemp, on 2005-02-09, CC BY 2.5, https://commons.wikimedia.org/w/index.php?curid=1903871"><div class="figcaption">Von M. W. Toews - Eigenes Werk, based (in
-concept) on figure by Jeremy Kemp, on 2005-02-09, CC BY 2.5, <a href="https://commons.wikimedia.org/w/index.php?curid=1903871" class="external-link uri">https://commons.wikimedia.org/w/index.php?curid=1903871</a>
-</div>
-</div>
+<p><a href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Standard_deviation_diagram_micro.svg" class="external-link"><img src="images%2FStandard_deviation_diagram.svg" style="width:100.0%" alt="Ainali, CC BY-SA 3.0 &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia Commons"></a></p>
 <p>In our case we decide that
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mspace width="0.167em"></mspace><mi>σ</mi></mrow><annotation encoding="application/x-tex">4\,\sigma</annotation></semantics></math>
 is the effective width of our window function, and so we expect an
@@ -147,11 +143,11 @@ effective resolution of</p>
 <h2 id="example-piano-keys">Example: Piano keys<a class="anchor" aria-label="anchor" href="#example-piano-keys"></a>
 </h2>
 <p>Let’s try to understand the meaning of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
 via an example: We would like to analyse piano music, and be able to at
 least distinguish different piano key frequencies.</p>
 <p>We can for example check what the resolutions corresponding to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\Sigma=1</annotation></semantics></math>
 at the key A4 (440 Hz) is with helper functions that implement the
 formulas above:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -164,19 +160,19 @@ formulas above:</p>
 <span><span class="co">#&gt; $freq</span></span>
 <span><span class="co">#&gt; 280.1127 [Hz]</span></span></code></pre></div>
 <p>We see now, with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\Sigma=1</annotation></semantics></math>,
 our frequency resolution at 440 Hz is only 280 Hz! The spreading is way
 too high to be able to distinguish different keys (the next key A#4 is
 at 466 Hz and the previous key Ab4 is at 415 Hz), we need to able at
 least to resolve the difference, 15 Hz. We can use another helper
 function to check what the corresponding
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
 should be:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_from_frequency_resolution.html">sigma_from_frequency_resolution</a></span><span class="op">(</span><span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"Hz"</span><span class="op">)</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 18.67418</span></span></code></pre></div>
 <p>and it tells us we need
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">\sigma=19</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">\Sigma=19</annotation></semantics></math>
 or higher. Let’s double-check what that implies for the time
 resolution:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -190,13 +186,25 @@ resolution:</p>
 170 milliseconds. A typical very fast piano beat is around 180 beats per
 minutes (&gt; Prestissimo), that means, 3 beats per seconds, and the
 required time resolution to detect that is at least 330 milliseconds:
-our time resolution is still below that, so we are on the safe side.</p>
-<p>Let’s compare these two settings in practice:</p>
+our time resolution is still below that, so we are on the safe side.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;As an interesting side note, we do not have a whole lot
+of leeway, and when playing a fast piano piece we are already at the
+edge of what we we can resolve (that is, when only playing a single
+frequency note, when playing a lot of different notes, we probably can
+still resolve a faster beat).&lt;/p&gt;"><sup>2</sup></a></p>
+<p>Let’s compare these settings in practice. As an example serves a
+simple piano sample playing a couple of 440 Hz notes in the beginning
+and some simple chords in the end.</p>
 <div class="section level3">
-<h3 id="sigma-1">
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\Sigma = 1</annotation></semantics></math><a class="anchor" aria-label="anchor" href="#sigma-1"></a>
+<h3 id="high-time-resolution-low-frequency-resolution">High time resolution, low frequency resolution<a class="anchor" aria-label="anchor" href="#high-time-resolution-low-frequency-resolution"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_resolution.html">sigma_resolution</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">1</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $time</span></span>
+<span><span class="co">#&gt; 0.009090909 [1/Hz]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $freq</span></span>
+<span><span class="co">#&gt; 280.1127 [Hz]</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
 <span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
@@ -213,13 +221,19 @@ our time resolution is still below that, so we are on the safe side.</p>
 <span>  time_resolution <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="sigma_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="sigma_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="sigma-20">
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\Sigma = 20</annotation></semantics></math><a class="anchor" aria-label="anchor" href="#sigma-20"></a>
+<h3 id="good-middle-ground">Good middle ground<a class="anchor" aria-label="anchor" href="#good-middle-ground"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_resolution.html">sigma_resolution</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">19</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $time</span></span>
+<span><span class="co">#&gt; 0.1727273 [1/Hz]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $freq</span></span>
+<span><span class="co">#&gt; 14.74277 [Hz]</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
@@ -234,13 +248,24 @@ our time resolution is still below that, so we are on the safe side.</p>
 <span>  time_resolution <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="sigma_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="sigma_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="sigma-40">
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">\Sigma = 40</annotation></semantics></math><a class="anchor" aria-label="anchor" href="#sigma-40"></a>
+<h3 id="low-time-resolution-high-frequency-resolution">Low time resolution, high frequency resolution<a class="anchor" aria-label="anchor" href="#low-time-resolution-high-frequency-resolution"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>Note that with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\Sigma=100</annotation></semantics></math>
+we have</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_resolution.html">sigma_resolution</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">100</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $time</span></span>
+<span><span class="co">#&gt; 0.9090909 [1/Hz]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $freq</span></span>
+<span><span class="co">#&gt; 2.801127 [Hz]</span></span></code></pre></div>
+<p>and so we barely have a time resolution of one second. As we can see
+we can not resolve the beats between second 12 and 18 anymore:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
 <span>  <span class="va">ts_piano_sample</span>,</span>
 <span>  sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span> <span class="op">/</span> <span class="fl">4</span>,</span>
@@ -253,7 +278,7 @@ our time resolution is still below that, so we are on the safe side.</p>
 <span>  time_resolution <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">100</span>, <span class="st">"ms"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="sigma_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="sigma_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
 <p>In some way,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
 can be thought of the exposure time of a camera that has to adjusted
