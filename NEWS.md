@@ -8,11 +8,15 @@
 
     -   allow (and prefer) `sample_freq`, `freq_begin`, `freq_end` arguments to be passed as a dimensionful quantities, via `u()`.
 
+    -   minor argument name changes
+
 -   `fcwt_batch()`:
 
     -   allow (and prefer) `sample_freq`, `freq_begin`, `freq_end` and `time_resolution` arguments to be passed as a dimensionful quantities, via `u()`.
 
     -   in some cases, the averaging procedure together with the batching could lead to accidentally dropped or duplicated time slices: the mechanism has been overhauled, every slice should be perfectly aligned now, even when averaged.
+
+    -   minor argument name changes
 
 -   new unit helper functions: `u()` and `du()`: include improved physical unit treatment with the [units](https://r-quantities.github.io/units/) package. Frequency and time parameters can now be "units" objects, created with `u()`. Allow user to adjust `plot()` scales to use arbitrary time/frequency units.
 
@@ -21,6 +25,8 @@
 -   add more convenience S3 methods: `print()`, `[]`, `as.matrix()`, `rbind()`, `tibble::as_tibble()`.
 
 -   `openmp_enabled()`/`avx_enabled()` new functions to check for system OpenMP/AVX support.
+
+-   new vignette about controlling the time-frequency resolution `vignette("sigma")`.
 
 -   add a [package logo](https://lschneiderbauer.github.io/fCWTr/logo.svg)
 
