@@ -21,7 +21,11 @@ In contrast to the [Short Time Fourier Transform](https://en.wikipedia.org/wiki/
 
 [^1]: That is of course one of the selling points of the CWT: it works for all frequency ranges, while the fixed window size in the Short Time Fourier Transform will break down when probing modes whose wavelength approach the window size, at the same time it lacks a reasonable time resolutions for modes whose wavelength is much smaller than the window size.
 
-For a particular time $t$ and a reference frequency $f$, the Gaussian envelope $g(t)$ of the wavelet is given by $$g(t) \sim e^{-\left( \frac{t f}{2 \Sigma} \right)^2}$$ with variance in time $\sigma_t=\frac{\Sigma}{f}$ which also sets the scale for the effective time resolution of the CWT at frequency $f$ and a dimensionless parameter $\Sigma$,. The corresponding frequency uncertainty is given by the spreading of the Gaussian in Fourier space: $\sigma_f = \frac{f}{2\pi \Sigma}$. The time and frequency resolution satisfy the famous time-frequency uncertainty relation $\sigma_t \sigma_f=\frac{1}{2\pi}$.
+For a particular time $t$ and a reference frequency $f$, the Gaussian envelope $g(t)$ of the wavelet is given by
+
+$$g(t) \sim e^{-\left( \frac{t f}{2 \Sigma} \right)^2}$$
+
+with variance in time $\sigma_t=\frac{\Sigma}{f}$ which also sets the scale for the effective time resolution of the CWT at frequency $f$ and a dimensionless parameter $\Sigma$. The corresponding frequency uncertainty is given by the spreading of the Gaussian in Fourier space: $\sigma_f = \frac{f}{2\pi \Sigma}$. The time and frequency resolution satisfy the famous time-frequency uncertainty relation $\sigma_t \sigma_f=\frac{1}{2\pi}$.
 
 The time-frequency uncertainty relation is true for any $\Sigma$ or frequency $f$, but we can adjust the parameter $\Sigma$ to increase (decrease) time uncertainty at the cost of decreasing (increasing) the frequency uncertainty. The "correct" balance depends on your use case.
 
