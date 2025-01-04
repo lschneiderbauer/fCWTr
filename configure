@@ -4274,7 +4274,7 @@ then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
   have_fftw=yes
 else case e in #(
-  e) as_fn_error $? "The fftw3f library is required. In case fftw is already installed, you might need to enable fftw's single precision support with './configure --enable-float'." "$LINENO" 5
+  e) as_fn_error $? "The fftw3 library with single precision support is required. In case fftw is already installed, you might need to enable fftw's single precision support with './configure --enable-type-prefix  --enable-float'." "$LINENO" 5
  ;;
 esac
 fi
