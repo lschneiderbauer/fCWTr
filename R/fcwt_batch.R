@@ -164,7 +164,7 @@ fcwt_batch <- function(x,
       fcwt(
         x[begin:end],
         x_sample_freq = x_sample_freq,
-        #y_sample_freq = y_sample_freq,
+        y_sample_freq = y_sample_freq,
         freq_begin = freq_begin,
         freq_end = freq_end,
         n_freqs = n_freqs,
@@ -174,11 +174,7 @@ fcwt_batch <- function(x,
         n_threads = n_threads
       ) |>
         # we fully remove COI infected time slices
-        sc_rm_bdry_time_slices(dt) |>
-        # due to our choice of batch_size, the remaining number
-        # of time slices should be exactly a multiple of the window
-        # size (w$size_n)
-        sc_agg(w)
+        sc_rm_coi_time_slices()
     }
   ) |>
     do.call(rbind, args = _)
