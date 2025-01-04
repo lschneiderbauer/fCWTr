@@ -192,3 +192,31 @@ test_that("`agg()` check n_freqs = 1 edge case", {
 
   expect_s3_class(res, "fcwtr_scalogram")
 })
+
+test_that("`agg()` gives the same result as c++ aggregation", {
+  agg1 <-
+    fcwt(
+      ts_sin_440[1:1000],
+      x_sample_freq = 44100,
+      y_sample_freq = 22050,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 1,
+      sigma = 1
+    )
+
+  agg2 <-
+    fcwt(
+      ts_sin_440[1:1000],
+      x_sample_freq = 44100,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 1,
+      sigma = 1
+    ) |>
+    sc_agg(wnd_from_target_sample_freq(u(22050, "Hz"), u(44100, "Hz")))
+
+  expect_equal(
+    agg1, agg2
+  )
+})
