@@ -24,6 +24,20 @@ test_that("fcwt() returns a vector of expected length", {
 
   expect_equal(sc_dim_freq(res2), 15)
   expect_equal(sc_dim_time(res2), 500)
+
+  res3 <-
+    fcwt(
+      ts_sin_440[1:1000],
+      x_sample_freq = 44100,
+      y_sample_freq = 11025,
+      freq_begin = 50,
+      freq_end = 1000,
+      n_freqs = 10,
+      sigma = 1
+    )
+
+  expect_equal(sc_dim_freq(res3), 10)
+  expect_equal(sc_dim_time(res3), 250)
 })
 
 test_that("fcwt() optional arguments do work", {
