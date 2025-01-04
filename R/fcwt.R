@@ -136,15 +136,18 @@ fcwt <- function(x,
   freq_scale_lgl <- (freq_scale == "linear")
   stopifnot(isTRUE(freq_scale_lgl) || isFALSE(freq_scale_lgl))
 
+  w <- wnd_from_target_sample_freq(y_sample_freq, x_sample_freq)
+
   # we expect the numbers in Hz here
   output <-
     fcwt_raw(
       as.numeric(x), as.integer(hz(x_sample_freq)),
       hz(freq_begin), hz(freq_end),
-      as.integer(n_freqs), sigma, as.integer(n_threads),
+      as.integer(n_freqs), sigma,
+      as.integer(w$size_n),
+      as.integer(n_threads),
       freq_scale_lgl,
-      FALSE,
-      abs = TRUE
+      FALSE
     )
 
   # if (!abs) {
@@ -152,16 +155,15 @@ fcwt <- function(x,
   #
   #   output <- output[, , 1] + output[, , 2] * 1i
   # } else {
-  dim(output) <- c(length(x), n_freqs)
+  dim(output) <- c(ceiling(length(x) / w$size_n), n_freqs)
   # }
 
   sc <-
     fcwtr_scalogram(
       output,
-      time_offset = u(0, "s"), x_sample_freq, freq_begin, freq_end,
+      time_offset = u(0, "s"), y_sample_freq, freq_begin, freq_end,
       freq_scale, sigma
-    ) |>
-    sc_agg(wnd_from_target_sample_freq(y_sample_freq, x_sample_freq))
+    )
 
   if (remove_coi) {
     sc_set_coi_na(sc)
