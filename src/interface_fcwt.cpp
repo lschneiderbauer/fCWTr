@@ -45,10 +45,10 @@ std::vector<double> fcwt_raw(
     double f1, // end of frequency range
     int fn, // number of wavelets to generate across frequency range
     double sigma,
+    int window_size,
     int nthreads,
     bool scaletype, // TRUE = linear, FALSE = log
-    bool optplans,
-    bool abs)
+    bool optplans)
 {
   int n = signal.size(); //signal length
 
@@ -108,17 +108,31 @@ std::vector<double> fcwt_raw(
 
   std::vector<double> abs_output;
 
-  if (abs) {
-    // convert to absolute value
-    abs_output = std::vector<double> (n*fn);
-    std::transform(output.cbegin(), output.cend(), abs_output.begin(), my_abs);
-    //static_cast<float (*)(const &std::complex<float>)>(&std::abs));
-  } else {
-    // transform to an array of real and imaginary part
-    abs_output = std::vector<double> (2 * n*fn);
+  // in case of averaging
+  int target_time_n = std::ceil((float)n / window_size);
 
-    auto it = std::transform(output.cbegin(), output.cend(), abs_output.begin(), my_real);
-    std::transform(output.cbegin(), output.cend(), it, my_imag);
+  // convert to absolute value
+  abs_output = std::vector<double> (target_time_n*fn);
+
+  if (window_size > 1) {
+    // perform my_abs and averaging at the same time
+    for (int f = 0; f < fn; f++) {
+      // for each frequency do the window averaging
+      for (int w = 0; w < target_time_n; w++) {
+
+        // first iteration
+        double mean = 0; // does not contribute because first term cancels
+        int count = 0;
+        for (int i = w * window_size; i < (w+1)*window_size && i < n; i++) {
+          count += 1;
+          mean = (count - 1)/count * mean + my_abs(output[f*n + i]) / count;
+        }
+
+        abs_output[f*target_time_n + w] = mean;
+      }
+    }
+  } else {
+    std::transform(output.cbegin(), output.cend(), abs_output.begin(), my_abs);
   }
 
 

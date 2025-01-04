@@ -20,10 +20,10 @@ extern "C" SEXP _fCWTr_has_avx() {
   END_CPP11
 }
 // interface_fcwt.cpp
-std::vector<double> fcwt_raw(std::vector<double> signal, int fs, double f0, double f1, int fn, double sigma, int nthreads, bool scaletype, bool optplans, bool abs);
-extern "C" SEXP _fCWTr_fcwt_raw(SEXP signal, SEXP fs, SEXP f0, SEXP f1, SEXP fn, SEXP sigma, SEXP nthreads, SEXP scaletype, SEXP optplans, SEXP abs) {
+std::vector<double> fcwt_raw(std::vector<double> signal, int fs, double f0, double f1, int fn, double sigma, int window_size, int nthreads, bool scaletype, bool optplans);
+extern "C" SEXP _fCWTr_fcwt_raw(SEXP signal, SEXP fs, SEXP f0, SEXP f1, SEXP fn, SEXP sigma, SEXP window_size, SEXP nthreads, SEXP scaletype, SEXP optplans) {
   BEGIN_CPP11
-    return cpp11::as_sexp(fcwt_raw(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(signal), cpp11::as_cpp<cpp11::decay_t<int>>(fs), cpp11::as_cpp<cpp11::decay_t<double>>(f0), cpp11::as_cpp<cpp11::decay_t<double>>(f1), cpp11::as_cpp<cpp11::decay_t<int>>(fn), cpp11::as_cpp<cpp11::decay_t<double>>(sigma), cpp11::as_cpp<cpp11::decay_t<int>>(nthreads), cpp11::as_cpp<cpp11::decay_t<bool>>(scaletype), cpp11::as_cpp<cpp11::decay_t<bool>>(optplans), cpp11::as_cpp<cpp11::decay_t<bool>>(abs)));
+    return cpp11::as_sexp(fcwt_raw(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(signal), cpp11::as_cpp<cpp11::decay_t<int>>(fs), cpp11::as_cpp<cpp11::decay_t<double>>(f0), cpp11::as_cpp<cpp11::decay_t<double>>(f1), cpp11::as_cpp<cpp11::decay_t<int>>(fn), cpp11::as_cpp<cpp11::decay_t<double>>(sigma), cpp11::as_cpp<cpp11::decay_t<int>>(window_size), cpp11::as_cpp<cpp11::decay_t<int>>(nthreads), cpp11::as_cpp<cpp11::decay_t<bool>>(scaletype), cpp11::as_cpp<cpp11::decay_t<bool>>(optplans)));
   END_CPP11
 }
 
