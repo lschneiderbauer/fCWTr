@@ -155,7 +155,7 @@ fcwt <- function(x,
   #
   #   output <- output[, , 1] + output[, , 2] * 1i
   # } else {
-  dim(output) <- c(ceiling(length(x) / w$size_n), n_freqs)
+  dim(output) <- c(wnd_new_sc_dim(w, length(x)), n_freqs)
   # }
 
   sc <-

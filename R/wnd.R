@@ -54,3 +54,7 @@ wnd_from_target_size <- function(target_size, sc) {
     attr(sc, "sample_freq")
   )
 }
+
+wnd_new_sc_dim <- function(wnd, sc_length) {
+  ceiling(sc_length / wnd$size_n)
+}
