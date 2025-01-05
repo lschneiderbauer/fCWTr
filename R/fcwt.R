@@ -76,15 +76,15 @@
 #'  sigma, it depends on the use case. So the default choice can very well be
 #'  quite a bad choice (it probably is for audio data).
 #'
-#' @param remove_coi ( [TRUE] | [FALSE] )
-#'  Boundary effects can result in nonphysical artifacts. If `remove_coi = TRUE`,
+#' @param rm_coi ( [TRUE] | [FALSE] )
+#'  Boundary effects can result in nonphysical artifacts. If `rm_coi = TRUE`,
 #'  those are effectively removed by setting corresponding values to [NA].
 #'  We define the essential support of the
 #'  (Gaussian) wavelet to be four times its standard deviation,
 #'  \eqn{\Delta t = \frac{\sigma}{f}}, and so a wavelet touches
 #'  the boundary if the distance of the center of the wavelet to the boundary
 #'  is less then \eqn{\Delta t /2}. Values that fall into that range are removed
-#'  if `remove_coi = TRUE`.
+#'  if `rm_coi = TRUE`.
 #'
 #' @param n_threads
 #'  Number of threads used by the computation, if supported by your platform.
@@ -138,7 +138,7 @@ fcwt <- function(x,
                    ),
                  freq_scale = c("log", "linear"),
                  # abs = FALSE,
-                 remove_coi = TRUE,
+                 rm_coi = TRUE,
                  n_threads = 2L) {
   stopifnot(is.numeric(x))
   stopifnot(is.numeric(n_freqs), n_freqs > 0)
@@ -193,7 +193,7 @@ fcwt <- function(x,
       freq_scale, sigma
     )
 
-  if (remove_coi) {
+  if (rm_coi) {
     sc_set_coi_na(sc)
   } else {
     sc
