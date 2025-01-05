@@ -114,6 +114,10 @@ void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
 //================== Scales =====================================//
 //==============================================================//
 
+Scales::~Scales() {
+    free(scales);
+}
+
 Scales::Scales(Wavelet *wav, SCALETYPE st, int afs, float af0, float af1, int afn) {
 
     fs = afs;
