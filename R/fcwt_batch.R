@@ -76,6 +76,7 @@
 #' @export
 fcwt_batch <- function(x,
                        x_sample_freq,
+                       sigma = 1,
                        y_sample_freq = x_sample_freq,
                        freq_begin = 2 * x_sample_freq / length(x),
                        freq_end = x_sample_freq / 2,
@@ -87,7 +88,6 @@ fcwt_batch <- function(x,
                            )
                          ),
                        freq_scale = c("log", "linear"),
-                       sigma = 1,
                        # factor 2 as additional security measure
                        max_batch_size = ceiling(1 * 10^9 / (n_freqs * 8) / 2),
                        n_threads = 2L,

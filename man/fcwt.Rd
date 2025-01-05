@@ -7,13 +7,13 @@
 fcwt(
   x,
   x_sample_freq,
+  sigma = 2 * pi,
   y_sample_freq = x_sample_freq,
   freq_begin = 2 * x_sample_freq/length(x),
   freq_end = x_sample_freq/2,
   n_freqs = 2 * ceiling(log(du(freq_end/freq_begin), base = 1 +
     sigma_freq_res_rel(sigma))),
   freq_scale = c("log", "linear"),
-  sigma = 2 * pi,
   remove_coi = TRUE,
   n_threads = 2L
 )
@@ -26,6 +26,18 @@ a connection to physical units which is used in other frequency definitions
 as well as the units of the output data. Expects either a value with frequency
 units, generated with \code{\link[=u]{u()}}, or a pure number, in which case it is
 interpreted in units of 'Hertz'.}
+
+\item{sigma}{Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
+Changing this parameter adjusts the time/frequency uncertainty balance,
+\eqn{\Delta t = 4 \frac{\Sigma}{f}}, \eqn{\Delta f = 4 \frac{f}{2\pi \Sigma}}.
+Larger (lower) value of sigma corresponds to a better (worse) frequency
+resolution and a worse (better) time resolution.
+
+For more information, see \code{vignette("sigma", package = "fCWTr")}).
+
+Defaults to \eqn{2\pi}. Note that there is not really a natural choice for
+sigma, it depends on the use case. So the default choice can very well be
+quite a bad choice (it probably is for audio data).}
 
 \item{y_sample_freq}{Sampling rate of output time series. This defaults to the input sampling
 rate \code{x_sample_freq}, but can be reduced if a lower resolution output
@@ -55,18 +67,6 @@ The default scale is logarithmic since differences on a logarithmic scale
 are proportional to the frequency uncertainties.
 In this sense, the logarithmic frequency scale is actually the natural
 scale for the continuous wavelet transform.}
-
-\item{sigma}{Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
-Changing this parameter adjusts the time/frequency uncertainty balance,
-\eqn{\Delta t = 4 \frac{\Sigma}{f}}, \eqn{\Delta f = 4 \frac{f}{2\pi \Sigma}}.
-Larger (lower) value of sigma corresponds to a better (worse) frequency
-resolution and a worse (better) time resolution.
-
-For more information, see \code{vignette("sigma", package = "fCWTr")}).
-
-Defaults to \eqn{2\pi}. Note that there is not really a natural choice for
-sigma, it depends on the use case. So the default choice can very well be
-quite a bad choice (it probably is for audio data).}
 
 \item{remove_coi}{( \link{TRUE} | \link{FALSE} )
 Boundary effects can result in nonphysical artifacts. If \code{remove_coi = TRUE},

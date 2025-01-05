@@ -112,6 +112,7 @@
 #' @export
 fcwt <- function(x,
                  x_sample_freq,
+                 sigma = 2 * pi,
                  y_sample_freq = x_sample_freq,
                  freq_begin = 2 * x_sample_freq / length(x),
                  freq_end = x_sample_freq / 2,
@@ -132,7 +133,6 @@ fcwt <- function(x,
                      )
                    ),
                  freq_scale = c("log", "linear"),
-                 sigma = 2 * pi,
                  # abs = FALSE,
                  remove_coi = TRUE,
                  n_threads = 2L) {
