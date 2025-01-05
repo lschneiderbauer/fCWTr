@@ -47,9 +47,9 @@ library(ggplot2)
 res <-
   fcwt(
     sin((1:4410) * 2 * pi * 440 / 44100),
-    x_sample_freq = 44100,
-    freq_begin = 50,
-    freq_end = 1000,
+    x_sample_freq = u(44100, "Hz"),
+    freq_begin = u(50, "Hz"),
+    freq_end = u(1000, "Hz"),
     n_freqs = 10,
     sigma = 5
   )

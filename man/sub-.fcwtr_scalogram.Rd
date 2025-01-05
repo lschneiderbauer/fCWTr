@@ -33,7 +33,8 @@ Extract parts of a scalogram
 \examples{
 fcwt(
   sin((1:5000) * 2 * pi * 440 / 44100),
-  x_sample_freq = 44100,
+  x_sample_freq = u(44100, "Hz"),
+  y_sample_freq = u(44100, "Hz"),
   n_freqs = 10
 )[1:1000, 2:7]
 
