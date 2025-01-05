@@ -33,7 +33,7 @@ See the original paper by Arts, L.P.A., van den Broek, E.L. The fast continuous 
 -   [fftw](https://www.fftw.org/) library with [single-precision support](https://www.fftw.org/faq/section2.html#singleprec) enabled (used by [fCWT](https://github.com/fastlib/fCWT))
 -   Optional: a CPU/compiler supporting the [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) instruction set
 -   Optional: OpenMP (and fftw built with [OpenMP support](https://www.fftw.org/doc/Usage-of-Multi_002dthreaded-FFTW.html))
-    -   On Windows, OpenMP support is disabled since rtools decided to compile fftw without OpenMP support.
+    -   On Windows, OpenMP support is disabled since rtools' fftw is compiled without OpenMP support.
     -   On Linux and MacOS the build scripts should automatically detect whether OpenMP support is available.
 
 By default, most compiler setups do not make use of AVX to increase portability of the binary. If you are an R user that has a CPU supporting AVX and want to make use of it, you might need to manually enable compiler flags to let R know about it, and install the package from source (so that it gets compiled on your machine). One way to enable the flags is to create a file `~/.R/Makevars` with the following content:
@@ -63,7 +63,7 @@ Note that the installation process might fail if the package needs to be compile
 
 ## Example
 
-This is a basic example that invokes the fCWT library to calculate the continuous wavelet transform and plot the result.
+This is a basic example where the continuous wavelet transform of a sample signal is calculated. The result is inspected and plotted.
 
 ```{r example}
 library(fCWTr)
@@ -84,17 +84,18 @@ output <-
     freq_scale = "linear"
   )
 
-# The result is basically a numeric matrix with time and frequency dimension
+# The result is a numeric matrix with time and frequency dimension
 dim(output)
 
 # Some meta data is recorded too
 output
 ```
 
-The result can be converted into a data frame if need be:
+The result can also be converted into a data frame:
 
 ```{r example_df}
-head(as.data.frame(output), 10)
+as.data.frame(output) |>
+  head(10)
 ```
 
 We can also directly plot the resulting scalogram:

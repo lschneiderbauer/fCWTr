@@ -40,8 +40,8 @@ noise-resistant time–frequency analysis. Nat Comput Sci 2, 47–58 (2022).
   instruction set
 - Optional: OpenMP (and fftw built with [OpenMP
   support](https://www.fftw.org/doc/Usage-of-Multi_002dthreaded-FFTW.html))
-  - On Windows, OpenMP support is disabled since rtools decided to
-    compile fftw without OpenMP support.
+  - On Windows, OpenMP support is disabled since rtools’ fftw is
+    compiled without OpenMP support.
   - On Linux and MacOS the build scripts should automatically detect
     whether OpenMP support is available.
 
@@ -83,8 +83,8 @@ system.
 
 ## Example
 
-This is a basic example that invokes the fCWT library to calculate the
-continuous wavelet transform and plot the result.
+This is a basic example where the continuous wavelet transform of a
+sample signal is calculated. The result is inspected and plotted.
 
 ``` r
 library(fCWTr)
@@ -105,7 +105,7 @@ output <-
     freq_scale = "linear"
   )
 
-# The result is basically a numeric matrix with time and frequency dimension
+# The result is a numeric matrix with time and frequency dimension
 dim(output)
 #> [1] 137 200
 
@@ -125,10 +125,11 @@ output
 #>   0.000   0.000   0.000   0.003   0.001   0.064    6671
 ```
 
-The result can be converted into a data frame if need be:
+The result can also be converted into a data frame:
 
 ``` r
-head(as.data.frame(output), 10)
+as.data.frame(output) |>
+  head(10)
 #>    time_index      time      freq        value
 #> 1           0 0.000 [s] 2100 [Hz]           NA
 #> 2           1 0.001 [s] 2100 [Hz]           NA
