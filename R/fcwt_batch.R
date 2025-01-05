@@ -115,16 +115,24 @@ fcwt_batch <- function(x,
 
   # time steps we need to overlap because we need to remove the
   # boundary effects
-  dt <- coi_invalid_time_steps(x_sample_freq, freq_begin, sigma)
+  # make it also a multiple of the window size
+  dt <-
+    floor(
+      coi_invalid_time_steps(x_sample_freq, freq_begin, sigma) / w$size_n
+    ) * w$size_n
 
   # we also want the batch size to be a multiple of the
   # window size
   # batch_size <- 2^floor(log2(max_batch_size))
 
   # we want (batch_size - 2 * dt) be a multiple of the window size
-  batch_size <- 2 * dt + floor((max_batch_size - 2 * dt) / w$size_n) * w$size_n
+  # batch_size <- 2 * dt + floor((max_batch_size - 2 * dt) / w$size_n) * w$size_n
 
-  signal_size <- w$size_n * floor(length(x) / w$size_n) # cut off the rest
+  # we want batch_size be a multiple of the window size
+  batch_size <- floor(max_batch_size / w$size_n) * w$size_n
+
+  # signal_size <- w$size_n * floor(length(x) / w$size_n) # cut off the rest
+  signal_size <- length(x)
 
   loss_ratio <- 2 * dt / batch_size
 
@@ -180,7 +188,8 @@ fcwt_batch <- function(x,
         n_threads = n_threads
       ) |>
         # we fully remove COI infected time slices
-        sc_rm_coi_time_slices()
+        # dt is a multiple of window size per definition
+        sc_rm_bdry_time_slices(as.integer(dt/w$size_n))
     }
   ) |>
     do.call(rbind, args = _)
