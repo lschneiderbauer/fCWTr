@@ -94,3 +94,12 @@ test_that("fcwt() works with linear scale", {
     )
   )
 })
+
+test_that("fcwt() default arguments work", {
+  expect_no_error(
+    res <- fcwt(ts_sin_440[1:1000], u(44.1, "kHz"))
+  )
+
+  expect_equal(sc_dim_freq(res), 174)
+  expect_equal(sc_dim_time(res), 63)
+})
