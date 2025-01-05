@@ -267,8 +267,8 @@ rbind.fcwtr_scalogram <- function(...) {
 #' @export
 print.fcwtr_scalogram <- function(x, ...) {
   cat("_Scalogram_\n")
-  cat("* (Time/Frequency) dimension: [", sc_dim_time(x), ",",
-    sc_dim_freq(x), "]\n",
+  cat("* (Time/Frequency) dimension:  ( ", sc_dim_time(x), " , ",
+    sc_dim_freq(x), " )\n",
     sep = ""
   )
   cat("* Sampling rate: ", format(attr(x, "sample_freq")), "\n", sep = "")
