@@ -34,6 +34,30 @@ sigma_res <- function(sigma, freq) {
   )
 }
 
+#' Calculates Relative Frequency Resolution
+#'
+#' For a given `sigma` this function calculates
+#' the expected relative frequency resolution respectively.
+#'
+#' @param sigma
+#'  The dimensionless positive parameter in [fcwt()] controlling the wavelet spread.
+#'
+#' @return
+#'  A number `p` representing the relative frequency resolution. I.e. at a given
+#'  resolution `f`, the frequency resolution is `f*p`.
+#'
+#' @examples
+#' sigma_freq_res_rel(1)
+#'
+#' @concept sigma
+#' @family sigma
+#' @export
+sigma_freq_res_rel <- function(sigma) {
+  stopifnot(is.numeric(sigma), sigma > 0)
+
+  2 / (pi * sigma)
+}
+
 #' Determine Sigma from a frequency resolution requirement
 #'
 #' Setting the correct value for `sigma` in [fcwt()] for a particular

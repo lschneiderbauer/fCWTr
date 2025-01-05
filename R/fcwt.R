@@ -37,6 +37,12 @@
 #'  are linearly or logarithmically distributed, depending on the `freq_scale`
 #'  argument. Computation time increases when raising the
 #'  number of frequency bins.
+#'  The default number is chosen such that the frequency bandwidths are of the
+#'  size of the physical frequency resolutions in case of a logarithmic scale.
+#'  In some sense this value constitutes the "physical" limit: even though one
+#'  can still
+#'  increase the number of frequency bins, no additional information can be
+#'  contained there.
 #'
 #' @param freq_begin,freq_end
 #'  Optionally specifies the frequency range `[freq_end, freq_begin]`. If not
@@ -45,11 +51,13 @@
 #'  A frequency-valued number, generated with [u()], or a pure number, that is
 #'  interpreted in units of 'Hertz'.
 #'
-#' @param freq_scale ( `"freq"` | `"log"` )
+#' @param freq_scale ( `"log"` | `"linear"` )
 #' Should the frequency scale be linear or logarithmic?
 #'  "linear"  / "log" for linear / logarithmic.
-#' The default scale is logarithmic, since frequency resolution decreases
-#' with increasing frequency and a linear scale contains superficial information.
+#' The default scale is logarithmic since differences on a logarithmic scale
+#' are proportional to the frequency uncertainties.
+#' In this sense, the logarithmic frequency scale is actually the natural
+#' scale for the continuous wavelet transform.
 #'
 #' @param sigma
 #'  Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
@@ -105,9 +113,24 @@
 fcwt <- function(x,
                  x_sample_freq,
                  y_sample_freq = x_sample_freq,
-                 n_freqs,
                  freq_begin = 2 * x_sample_freq / length(x),
                  freq_end = x_sample_freq / 2,
+                 n_freqs =
+                 # we want to assign one band per uncertainty interval
+                 # so we have a similar frequency sampling than
+                 # physical uncertainty.
+                 # this calculation makes sense only for the log scale
+                 # (since for the log scale the difference of neighboring
+                 # axis values are proportional to the value itself and so is
+                 # the uncertainty).
+                 # we double this number because we could get frequencies
+                 # that lie just in the middle of two bands
+                   2 * ceiling(
+                     log(
+                       du(freq_end / freq_begin),
+                       base = 1 + sigma_freq_res_rel(sigma)
+                     )
+                   ),
                  freq_scale = c("log", "linear"),
                  sigma = 2 * pi,
                  # abs = FALSE,

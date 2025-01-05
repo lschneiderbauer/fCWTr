@@ -37,6 +37,7 @@ sigma_res(sigma, ref_freq)
 }
 \seealso{
 Other sigma: 
+\code{\link{sigma_freq_res_rel}()},
 \code{\link{sigma_from_freq_res}()},
 \code{\link{sigma_from_freq_res_rel}()},
 \code{\link{sigma_res}()}
