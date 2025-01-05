@@ -74,7 +74,7 @@
 <li>Optional: a CPU/compiler supporting the <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions" class="external-link">AVX</a> instruction set</li>
 <li>Optional: OpenMP (and fftw built with <a href="https://www.fftw.org/doc/Usage-of-Multi_002dthreaded-FFTW.html" class="external-link">OpenMP support</a>)
 <ul>
-<li>On Windows, OpenMP support is disabled since rtools decided to compile fftw without OpenMP support.</li>
+<li>On Windows, OpenMP support is disabled since rtools’ fftw is compiled without OpenMP support.</li>
 <li>On Linux and MacOS the build scripts should automatically detect whether OpenMP support is available.</li>
 </ul>
 </li>
@@ -100,7 +100,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example that invokes the fCWT library to calculate the continuous wavelet transform and plot the result.</p>
+<p>This is a basic example where the continuous wavelet transform of a sample signal is calculated. The result is inspected and plotted.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lschneiderbauer.github.io/fCWTr/">fCWTr</a></span><span class="op">)</span></span>
 <span></span>
@@ -120,7 +120,7 @@
 <span>    freq_scale <span class="op">=</span> <span class="st">"linear"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co"># The result is basically a numeric matrix with time and frequency dimension</span></span>
+<span><span class="co"># The result is a numeric matrix with time and frequency dimension</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 137 200</span></span>
 <span></span>
@@ -138,9 +138,10 @@
 <span><span class="co">#&gt; * Time/frequency matrix summary</span></span>
 <span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span></span>
 <span><span class="co">#&gt;   0.000   0.000   0.000   0.003   0.001   0.064    6671</span></span></code></pre></div>
-<p>The result can be converted into a data frame if need be:</p>
+<p>The result can also be converted into a data frame:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    time_index      time      freq        value</span></span>
 <span><span class="co">#&gt; 1           0 0.000 [s] 2100 [Hz]           NA</span></span>
 <span><span class="co">#&gt; 2           1 0.001 [s] 2100 [Hz]           NA</span></span>
