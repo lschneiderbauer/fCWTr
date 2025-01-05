@@ -285,7 +285,7 @@ print.fcwtr_scalogram <- function(x, ...) {
       format(sigma_res(attr(x, "sigma"), attr(x, "freq_end"))$time) , "\n")
 
   cat("  o Relative frequency resolution: ",
-      format(du(sigma_res(attr(x, "sigma"), u(1, "Hz"))$freq / u(1, "Hz"))) , "\n")
+      format(sigma_freq_res_rel(attr(x, "sigma"))), "\n")
 
   cat("* Time/frequency matrix summary\n")
   print(summary(as.vector(as.matrix(x))))

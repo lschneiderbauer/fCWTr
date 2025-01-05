@@ -77,9 +77,15 @@
 fcwt_batch <- function(x,
                        x_sample_freq,
                        y_sample_freq = x_sample_freq,
-                       n_freqs,
                        freq_begin = 2 * x_sample_freq / length(x),
                        freq_end = x_sample_freq / 2,
+                       n_freqs =
+                         2 * ceiling(
+                           log(
+                             du(freq_end / freq_begin),
+                             base = 1 + sigma_freq_res_rel(sigma)
+                           )
+                         ),
                        freq_scale = c("log", "linear"),
                        sigma = 1,
                        # factor 2 as additional security measure
