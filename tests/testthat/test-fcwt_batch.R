@@ -17,9 +17,7 @@ test_that("fcwt batching yields identical result in single-batch case", {
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
-      sigma = 1,
-      # no aggregation
-      y_sample_freq = 44100
+      sigma = 1
     )
 
   res_batch_2 <-
@@ -47,31 +45,31 @@ test_that("fcwt batching yields identical result in single-batch case", {
     )
 
   expect_equal(
-    sc_dim_time(res0), sc_dim_time(res_batch)
+    sc_dim_time(res_batch), sc_dim_time(res0)
   )
   expect_equal(
-    sc_dim_time(res0), sc_dim_time(res_batch_2)
+    sc_dim_time(res_batch_2), sc_dim_time(res0)
   )
   expect_equal(
-    sc_dim_time(res0), sc_dim_time(res_batch_3)
-  )
-
-  expect_equal(
-    res0,
-    res_batch
+    sc_dim_time(res_batch_3), sc_dim_time(res0)
   )
 
   expect_equal(
-    res0,
+    res_batch,
+    res0
+  )
+
+  expect_equal(
     res_batch_2,
+    res0,
     # we still have boundary effects that influence the values
     # to some degree
     tolerance = 10^-3
   )
 
   expect_equal(
-    res0,
     res_batch_3,
+    res0,
     # we still have boundary effects that influence the values
     # to some degree
     tolerance = 10^-3

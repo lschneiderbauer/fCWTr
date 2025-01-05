@@ -32,6 +32,7 @@ test_that("wnd_from_target_size works", {
     fcwt(
       ts_sin_440[1:1000],
       x_sample_freq = 44100,
+      y_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
