@@ -8,9 +8,11 @@
 
     -   allow (and prefer) `sample_freq`, `freq_begin`, `freq_end` arguments to be passed as a dimensionful quantities, via `u()`.
 
-    -   minor argument name changes
-    
-    -   add new argument which allows to specify the sampling rate of the output signal
+    -   minor argument name changes.
+
+    -   add new argument `y_sample_freq` which allows to specify the sampling rate of the output signal.
+
+    -   add meaningful default values for most of the arguments.
 
 -   `fcwt_batch()`:
 
@@ -18,7 +20,7 @@
 
     -   in some cases, the averaging procedure together with the batching could lead to accidentally dropped or duplicated time slices: the mechanism has been overhauled, every slice should be perfectly aligned now, even when averaged.
 
-    -   minor argument name changes
+    -   shared argument with `fcwt()`: same changes as in `fcwt()`.
 
 -   new unit helper functions: `u()` and `du()`: include improved physical unit treatment with the [units](https://r-quantities.github.io/units/) package. Frequency and time parameters can now be "units" objects, created with `u()`. Allow user to adjust `plot()` scales to use arbitrary time/frequency units.
 
