@@ -431,6 +431,12 @@ void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, comple
         fftbased(p, Ihat, O1, (float*)lastscalemem, wav->mother, newsize, scale, wav->imag_frequency, wav->doublesided);
         if(use_normalization) fft_normalize((complex<float>*)lastscalemem, newsize);
         memcpy(out, (complex<float>*)lastscalemem, sizeof(complex<float>)*size);
+
+        #ifdef _WIN32
+          _aligned_free(lastscalemem);
+        #else
+          free(lastscalemem);
+        #endif
     } else {
         // if(!out) {
         //     std::cout << "OUT NOT A POINTER" << std::endl;
