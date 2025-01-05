@@ -86,16 +86,14 @@ sigma_res(sigma = 1, u(440, "Hz"))
 ```{r}
 library(ggplot2)
 
-fcwt_batch(
+fcwt(
   ts_piano_sample,
   x_sample_freq = u(44.1, "kHz") / 4,
+  sigma = 1,
   y_sample_freq = u(10, "Hz"),
   freq_begin = u(220, "Hz"),
   freq_end = u(440, "Hz") * 4,
-  # 5 octaves, 12 keys per octave, 3 frequencies per key
-  n_freqs = 12 * 5 * 3,
-  sigma = 1,
-  freq_scale = "log"
+  n_freqs = 12 * 5 * 3
 ) |>
   plot()
 ```
@@ -107,18 +105,15 @@ sigma_res(sigma = 19, u(440, "Hz"))
 ```
 
 ```{r}
-library(ggplot2)
 
-fcwt_batch(
+fcwt(
   ts_piano_sample,
   x_sample_freq = u(44.1, "kHz") / 4,
+  sigma = 20,
   y_sample_freq = u(10, "Hz"),
   freq_begin = u(220, "Hz"),
   freq_end = u(440, "Hz") * 4,
-  # 5 octaves, 12 keys per octave, 3 frequencies per key
-  n_freqs = 12 * 5 * 3,
-  sigma = 20,
-  freq_scale = "log"
+  n_freqs = 12 * 5 * 3
 ) |>
   plot()
 ```
@@ -134,16 +129,15 @@ sigma_res(sigma = 100, u(440, "Hz"))
 and so we barely have a time resolution of one second. As we can see, we can not resolve the beats between second 12 and 18 anymore:
 
 ```{r}
-fcwt_batch(
+
+fcwt(
   ts_piano_sample,
   x_sample_freq = u(44.1, "kHz") / 4,
+  sigma = 100,
   y_sample_freq = u(10, "Hz"),
   freq_begin = u(220, "Hz"),
   freq_end = u(440, "Hz") * 4,
-  # 3 octaves, 12 keys per octave, 10 frequencies per key
-  n_freqs = 12 * 3 * 10,
-  sigma = 100,
-  freq_scale = "log"
+  n_freqs = 12 * 5 * 3
 ) |>
   plot()
 ```
