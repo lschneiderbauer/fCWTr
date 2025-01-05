@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Controlling the time/frequency resolution • fCWTr</title>
-<script src="../katex-auto.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><link href="../deps/KaTex-0.16.10/katex.min.css" rel="stylesheet">
-<script src="../deps/KaTex-0.16.10/katex.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Controlling the time/frequency resolution">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Controlling the time/frequency resolution">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -79,52 +78,54 @@ Short Time Fourier Transform will break down when probing modes whose
 wavelength approach the window size, at the same time it lacks a
 reasonable time resolutions for modes whose wavelength is much smaller
 than the window size.&lt;/p&gt;"><sup>1</sup></a></p>
-<p>For a reference frequency <span class="math inline">f</span>, the
-Gaussian envelope <span class="math inline">g(t)</span> of the wavelet
-is given by</p>
-<p><span class="math display">g(t) \sim e^{-\left( \frac{t f}{2 \Sigma}
-\right)^2}</span></p>
-<p>with variance in time <span class="math inline">\sigma_t=\frac{\Sigma}{f}</span> which also sets the
-scale for the effective time resolution of the CWT at frequency <span class="math inline">f</span> and a dimensionless parameter <span class="math inline">\Sigma</span>. The corresponding frequency
+<p>For a reference frequency <span class="math inline">\(f\)</span>, the
+Gaussian envelope <span class="math inline">\(g(t)\)</span> of the
+wavelet is given by</p>
+<p><span class="math display">\[g(t) \sim e^{-\left( \frac{t f}{2
+\Sigma} \right)^2}\]</span></p>
+<p>with variance in time <span class="math inline">\(\sigma_t=\frac{\Sigma}{f}\)</span> which also sets
+the scale for the effective time resolution of the CWT at frequency
+<span class="math inline">\(f\)</span> and a dimensionless parameter
+<span class="math inline">\(\Sigma\)</span>. The corresponding frequency
 uncertainty is given by the spreading of the Gaussian in Fourier space:
-<span class="math inline">\sigma_f = \frac{f}{2\pi \Sigma}</span>. The
-time and frequency resolution satisfy the famous time-frequency
-uncertainty relation <span class="math inline">\sigma_t
-\sigma_f=\frac{1}{2\pi}</span>.</p>
-<p>The time-frequency uncertainty relation is true for any <span class="math inline">\Sigma</span> or frequency <span class="math inline">f</span>, but we can adjust the parameter <span class="math inline">\Sigma</span> to increase (decrease) time
+<span class="math inline">\(\sigma_f = \frac{f}{2\pi \Sigma}\)</span>.
+The time and frequency resolution satisfy the famous time-frequency
+uncertainty relation <span class="math inline">\(\sigma_t
+\sigma_f=\frac{1}{2\pi}\)</span>.</p>
+<p>The time-frequency uncertainty relation is true for any <span class="math inline">\(\Sigma\)</span> or frequency <span class="math inline">\(f\)</span>, but we can adjust the parameter <span class="math inline">\(\Sigma\)</span> to increase (decrease) time
 uncertainty at the cost of decreasing (increasing) the frequency
 uncertainty. The “correct” balance depends on your use case.</p>
 <div class="section level2">
 <h2 id="from-uncertainty-to-resolution">From uncertainty to resolution<a class="anchor" aria-label="anchor" href="#from-uncertainty-to-resolution"></a>
 </h2>
-<p>So which time and frequency resolution <span class="math inline">\Delta t</span> and <span class="math inline">\Delta
-f</span> can we expect from a certain value of <span class="math inline">\Sigma</span>?</p>
+<p>So which time and frequency resolution <span class="math inline">\(\Delta t\)</span> and <span class="math inline">\(\Delta f\)</span> can we expect from a certain
+value of <span class="math inline">\(\Sigma\)</span>?</p>
 <p>The resolution is set by the Gaussian spread which in turn is
-quantified by the uncertainties <span class="math inline">\sigma_t</span> and <span class="math inline">\sigma_f</span>. Interpreting the Gaussian as a
+quantified by the uncertainties <span class="math inline">\(\sigma_t\)</span> and <span class="math inline">\(\sigma_f\)</span>. Interpreting the Gaussian as a
 window function, we expect that in order to achieve a certain resolution
-<span class="math inline">\Delta_t</span> the window size needs to be at
-least equal (or smaller) than <span class="math inline">\Delta t</span>.
-Since a Gaussian has infinite support, we need to make a more or less
-arbitrary decision where the exponential falloff of the Gaussian is
-close enough to zero for our liking.</p>
+<span class="math inline">\(\Delta_t\)</span> the window size needs to
+be at least equal (or smaller) than <span class="math inline">\(\Delta
+t\)</span>. Since a Gaussian has infinite support, we need to make a
+more or less arbitrary decision where the exponential falloff of the
+Gaussian is close enough to zero for our liking.</p>
 <p><a href="https://upload.wikimedia.org/wikipedia/commons/3/3a/Standard_deviation_diagram_micro.svg" class="external-link"><img src="images%2FStandard_deviation_diagram.svg" style="width:100.0%" alt="Ainali, CC BY-SA 3.0 &lt;https://creativecommons.org/licenses/by-sa/3.0&gt;, via Wikimedia Commons"></a></p>
-<p>In our case, we decide that <span class="math inline">4\,\sigma</span> is the effective width of our
+<p>In our case, we decide that <span class="math inline">\(4\,\sigma\)</span> is the effective width of our
 window function, and so we expect an effective resolution of</p>
-<p><span class="math display">\Delta t:=\frac{4Σ}{f}</span></p>
+<p><span class="math display">\[\Delta t:=\frac{4Σ}{f}\]</span></p>
 <p>and</p>
-<p><span class="math display">\Delta f:=\frac{2f}{πΣ}</span></p>
+<p><span class="math display">\[\Delta f:=\frac{2f}{πΣ}\]</span></p>
 </div>
 <div class="section level2">
 <h2 id="example-piano-keys">Example: Piano keys<a class="anchor" aria-label="anchor" href="#example-piano-keys"></a>
 </h2>
-<p>Let’s try to understand the meaning of <span class="math inline">\Sigma</span> via an example: We would like to
+<p>Let’s try to understand the meaning of <span class="math inline">\(\Sigma\)</span> via an example: We would like to
 analyse piano music, and be able to at least distinguish different piano
 key frequencies.</p>
 <p>We can, for example, check what the resolutions corresponding to
-<span class="math inline">\Sigma=1</span> at the key A4 (440 Hz) is with
-helper functions that implement the formulas above:</p>
+<span class="math inline">\(\Sigma=1\)</span> at the key A4 (440 Hz) is
+with helper functions that implement the formulas above:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lschneiderbauer.github.io/fCWTr/" class="external-link">fCWTr</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lschneiderbauer.github.io/fCWTr/">fCWTr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_res.html">sigma_res</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">1</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $time</span></span>
@@ -132,18 +133,17 @@ helper functions that implement the formulas above:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $freq</span></span>
 <span><span class="co">#&gt; 280.1127 [Hz]</span></span></code></pre></div>
-<p>We see now, with <span class="math inline">\Sigma=1</span>, our
+<p>We see now, with <span class="math inline">\(\Sigma=1\)</span>, our
 frequency resolution at 440 Hz is only 280 Hz! The spreading is way too
 high to be able to distinguish different keys (the next key A#4 is at
 466 Hz and the previous key Ab4 is at 415 Hz), at least we need to be
 able to resolve the difference, 15 Hz. We can use another helper
-function to check what the corresponding <span class="math inline">\Sigma</span> should be:</p>
+function to check what the corresponding <span class="math inline">\(\Sigma\)</span> should be:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_from_freq_res.html">sigma_from_freq_res</a></span><span class="op">(</span><span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">15</span>, <span class="st">"Hz"</span><span class="op">)</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 18.67418</span></span></code></pre></div>
-<p>and it tells us we need <span class="math inline">\Sigma=19</span> or
-higher. Let’s double-check what that implies for the time
-resolution:</p>
+<p>and it tells us we need <span class="math inline">\(\Sigma=19\)</span> or higher. Let’s double-check
+what that implies for the time resolution:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_res.html">sigma_res</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">19</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $time</span></span>
@@ -222,7 +222,7 @@ and some simple chords in the end.</p>
 <div class="section level3">
 <h3 id="low-time-resolution-high-frequency-resolution">Low time resolution, high frequency resolution<a class="anchor" aria-label="anchor" href="#low-time-resolution-high-frequency-resolution"></a>
 </h3>
-<p>Note that with <span class="math inline">\Sigma=100</span> we
+<p>Note that with <span class="math inline">\(\Sigma=100\)</span> we
 have</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sigma_res.html">sigma_res</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="fl">100</span>, <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span><span class="op">)</span></span>
@@ -247,11 +247,11 @@ we can not resolve the beats between second 12 and 18 anymore:</p>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
-<p>In some way, <span class="math inline">\Sigma</span> can be thought
-of the exposure time of a camera that has to adjusted manually. Is the
-exposure time too long the picture becomes blurry; is it too short, the
-picture becomes too dark to see anything. A good balance is key to a
-good photo.</p>
+<p>In some way, <span class="math inline">\(\Sigma\)</span> can be
+thought of the exposure time of a camera that has to adjusted manually.
+Is the exposure time too long the picture becomes blurry; is it too
+short, the picture becomes too dark to see anything. A good balance is
+key to a good photo.</p>
 </div>
 </div>
 
