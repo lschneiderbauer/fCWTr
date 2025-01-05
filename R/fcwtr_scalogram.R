@@ -319,7 +319,7 @@ print.fcwtr_scalogram <- function(x, ...) {
 #' @examples
 #' fcwt(
 #'   sin((1:5000) * 2 * pi * 440 / 44100),
-#'   x_sample_freq = 44100,
+#'   x_sample_freq = u(44100, "Hz"),
 #'   n_freqs = 10
 #' ) |>
 #'   as.data.frame() |>
@@ -366,7 +366,7 @@ as_tibble.fcwtr_scalogram <- function(x, ...) {
 #'
 #' fcwt(
 #'   sin((1:5000) * 2 * pi * 440 / 44100),
-#'   x_sample_freq = 44100,
+#'   x_sample_freq = u(44100, "Hz"),
 #'   n_freqs = 10
 #' ) |>
 #'   as.matrix()
@@ -408,7 +408,8 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #' @examples
 #' fcwt(
 #'   sin((1:5000) * 2 * pi * 440 / 44100),
-#'   x_sample_freq = 44100,
+#'   x_sample_freq = u(44100, "Hz"),
+#'   y_sample_freq = u(44100, "Hz"),
 #'   n_freqs = 10
 #' )[1:1000, 2:7]
 #'
@@ -449,9 +450,9 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #' res <-
 #'   fcwt(
 #'     ts_sin_440,
-#'     x_sample_freq = 44100,
-#'     freq_begin = 50,
-#'     freq_end = 1000,
+#'     x_sample_freq = u(44100, "Hz"),
+#'     freq_begin = u(50, "Hz"),
+#'     freq_end = u(1000, "Hz"),
 #'     n_freqs = 10,
 #'     sigma = 5
 #'   )
@@ -493,9 +494,9 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #' res <-
 #'   fcwt(
 #'     sin((1:4410) * 2 * pi * 440 / 44100),
-#'     x_sample_freq = 44100,
-#'     freq_begin = 50,
-#'     freq_end = 1000,
+#'     x_sample_freq = u(44100, "Hz"),
+#'     freq_begin = u(50, "Hz"),
+#'     freq_end = u(1000, "Hz"),
 #'     n_freqs = 10,
 #'     sigma = 5
 #'   )

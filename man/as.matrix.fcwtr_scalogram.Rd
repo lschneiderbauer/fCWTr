@@ -23,7 +23,7 @@ options(max.print = 10)
 
 fcwt(
   sin((1:5000) * 2 * pi * 440 / 44100),
-  x_sample_freq = 44100,
+  x_sample_freq = u(44100, "Hz"),
   n_freqs = 10
 ) |>
   as.matrix()
