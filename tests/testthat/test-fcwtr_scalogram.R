@@ -25,6 +25,7 @@ test_that("rbind() for fcwtr_scalogram", {
     fcwt(
       ts_sin_440[1:1000],
       x_sample_freq = 22100,
+      y_sample_freq = 22100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -109,6 +110,7 @@ test_that("[] works", {
     fcwt(
       ts_sin_440[1:1000],
       x_sample_freq = 44100,
+      y_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -209,6 +211,7 @@ test_that("`agg()` gives the same result as c++ aggregation", {
     fcwt(
       ts_sin_440[1:1000],
       x_sample_freq = 44100,
+      y_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 1,
