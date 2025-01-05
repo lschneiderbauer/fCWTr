@@ -3,6 +3,7 @@ test_that("fcwt() returns a vector of expected length", {
     fcwt(
       ts_sin_440[1:1000],
       x_sample_freq = 44100,
+      y_sample_freq = 44100,
       freq_begin = 50,
       freq_end = 1000,
       n_freqs = 10,
@@ -16,6 +17,7 @@ test_that("fcwt() returns a vector of expected length", {
     fcwt(
       ts_sin_440[2001:2500],
       x_sample_freq = 44100,
+      y_sample_freq = 44100,
       freq_begin = 30,
       freq_end = 1100,
       n_freqs = 15,
