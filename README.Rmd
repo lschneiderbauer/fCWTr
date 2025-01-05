@@ -76,11 +76,12 @@ output <-
   fcwt(
     signal,
     x_sample_freq = u(44.1, "kHz"),
+    sigma = 5,
+    y_sample_freq = u(1, "kHz"),
     freq_begin = u(16, "Hz"),
     freq_end = u(2100, "Hz"),
     n_freqs = 200,
-    freq_scale = "linear",
-    sigma = 5
+    freq_scale = "linear"
   )
 
 # The result is basically a numeric matrix with time and frequency dimension

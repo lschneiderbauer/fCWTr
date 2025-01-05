@@ -97,22 +97,23 @@ output <-
   fcwt(
     signal,
     x_sample_freq = u(44.1, "kHz"),
+    sigma = 5,
+    y_sample_freq = u(1, "kHz"),
     freq_begin = u(16, "Hz"),
     freq_end = u(2100, "Hz"),
     n_freqs = 200,
-    freq_scale = "linear",
-    sigma = 5
+    freq_scale = "linear"
   )
 
 # The result is basically a numeric matrix with time and frequency dimension
 dim(output)
-#> [1] 6000  200
+#> [1] 137 200
 
 # Some meta data is recorded too
 output
 #> _Scalogram_
-#> * (Time/Frequency) dimension: [6000,200]
-#> * Sampling rate: 44.1 [kHz]
+#> * (Time/Frequency) dimension:  ( 137 , 200 )
+#> * Sampling rate: 1 [kHz]
 #> * Frequency scale: 16 [Hz] - 2100 [Hz], linear
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
@@ -121,24 +122,24 @@ output
 #>   o Relative frequency resolution:  0.127324 
 #> * Time/frequency matrix summary
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-#>    0.00    0.00    0.00    0.13    0.03    2.81  302028
+#>   0.000   0.000   0.000   0.003   0.001   0.064    6671
 ```
 
 The result can be converted into a data frame if need be:
 
 ``` r
 head(as.data.frame(output), 10)
-#>    time_index             time      freq value
-#> 1           0 0.000000e+00 [s] 2100 [Hz]    NA
-#> 2           1 2.267574e-05 [s] 2100 [Hz]    NA
-#> 3           2 4.535147e-05 [s] 2100 [Hz]    NA
-#> 4           3 6.802721e-05 [s] 2100 [Hz]    NA
-#> 5           4 9.070295e-05 [s] 2100 [Hz]    NA
-#> 6           5 1.133787e-04 [s] 2100 [Hz]    NA
-#> 7           6 1.360544e-04 [s] 2100 [Hz]    NA
-#> 8           7 1.587302e-04 [s] 2100 [Hz]    NA
-#> 9           8 1.814059e-04 [s] 2100 [Hz]    NA
-#> 10          9 2.040816e-04 [s] 2100 [Hz]    NA
+#>    time_index      time      freq        value
+#> 1           0 0.000 [s] 2100 [Hz]           NA
+#> 2           1 0.001 [s] 2100 [Hz]           NA
+#> 3           2 0.002 [s] 2100 [Hz]           NA
+#> 4           3 0.003 [s] 2100 [Hz]           NA
+#> 5           4 0.004 [s] 2100 [Hz] 5.170488e-05
+#> 6           5 0.005 [s] 2100 [Hz] 2.023599e-05
+#> 7           6 0.006 [s] 2100 [Hz] 7.007858e-06
+#> 8           7 0.007 [s] 2100 [Hz] 2.413503e-06
+#> 9           8 0.008 [s] 2100 [Hz] 1.058135e-06
+#> 10          9 0.009 [s] 2100 [Hz] 6.853825e-07
 ```
 
 We can also directly plot the resulting scalogram:
