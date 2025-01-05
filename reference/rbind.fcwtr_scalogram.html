@@ -90,8 +90,8 @@ Time offset information is kept from the first piece.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * (Time/Frequency) dimension: [5000,10]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Sampling rate: 44.1 [kHz]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * (Time/Frequency) dimension:  ( 18 , 10 )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Sampling rate: 150 [Hz]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Frequency scale: 50 [Hz] - 1000 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time offset: 0 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Sigma: 5</span>
@@ -100,15 +100,15 @@ Time offset information is kept from the first piece.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   o Relative frequency resolution:  0.127324 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.00    0.00    0.00    0.00    0.00    0.01   34218 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.00000 0.00000 0.00000 0.00001 0.00001 0.00023     114 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># doubled scalogram</span></span></span>
 <span class="r-in"><span><span class="va">res_doubled</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">res</span>, <span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res_doubled</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * (Time/Frequency) dimension: [10000,10]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Sampling rate: 44.1 [kHz]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * (Time/Frequency) dimension:  ( 36 , 10 )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Sampling rate: 150 [Hz]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Frequency scale: 50 [Hz] - 1000 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time offset: 0 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Sigma: 5</span>
@@ -117,7 +117,7 @@ Time offset information is kept from the first piece.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   o Relative frequency resolution:  0.127324 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.00    0.00    0.00    0.00    0.00    0.01   68436 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.00000 0.00000 0.00000 0.00001 0.00001 0.00023     228 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

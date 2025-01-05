@@ -88,18 +88,18 @@ of <code><a href="fcwt.html">fcwt()</a></code>.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="fcwt.html">fcwt</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5000</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="fl">440</span> <span class="op">/</span> <span class="fl">44100</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  x_sample_freq <span class="op">=</span> <span class="fl">44100</span>,</span></span>
+<span class="r-in"><span>  x_sample_freq <span class="op">=</span> <span class="fu"><a href="u.html">u</a></span><span class="op">(</span><span class="fl">44100</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  n_freqs <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   time_index             time       freq value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0 0.000000e+00 [s] 22050 [Hz]    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          1 2.267574e-05 [s] 22050 [Hz]    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3          2 4.535147e-05 [s] 22050 [Hz]    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4          3 6.802721e-05 [s] 22050 [Hz]    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5          4 9.070295e-05 [s] 22050 [Hz]    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6          5 1.133787e-04 [s] 22050 [Hz]    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   time_index             time       freq        value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0 0.0000000000 [s] 22050 [Hz]           NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          1 0.0003799356 [s] 22050 [Hz] 1.229610e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          2 0.0007598712 [s] 22050 [Hz] 7.816250e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          3 0.0011398069 [s] 22050 [Hz] 6.032826e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          4 0.0015197425 [s] 22050 [Hz] 5.094111e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          5 0.0018996781 [s] 22050 [Hz] 4.511332e-06</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
