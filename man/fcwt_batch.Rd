@@ -8,7 +8,7 @@ fcwt_batch(
   x,
   x_sample_freq,
   sigma = 1,
-  y_sample_freq = x_sample_freq,
+  y_sample_freq = 3/sigma_res(sigma, freq_end)$time,
   freq_begin = 2 * x_sample_freq/length(x),
   freq_end = x_sample_freq/2,
   n_freqs = 2 * ceiling(log(du(freq_end/freq_begin), base = 1 +
@@ -40,9 +40,11 @@ Defaults to \eqn{2\pi}. Note that there is not really a natural choice for
 sigma, it depends on the use case. So the default choice can very well be
 quite a bad choice (it probably is for audio data).}
 
-\item{y_sample_freq}{Sampling rate of output time series. This defaults to the input sampling
-rate \code{x_sample_freq}, but can be reduced if a lower resolution output
-signal is required (saves memory).}
+\item{y_sample_freq}{Sampling rate of output time series, in frequency units (see \code{\link[=u]{u()}}).
+The default value is set so that it aligns with the physical time resolution
+of the highest frequency modes.
+The maximum allowed sampling rate is the sampling rate of the input signal
+\code{x_sample_freq}.}
 
 \item{freq_begin, freq_end}{Optionally specifies the frequency range \verb{[freq_end, freq_begin]}. If not
 specified the maximal meaningful frequency range, depending on the input signal,
@@ -56,10 +58,12 @@ argument. Computation time increases when raising the
 number of frequency bins.
 The default number is chosen such that the frequency bandwidths are of the
 size of the physical frequency resolutions in case of a logarithmic scale.
-In some sense this value constitutes the "physical" limit: even though one
-can still
-increase the number of frequency bins, no additional information can be
-contained there.}
+In some sense this value constitutes the "physical" limit.
+However, increasing \code{n_freqs} beyond this limit can still make sense: If
+we have a signal of a precise frequency, and the probing frequency band is
+not exactly aligned, the output signal will be dampened. In this case it
+can be useful to increase \code{n_freqs} and perform appropriate averaging
+afterwards: the output signal will show improved response.}
 
 \item{freq_scale}{( \code{"log"} | \code{"linear"} )
 Should the frequency scale be linear or logarithmic?
@@ -136,11 +140,11 @@ sequence is lost. (The amount depends on the minimal frequency captured \code{mi
 fcwt_batch(
   ts_sin_sin,
   x_sample_freq = u(44.1, "kHz"),
+  sigma = 10,
   y_sample_freq = u(100, "Hz"),
   freq_begin = u(100, "Hz"),
   freq_end = u(11000, "Hz"),
-  n_freqs = 30,
-  sigma = 10
+  n_freqs = 30
 )
 
 }

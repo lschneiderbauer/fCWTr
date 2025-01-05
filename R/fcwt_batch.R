@@ -65,11 +65,11 @@
 #' fcwt_batch(
 #'   ts_sin_sin,
 #'   x_sample_freq = u(44.1, "kHz"),
+#'   sigma = 10,
 #'   y_sample_freq = u(100, "Hz"),
 #'   freq_begin = u(100, "Hz"),
 #'   freq_end = u(11000, "Hz"),
-#'   n_freqs = 30,
-#'   sigma = 10
+#'   n_freqs = 30
 #' )
 #'
 #' @importFrom utils txtProgressBar setTxtProgressBar
@@ -77,7 +77,7 @@
 fcwt_batch <- function(x,
                        x_sample_freq,
                        sigma = 1,
-                       y_sample_freq = x_sample_freq,
+                       y_sample_freq = 3 / sigma_res(sigma, freq_end)$time,
                        freq_begin = 2 * x_sample_freq / length(x),
                        freq_end = x_sample_freq / 2,
                        n_freqs =
@@ -93,9 +93,9 @@ fcwt_batch <- function(x,
                        n_threads = 2L,
                        progress_bar = FALSE) {
   x_sample_freq <- as_freq(x_sample_freq)
-  y_sample_freq <- as_freq(y_sample_freq)
   freq_begin <- as_freq(freq_begin)
   freq_end <- as_freq(freq_end)
+  y_sample_freq <- as_freq(y_sample_freq)
 
   stopifnot(
     y_sample_freq > u(0, "Hz"),
