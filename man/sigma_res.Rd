@@ -14,7 +14,7 @@ calculated. Must be a quantity with frequency units (see \code{\link[=u]{u()}}).
 }
 \value{
 A named list with two elements: "time" and "freq", in time and frequency
-units. They obey the property \eqn{time \times freq = \frac{8]{\pi}}}.
+units. They obey the property \eqn{time \times freq = \frac{8}{\pi}}.
 }
 \description{
 For a given \code{sigma} and reference frequency \code{freq} this function calculates

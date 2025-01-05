@@ -16,7 +16,7 @@
 #'
 #' @return
 #'  A named list with two elements: "time" and "freq", in time and frequency
-#'  units. They obey the property \eqn{time \times freq = \frac{8]{\pi}}}.
+#'  units. They obey the property \eqn{time \times freq = \frac{8}{\pi}}.
 #'
 #' @examples
 #' sigma_res(1, u(440, "Hz"))
