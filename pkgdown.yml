@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   sigma: sigma.html
-last_built: 2025-01-05T23:23Z
+last_built: 2025-01-05T23:43Z
 urls:
   reference: https://lschneiderbauer.github.io/fCWTr/reference
   article: https://lschneiderbauer.github.io/fCWTr/articles

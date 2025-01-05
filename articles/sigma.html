@@ -178,16 +178,14 @@ and some simple chords in the end.</p>
 <span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
 <span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/fcwt.html">fcwt</a></span><span class="op">(</span></span>
 <span>  <span class="va">ts_piano_sample</span>,</span>
 <span>  x_sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span> <span class="op">/</span> <span class="fl">4</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  y_sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>  freq_begin <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">220</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>  freq_end <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>,</span>
-<span>  <span class="co"># 5 octaves, 12 keys per octave, 3 frequencies per key</span></span>
-<span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  freq_scale <span class="op">=</span> <span class="st">"log"</span></span>
+<span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-6-1.png" width="100%"></p>
@@ -203,18 +201,15 @@ and some simple chords in the end.</p>
 <span><span class="co">#&gt; $freq</span></span>
 <span><span class="co">#&gt; 14.74277 [Hz]</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/fcwt.html">fcwt</a></span><span class="op">(</span></span>
 <span>  <span class="va">ts_piano_sample</span>,</span>
 <span>  x_sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span> <span class="op">/</span> <span class="fl">4</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  y_sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>  freq_begin <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">220</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>  freq_end <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>,</span>
-<span>  <span class="co"># 5 octaves, 12 keys per octave, 3 frequencies per key</span></span>
-<span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  freq_scale <span class="op">=</span> <span class="st">"log"</span></span>
+<span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-8-1.png" width="100%"></p>
@@ -234,16 +229,15 @@ have</p>
 <p>and so we barely have a time resolution of one second. As we can see,
 we can not resolve the beats between second 12 and 18 anymore:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fcwt_batch.html">fcwt_batch</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/fcwt.html">fcwt</a></span><span class="op">(</span></span>
 <span>  <span class="va">ts_piano_sample</span>,</span>
 <span>  x_sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">44.1</span>, <span class="st">"kHz"</span><span class="op">)</span> <span class="op">/</span> <span class="fl">4</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  y_sample_freq <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>  freq_begin <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">220</span>, <span class="st">"Hz"</span><span class="op">)</span>,</span>
 <span>  freq_end <span class="op">=</span> <span class="fu"><a href="../reference/u.html">u</a></span><span class="op">(</span><span class="fl">440</span>, <span class="st">"Hz"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>,</span>
-<span>  <span class="co"># 3 octaves, 12 keys per octave, 10 frequencies per key</span></span>
-<span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">10</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  freq_scale <span class="op">=</span> <span class="st">"log"</span></span>
+<span>  n_freqs <span class="op">=</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">*</span> <span class="fl">3</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sigma_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
