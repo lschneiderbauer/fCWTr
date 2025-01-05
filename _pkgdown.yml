@@ -1,6 +1,7 @@
 url: https://lschneiderbauer.github.io/fcwtr/
 template:
   bootstrap: 5
+  math-rendering: katex
 reference:
 - title: "Fast continuous wavelet transform"
   desc: >
