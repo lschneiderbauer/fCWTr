@@ -184,7 +184,7 @@ fcwt_batch <- function(x,
         n_freqs = n_freqs,
         freq_scale = freq_scale,
         sigma = sigma,
-        remove_coi = FALSE,
+        rm_coi = FALSE,
         n_threads = n_threads
       ) |>
         # we fully remove COI infected time slices

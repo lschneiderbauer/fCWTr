@@ -61,7 +61,7 @@ test_that("fcwt() removing coi works", {
       freq_end = 1000,
       n_freqs = 10,
       sigma = 1,
-      remove_coi = TRUE
+      rm_coi = TRUE
     )
 
   # we have a time series that is 1000 / 44100 s long
