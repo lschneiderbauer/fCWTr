@@ -16,7 +16,6 @@ Description: Enables the usage of the fast continuous wavelet transform,
     originally implemented in the 'C++' library 'fCWT' by Lukas Arts.
     See Arts, P.A. and Van den Broek, E.L. (2022)
     <doi:10.1038/s43588-021-00183-z> for details.
-    The package includes simple helpers such as a plotting function.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
