@@ -21,6 +21,7 @@ reference:
   desc: "A data.frame conversion method, data extractors, and optional ggplot2 plotting methods (they only work if ggplot is installed)."
   contents:
   - as.data.frame.fcwtr_scalogram
+  - as_tibble.fcwtr_scalogram
   - as.matrix.fcwtr_scalogram
   - "`[.fcwtr_scalogram`"
   - rbind.fcwtr_scalogram
