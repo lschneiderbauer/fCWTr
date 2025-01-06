@@ -294,14 +294,19 @@ print.fcwtr_scalogram <- function(x, ...) {
 }
 
 
-#' Coerce the scalogram matrix to a data frame
+#' Convert the scalogram matrix to a data frame
 #'
 #' Internally, the scalogram resulting from [fcwt()] is represented by
-#' a numeric matrix. This method coerces this matrix into a reasonable
-#' data frame. Note that this conversion has a significant run time cost.
+#' a numeric [matrix()]. This method converts this matrix into a three-columned
+#' [data.frame()] (two columns to represent the matrix indices, and one column
+#' for the corresponding value).
+#' Note that this conversion has a significant run time cost.
 #'
 #' @param x
 #'  An "fcwtr_scalogram" object resulting from [fcwt()].
+#'
+#' @param ...
+#'  Additional arguments are ignored.
 #'
 #' @return
 #'  A [data.frame()] object representing the scalogram data with four columns:
@@ -315,7 +320,6 @@ print.fcwtr_scalogram <- function(x, ...) {
 #'   \item{value}{The fCWT result for the particular time-frequency combination.}
 #' }
 #'
-#' @inheritParams base::as.data.frame
 #' @examples
 #' fcwt(
 #'   sin((1:5000) * 2 * pi * 440 / 44100),
@@ -343,11 +347,45 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
   )
 }
 
+#' Convert the scalogram matrix to a tibble
+#'
+#' Internally, the scalogram resulting from [fcwt()] is represented by
+#' a numeric [matrix()]. This method converts this matrix into a three-columned
+#' [tibble::tibble()] (two columns to represent the matrix indices, and one column
+#' for the corresponding value).
+#' Note that this conversion has a significant run time cost.
+#'
+#' This method is conceptually identical to [as.data.frame()],
+#' it simply returns a [tibble::tibble()] instead of a [data.frame()].
+#'
+#' @return
+#'  A [tibble::tibble()] object representing the scalogram data with four columns:
+#' \describe{
+#'   \item{time_index}{An integer index uniquely identifying time slices.}
+#'   \item{time}{The time difference to the first time slice in physical units.
+#'               The time unit is the inverse of the frequency unit chosen by the user
+#'               for the `sample_freq` argument of [fcwt()].}
+#'   \item{freq}{The frequency in the same units as the `sample_freq` argument
+#'               of [fcwt()].}
+#'   \item{value}{The fCWT result for the particular time-frequency combination.}
+#' }
+#'
+#' @inherit as.data.frame.fcwtr_scalogram
+#' @examplesIf requireNamespace("tibble", quietly = TRUE)
+#' library(tibble)
+#'
+#' fcwt(
+#'   sin((1:5000) * 2 * pi * 440 / 44100),
+#'   x_sample_freq = u(44100, "Hz"),
+#'   n_freqs = 10
+#' ) |>
+#'   as_tibble()
+#'
 #' @exportS3Method tibble::as_tibble
 as_tibble.fcwtr_scalogram <- function(x, ...) {
   stopifnot(requireNamespace("tibble", quietly = TRUE))
 
-  tibble::as_tibble(as.data.frame(x))
+  tibble::as_tibble(as.data.frame(x, ...))
 }
 
 #' Extract the data matrix from a scalogram
