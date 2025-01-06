@@ -79,7 +79,8 @@ error message should give you hints, however, on what’s missing on your
 system.
 
 - Common confusion: fftw is installed, but compiled without single
-  precision support. Please consult [fftw.org](fftw.org) for help.
+  precision support. Please consult [fftw.org](https://www.fftw.org) for
+  help.
 
 ## Example
 
