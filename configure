@@ -4315,13 +4315,6 @@ esac
 fi
 
 
-# # Check for omp.h header
-# AC_CHECK_HEADER([omp.h], [
-#  AC_DEFINE([HAVE_OMP_H], [1], [Define if you have the omp.h header file])
-# ], [
-#   AC_DEFINE([HAVE_OMP_H], [0], [Define if you have the omp.h header file])
-# ])
-
 # have_fftw_omp=no
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing fftwf_plan_with_nthreads" >&5
 printf %s "checking for library containing fftwf_plan_with_nthreads... " >&6; }
