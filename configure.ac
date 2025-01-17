@@ -26,8 +26,8 @@ AC_MSG_CHECKING([whether pkg-config knows about fftw3f])
 AS_IF([$PKG_CONFIG fftw3f], [AC_MSG_RESULT(yes)], [AC_MSG_RESULT([no])
      AC_MSG_ERROR([Install libfftw3-dev or equivalent first])])
 
-FFTW_CPPFLAGS="`$PKG_CONFIG --cflags fftw3f`"
-FFTW_LIBS="`$PKG_CONFIG --libs fftw3f`"
+CPPFLAGS="${CPPFLAGS} `$PKG_CONFIG --cflags fftw3f`"
+LIBS="${LIBS} `$PKG_CONFIG --libs fftw3f`"
 
 # needs to be after pkg-config checks
 # to have correct paths already
@@ -39,6 +39,8 @@ AC_CHECK_HEADER([fftw3.h], [
   AC_MSG_ERROR([fftw3.h header file not found in: $CPPFLAGS])
 ])
 
+# there are no pkg-config files for fftw3-omp,
+# so check like this.
 # have_fftw_omp=no
 AC_SEARCH_LIBS(
  fftwf_plan_with_nthreads,
@@ -49,10 +51,10 @@ AC_SEARCH_LIBS(
 
 
 # Write the flags into the src/Makevars file.
-AC_SUBST([PKG_CPPFLAGS], ["${CPPFLAGS} ${OPENMP_CFLAGS} ${FFTW_CPPFLAGS}"])
+AC_SUBST([PKG_CPPFLAGS], ["${CPPFLAGS} ${OPENMP_CFLAGS}"])
 AC_SUBST([PKG_CXXFLAGS], ["${CXXFLAGS} ${OPENMP_CXXFLAGS}"])
 AC_SUBST([PKG_LDFLAGS], ["${LDFLAGS}"])
-AC_SUBST([PKG_LIBS], ["${FFTW_LIBS} ${LIBS}"])
+AC_SUBST([PKG_LIBS], ["${LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
 
