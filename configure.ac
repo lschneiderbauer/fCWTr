@@ -16,18 +16,10 @@ AC_PROG_CPP
 AC_PATH_PROG([PKG_CONFIG], [pkg-config])
 AC_OPENMP
 
-# Check for fftw3.h header
-AC_CHECK_HEADER([fftw3.h], [
-  AC_DEFINE([HAVE_FFTW3_H], [1], [Define if you have the fftw3.h header file])
-], [
-  AC_MSG_ERROR([fftw3.h header file not found in: $CPPFLAGS])
-])
-
 AC_MSG_CHECKING([for pkg-config])
 
 AS_IF(["$PKG_CONFIG" --version], , [AC_MSG_RESULT([no])
-  AC_MSG_ERROR([Provided flags don't work and pkg-config is not present.
-  You can either set PKG_LIBS to the correct flags or install pkg-config.])])
+  AC_MSG_ERROR([Provided flags don't work and pkg-config is not present.])])
 
 AC_MSG_CHECKING([whether pkg-config knows about fftw3f])
 
@@ -37,6 +29,15 @@ AS_IF([$PKG_CONFIG fftw3f], [AC_MSG_RESULT(yes)], [AC_MSG_RESULT([no])
 FFTW_CPPFLAGS="`$PKG_CONFIG --cflags fftw3f`"
 FFTW_LIBS="`$PKG_CONFIG --libs fftw3f`"
 
+# needs to be after pkg-config checks
+# to have correct paths already
+
+# Check for fftw3.h header
+AC_CHECK_HEADER([fftw3.h], [
+  AC_DEFINE([HAVE_FFTW3_H], [1], [Define if you have the fftw3.h header file])
+], [
+  AC_MSG_ERROR([fftw3.h header file not found in: $CPPFLAGS])
+])
 
 # # Check for omp.h header
 # AC_CHECK_HEADER([omp.h], [
