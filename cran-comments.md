@@ -1,10 +1,9 @@
-## New submission - Package was archived on CRAN
+## Resubmission
 
-This is a resubmission (after package being archived).
+This is a resubmission. In this version I have
 
--   In this version I have addressed the X-CRAN-Comment and changed 'SystemRequirements' to directly refer to single precision 'fftw3f' and added the optional 'fftw3f_omp' requirement. I also indicated an optional OpenMP requirement. I removed version specifications since they are already implied from the library names.
--   The note "[The package] does not test for [fftwf]" seems incorrect to me: The file ./configure.ac, line #40, contains a paragraph that tests for single precision functions. The configuration fails with a descriptive error message "The fftw3f library is required." in case it does not find a fitting library. I now added additional information to this error message to make it more clear what is missing. I searched the "Writing R Extensions" documentation for additional mandatory places, where a check should occur, to no avail.
--   I also added other features, unrelated to the comments, since last submission/archiving.
+-   added the macos recipe 'fftw-s' to 'SystemRequirements'
+-   rewrote the configure script to use pkg-config in order to test for fftw library with single precision support.
 
 ## R CMD check results
 
