@@ -33,7 +33,8 @@ Suggests:
 LinkingTo: 
     cpp11
 SystemRequirements:
-    fftw3 (including single precision support fftw3f), fftw3f_omp (optional), OpenMP (optional)
+    fftw3 (including single precision support fftw3f; 'fftw-s' macOS
+ recipe), fftw3f_omp (optional), OpenMP (optional)
 Config/testthat/edition: 3
 URL: https://lschneiderbauer.github.io/fCWTr/, https://github.com/lschneiderbauer/fCWTr
 Roxygen: list(markdown = TRUE)
