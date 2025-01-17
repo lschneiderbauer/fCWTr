@@ -1,4 +1,4 @@
-AC_INIT([fCWTr],[0.2.9000])
+AC_INIT([fCWTr],[0.3.1])
 
 
 # Find the compiler and compiler flags used by R.

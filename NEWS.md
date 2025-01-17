@@ -1,3 +1,7 @@
+# fCWTr 0.3.1
+
+-   fix CRAN issues
+
 # fCWTr 0.3.0
 
 -   `fcwt():`
