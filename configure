@@ -4236,6 +4236,39 @@ printf "%s\n" "$ac_cv_prog_cxx_openmp" >&6; }
 
 
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for pkg-config" >&5
+printf %s "checking for pkg-config... " >&6; }
+
+if "$PKG_CONFIG" --version
+then :
+
+else case e in #(
+  e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+  as_fn_error $? "Provided flags don't work and pkg-config is not present." "$LINENO" 5 ;;
+esac
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether pkg-config knows about fftw3f" >&5
+printf %s "checking whether pkg-config knows about fftw3f... " >&6; }
+
+if $PKG_CONFIG fftw3f
+then :
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+else case e in #(
+  e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+     as_fn_error $? "Install libfftw3-dev or equivalent first" "$LINENO" 5 ;;
+esac
+fi
+
+FFTW_CPPFLAGS="`$PKG_CONFIG --cflags fftw3f`"
+FFTW_LIBS="`$PKG_CONFIG --libs fftw3f`"
+
+# needs to be after pkg-config checks
+# to have correct paths already
+
 # Check for fftw3.h header
 ac_header= ac_cache=
 for ac_item in $ac_header_cxx_list
@@ -4280,38 +4313,6 @@ else case e in #(
  ;;
 esac
 fi
-
-
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for pkg-config" >&5
-printf %s "checking for pkg-config... " >&6; }
-
-if "$PKG_CONFIG" --version
-then :
-
-else case e in #(
-  e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-  as_fn_error $? "Provided flags don't work and pkg-config is not present.
-  You can either set PKG_LIBS to the correct flags or install pkg-config." "$LINENO" 5 ;;
-esac
-fi
-
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether pkg-config knows about fftw3f" >&5
-printf %s "checking whether pkg-config knows about fftw3f... " >&6; }
-
-if $PKG_CONFIG fftw3f
-then :
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-printf "%s\n" "yes" >&6; }
-else case e in #(
-  e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-     as_fn_error $? "Install libfftw3-dev or equivalent first" "$LINENO" 5 ;;
-esac
-fi
-
-FFTW_CPPFLAGS="`$PKG_CONFIG --cflags fftw3f`"
-FFTW_LIBS="`$PKG_CONFIG --libs fftw3f`"
 
 
 # # Check for omp.h header
