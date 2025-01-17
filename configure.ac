@@ -1,7 +1,6 @@
 AC_INIT([fCWTr],[0.2.9000])
 
 
-
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -14,20 +13,8 @@ CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS`"
 LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS`"
 AC_LANG(C++)
 AC_PROG_CPP
-
-
-
-# extra check for macos brew
-AC_CHECK_PROG(BREW,brew,yes)
-if test "x${BREW}" = xyes; then
-  # in order for AC_CHECK_HEADER to work
-  CPPFLAGS="${CPPFLAGS} -I`brew --prefix`/include"
-  PKG_CPPFLAGS="-I`brew --prefix`/include"
-
-  LDFLAGS="${LDFLAGS} -L`brew --prefix`/lib"
-  PKG_LDFLAGS="-L`brew --prefix`/lib"
-fi
-
+AC_PATH_PROG([PKG_CONFIG], [pkg-config])
+AC_OPENMP
 
 # Check for fftw3.h header
 AC_CHECK_HEADER([fftw3.h], [
@@ -36,36 +23,42 @@ AC_CHECK_HEADER([fftw3.h], [
   AC_MSG_ERROR([fftw3.h header file not found in: $CPPFLAGS])
 ])
 
-have_fftw=no
+AC_MSG_CHECKING([for pkg-config])
+
+AS_IF(["$PKG_CONFIG" --version], , [AC_MSG_RESULT([no])
+  AC_MSG_ERROR([Provided flags don't work and pkg-config is not present.
+  You can either set PKG_LIBS to the correct flags or install pkg-config.])])
+
+AC_MSG_CHECKING([whether pkg-config knows about fftw3f])
+
+AS_IF([$PKG_CONFIG fftw3f], [AC_MSG_RESULT(yes)], [AC_MSG_RESULT([no])
+     AC_MSG_ERROR([Install libfftw3-dev or equivalent first])])
+
+FFTW_CPPFLAGS="`$PKG_CONFIG --cflags fftw3f`"
+FFTW_LIBS="`$PKG_CONFIG --libs fftw3f`"
+
+
+# # Check for omp.h header
+# AC_CHECK_HEADER([omp.h], [
+#  AC_DEFINE([HAVE_OMP_H], [1], [Define if you have the omp.h header file])
+# ], [
+#   AC_DEFINE([HAVE_OMP_H], [0], [Define if you have the omp.h header file])
+# ])
+
+# have_fftw_omp=no
 AC_SEARCH_LIBS(
-  fftwf_free,
-  fftw3f,
-  [have_fftw=yes],
-  [AC_MSG_ERROR([The fftw3 library with single precision support is required. In case fftw is already installed, you might need to enable fftw's single precision support with './configure --enable-type-prefix  --enable-float'.])]
+ fftwf_plan_with_nthreads,
+ fftw3f_omp,
+ [have_fftw_omp=yes],
+ [AC_MSG_RESULT([The fftw3-omp support not found.])]
 )
 
-# Check for omp.h header
-AC_CHECK_HEADER([omp.h], [
-  AC_DEFINE([HAVE_OMP_H], [1], [Define if you have the omp.h header file])
-], [
-  AC_DEFINE([HAVE_OMP_H], [0], [Define if you have the omp.h header file])
-])
-
-have_fftw_omp=no
-AC_SEARCH_LIBS(
-  fftwf_plan_with_nthreads,
-  fftw3f_omp,
-  [have_fftw_omp=yes],
-  [AC_MSG_RESULT([The fftw3-omp support not found.])]
-)
-
-AC_OPENMP
 
 # Write the flags into the src/Makevars file.
-AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS} ${FFTW_CPPFLAGS} ${FFTW_OMP_CPPFLAGS} ${OPENMP_CPPFLAGS}"])
-AC_SUBST([PKG_CXXFLAGS], ["${PKG_CXXFLAGS} ${FFTW_CXXFLAGS} ${FFTW_OMP_CXXFLAGS} ${OPENMP_CXXFLAGS}"])
-AC_SUBST([PKG_LDFLAGS], ["${PKG_LDFLAGS} ${OPENMP_CXXFLAGS}"])
-AC_SUBST([PKG_LIBS], ["${LIBS} ${PKG_LIBS} ${FFTW_LIBS} ${FFTW_OMP_LIBS}"])
+AC_SUBST([PKG_CPPFLAGS], ["${CPPFLAGS} ${OPENMP_CFLAGS} ${FFTW_CPPFLAGS}"])
+AC_SUBST([PKG_CXXFLAGS], ["${CXXFLAGS} ${OPENMP_CXXFLAGS}"])
+AC_SUBST([PKG_LDFLAGS], ["${LDFLAGS}"])
+AC_SUBST([PKG_LIBS], ["${FFTW_LIBS} ${LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
 
