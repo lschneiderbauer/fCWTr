@@ -20,7 +20,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 4.1)
+    R (>= 4.2)
 Suggests:
     ggplot2 (>= 3.3.0),
     viridis (>= 0.6.0),
