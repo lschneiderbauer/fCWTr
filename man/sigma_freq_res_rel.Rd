@@ -11,7 +11,7 @@ sigma_freq_res_rel(sigma)
 }
 \value{
 A number \code{p} representing the relative frequency resolution. I.e. at a given
-resolution \code{f}, the frequency resolution is \code{f*p}.
+frequency \code{f}, the frequency resolution is \code{f*p}.
 }
 \description{
 For a given \code{sigma} this function calculates

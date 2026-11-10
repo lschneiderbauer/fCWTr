@@ -87,6 +87,34 @@ coi_invalid_time_steps <- function(sample_freq, freq_begin, sigma) {
   as.integer(ddu(floor(2 * sigma * sample_freq / freq_begin)))
 }
 
+# frequencies of the columns (highest frequency first),
+# in the units of freq_begin / freq_end
+sc_freqs <- function(x) {
+  seq2(
+    attr(x, "freq_end"), attr(x, "freq_begin"),
+    length.out = sc_dim_freq(x),
+    scale = attr(x, "freq_scale")
+  )
+}
+
+# turns an index (positive, negative, or logical) into positive indices,
+# and checks that they form a contiguous ascending range: only then the
+# result can be represented by an evenly spaced time / frequency axis
+contiguous_index <- function(idx, n, what) {
+  pos <- seq_len(n)[idx]
+
+  if (length(pos) == 0 || anyNA(pos) || any(diff(pos) != 1)) {
+    stop(
+      "The ", what, " index must select a contiguous, ascending range ",
+      "(e.g. `10:20`) within the scalogram's dimensions. ",
+      "Use `as.matrix()` for arbitrary subsetting.",
+      call. = FALSE
+    )
+  }
+
+  pos
+}
+
 sc_dim_freq <- function(x) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
@@ -115,7 +143,7 @@ sc_rm_bdry_time_slices <- function(x, n) {
   }
 
   new_fcwtr_scalogram(
-    unclass(x)[rows_to_keep, ],
+    unclass(x)[rows_to_keep, , drop = FALSE],
     attr(x, "time_offset") + n / attr(x, "sample_freq"), # new time offset
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
@@ -188,7 +216,7 @@ sc_agg <- function(x, wnd) {
 #' The function errs if these conditions are not satisfied.
 #'
 #' The scalograms are stitched together in chronological fashion (i.e. the first
-#' argument will the initial piece, etc.).
+#' argument will be the initial piece, etc.).
 #' Time offset information is kept from the first piece.
 #'
 #' @param ...
@@ -297,9 +325,8 @@ print.fcwtr_scalogram <- function(x, ...) {
 #' Convert the scalogram matrix to a data frame
 #'
 #' Internally, the scalogram resulting from [fcwt()] is represented by
-#' a numeric [matrix()]. This method converts this matrix into a three-columned
-#' [data.frame()] (two columns to represent the matrix indices, and one column
-#' for the corresponding value).
+#' a numeric [matrix()]. This method converts this matrix into a
+#' [data.frame()] in long format, with one row per matrix entry.
 #' Note that this conversion has a significant run time cost.
 #'
 #' @param x
@@ -311,12 +338,17 @@ print.fcwtr_scalogram <- function(x, ...) {
 #' @return
 #'  A [data.frame()] object representing the scalogram data with four columns:
 #' \describe{
-#'   \item{time_index}{An integer index uniquely identifying time slices.}
-#'   \item{time}{The time difference to the first time slice in physical units.
-#'               The time unit is the inverse of the frequency unit chosen by the user
-#'               for the `sample_freq` argument of [fcwt()].}
-#'   \item{freq}{The frequency in the same units as the `sample_freq` argument
-#'               of [fcwt()].}
+#'   \item{time_index}{An integer index uniquely identifying time slices,
+#'               starting at 0.}
+#'   \item{time}{The time of the time slice in physical units, relative to the
+#'               beginning of the input signal (time slices that were cut off,
+#'               e.g. by subsetting, are taken into account).
+#'               The time unit is the inverse of the frequency unit chosen by
+#'               the user for the `x_sample_freq` argument of [fcwt()]
+#'               (e.g. `1/kHz` for `x_sample_freq = u(44.1, "kHz")`), and can
+#'               be converted with `units::set_units()`.}
+#'   \item{freq}{The frequency, in the units chosen by the user for the
+#'               `freq_begin` and `freq_end` arguments of [fcwt()].}
 #'   \item{value}{The fCWT result for the particular time-frequency combination.}
 #' }
 #'
@@ -331,17 +363,14 @@ print.fcwtr_scalogram <- function(x, ...) {
 #'
 #' @export
 as.data.frame.fcwtr_scalogram <- function(x, ...) {
-  dim_t <- seq_along(x[, 1])
-  dim_f <-
-    seq2(
-      attr(x, "freq_end"), attr(x, "freq_begin"),
-      length.out = dim(x)[[2]],
-      scale = attr(x, "freq_scale")
-    )
+  dim_t <- seq_len(sc_dim_time(x))
+  dim_f <- sc_freqs(x)
 
   data.frame(
     time_index = dim_t[row(x)] - 1,
-    time = attr(x, "time_offset") + (dim_t[row(x)] - 1) / attr(x, "sample_freq"),
+    # note: the sum takes the unit of its first summand, so the time is given
+    # in the inverse unit of the sampling frequency (e.g. 1/kHz)
+    time = (dim_t[row(x)] - 1) / attr(x, "sample_freq") + attr(x, "time_offset"),
     freq = dim_f[col(x)],
     value = c(x)
   )
@@ -350,9 +379,8 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #' Convert the scalogram matrix to a tibble
 #'
 #' Internally, the scalogram resulting from [fcwt()] is represented by
-#' a numeric [matrix()]. This method converts this matrix into a three-columned
-#' [tibble::tibble()] (two columns to represent the matrix indices, and one column
-#' for the corresponding value).
+#' a numeric [matrix()]. This method converts this matrix into a
+#' [tibble::tibble()] in long format, with one row per matrix entry.
 #' Note that this conversion has a significant run time cost.
 #'
 #' This method is conceptually identical to [as.data.frame()],
@@ -361,12 +389,17 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #' @return
 #'  A [tibble::tibble()] object representing the scalogram data with four columns:
 #' \describe{
-#'   \item{time_index}{An integer index uniquely identifying time slices.}
-#'   \item{time}{The time difference to the first time slice in physical units.
-#'               The time unit is the inverse of the frequency unit chosen by the user
-#'               for the `sample_freq` argument of [fcwt()].}
-#'   \item{freq}{The frequency in the same units as the `sample_freq` argument
-#'               of [fcwt()].}
+#'   \item{time_index}{An integer index uniquely identifying time slices,
+#'               starting at 0.}
+#'   \item{time}{The time of the time slice in physical units, relative to the
+#'               beginning of the input signal (time slices that were cut off,
+#'               e.g. by subsetting, are taken into account).
+#'               The time unit is the inverse of the frequency unit chosen by
+#'               the user for the `x_sample_freq` argument of [fcwt()]
+#'               (e.g. `1/kHz` for `x_sample_freq = u(44.1, "kHz")`), and can
+#'               be converted with `units::set_units()`.}
+#'   \item{freq}{The frequency, in the units chosen by the user for the
+#'               `freq_begin` and `freq_end` arguments of [fcwt()].}
 #'   \item{value}{The fCWT result for the particular time-frequency combination.}
 #' }
 #'
@@ -422,23 +455,19 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 
 #' Extract parts of a scalogram
 #'
+#' Selects a time range and/or a frequency range of a scalogram. The time
+#' offset and the frequency range of the result are adjusted accordingly.
+#'
 #' @param x
 #'  An "fcwtr_scalogram" object resulting from [fcwt()].
 #' @param i,j
-#'  Indices corresponding to time slices of the spectogram which specify
-#'  elements to extract. Indices are numeric vectors or empty (missing)
-#'  or NULL. Numeric values are coerced to integer or whole numbers as by as.integer
-#'  or for large values by `trunc()` (and hence truncated towards zero).
-#'
-#'  The time offset of the scalogram is adjusted to correspond to `min(i)`.
-#'
-#'  For [-indexing only: i, j, ... can be logical vectors, indicating elements/slices
-#'  to select. Such vectors are recycled if necessary to match the corresponding extent.
-#'  i, j, ... can also be negative integers, indicating elements/slices to leave out of the selection.
-#'  When indexing arrays by [ a single argument i can be a matrix with as many
-#'  columns as there are dimensions of x; the result is then a vector with
-#'  elements corresponding to the sets of indices in each row of i.
-#'  An index value of NULL is treated as if it were integer(0).
+#'  Indices selecting time slices (rows, `i`) and frequencies (columns, `j`;
+#'  ordered from the highest to the lowest frequency).
+#'  Positive, negative, or logical indices are allowed, as long as they select
+#'  a contiguous, ascending range (e.g. `10:20` or `-(1:5)`), since the result
+#'  must again have evenly spaced time and frequency axes.
+#'  A missing index selects everything.
+#'  Use [as.matrix()] for arbitrary subsetting.
 #'
 #' @return
 #'  Another "fcwtr_scalogram" object that contains only part of the data.
@@ -453,17 +482,18 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #'
 #' @export
 `[.fcwtr_scalogram` <- function(x, i, j) {
-  if (!missing(i)) {
-    time_offset <- attr(x, "time_offset") + (min(i) - 1) / attr(x, "sample_freq")
-  } else {
-    time_offset <- attr(x, "time_offset")
-  }
+  i <- if (missing(i)) seq_len(sc_dim_time(x)) else contiguous_index(i, sc_dim_time(x), "time (row)")
+  j <- if (missing(j)) seq_len(sc_dim_freq(x)) else contiguous_index(j, sc_dim_freq(x), "frequency (column)")
+
+  # columns are ordered from the highest to the lowest frequency
+  freqs <- sc_freqs(x)
 
   new_fcwtr_scalogram(
     unclass(x)[i, j, drop = FALSE],
-    time_offset,
+    attr(x, "time_offset") + (i[[1]] - 1) / attr(x, "sample_freq"),
     attr(x, "sample_freq"),
-    attr(x, "freq_begin"), attr(x, "freq_end"),
+    freq_begin = freqs[[j[[length(j)]]]],
+    freq_end = freqs[[j[[1]]]],
     attr(x, "freq_scale"),
     attr(x, "sigma")
   )
@@ -522,7 +552,7 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #'  A function, taking a vector and returning a vector, that is used to
 #'  transform the scalogram values before plotting.
 #' @param ...
-#'  other arguments passed to specific methods
+#'  Additional arguments are ignored.
 #' @return
 #'  A ggplot object.
 #'

@@ -32,7 +32,7 @@ expressions.}
 \item{transf}{A function, taking a vector and returning a vector, that is used to
 transform the scalogram values before plotting.}
 
-\item{...}{other arguments passed to specific methods}
+\item{...}{Additional arguments are ignored.}
 }
 \value{
 A ggplot object.

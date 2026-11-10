@@ -14,20 +14,24 @@
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}} object representing the scalogram data with four columns:
 \describe{
-\item{time_index}{An integer index uniquely identifying time slices.}
-\item{time}{The time difference to the first time slice in physical units.
-The time unit is the inverse of the frequency unit chosen by the user
-for the \code{sample_freq} argument of \code{\link[=fcwt]{fcwt()}}.}
-\item{freq}{The frequency in the same units as the \code{sample_freq} argument
-of \code{\link[=fcwt]{fcwt()}}.}
+\item{time_index}{An integer index uniquely identifying time slices,
+starting at 0.}
+\item{time}{The time of the time slice in physical units, relative to the
+beginning of the input signal (time slices that were cut off,
+e.g. by subsetting, are taken into account).
+The time unit is the inverse of the frequency unit chosen by
+the user for the \code{x_sample_freq} argument of \code{\link[=fcwt]{fcwt()}}
+(e.g. \code{1/kHz} for \code{x_sample_freq = u(44.1, "kHz")}), and can
+be converted with \code{units::set_units()}.}
+\item{freq}{The frequency, in the units chosen by the user for the
+\code{freq_begin} and \code{freq_end} arguments of \code{\link[=fcwt]{fcwt()}}.}
 \item{value}{The fCWT result for the particular time-frequency combination.}
 }
 }
 \description{
 Internally, the scalogram resulting from \code{\link[=fcwt]{fcwt()}} is represented by
-a numeric \code{\link[=matrix]{matrix()}}. This method converts this matrix into a three-columned
-\code{\link[tibble:tibble]{tibble::tibble()}} (two columns to represent the matrix indices, and one column
-for the corresponding value).
+a numeric \code{\link[=matrix]{matrix()}}. This method converts this matrix into a
+\code{\link[tibble:tibble]{tibble::tibble()}} in long format, with one row per matrix entry.
 Note that this conversion has a significant run time cost.
 }
 \details{

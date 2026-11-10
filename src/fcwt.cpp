@@ -129,8 +129,13 @@ void Scales::calculate_linfreq_array(double fs, float f0, float f1, int fn) {
 
     float df = nf1-nf0;
 
+    // Linearly spaced frequencies from f1 (first scale) down to f0 (last
+    // scale), both inclusive, as on the logarithmic scale. (Previously the
+    // step was df/fn, so f1 was never reached and the frequencies did not
+    // match the ones reported on the R side.) For fn = 1, take f1.
     for(int i=0; i<fn; i++) {
-        scales[fn-i-1] = (((float)fs)/(nf0 + (df/fn)*(float)i));
+        float f = (fn > 1) ? nf0 + (df/(fn-1))*(float)i : nf1;
+        scales[fn-i-1] = (((float)fs)/f);
     }
 }
 

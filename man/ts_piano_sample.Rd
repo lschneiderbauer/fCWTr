@@ -5,12 +5,12 @@
 \alias{ts_piano_sample}
 \title{A simple piano audio sample}
 \format{
-A numeric vector containing a time series signal.
+A numeric vector of length 438461 containing a time series signal.
 }
 \usage{
 ts_piano_sample
 }
 \description{
-Its sample frequency is 11025 Hz.
+A piano playing the note A4 (440 Hz). Its sample frequency is 11025 Hz.
 }
 \keyword{datasets}

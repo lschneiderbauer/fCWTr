@@ -1,23 +1,22 @@
 
 #' Check for OpenMP support
 #'
-#' This function checks if OpenMP support is enabled. It is responsible for
-#' the multithreading capabilities of [fcwt()]. If OpenMP is not enabled
-#' the parameter `n_threads` of [fcwt()] is ignored.
+#' This function checks if fCWTr was compiled with OpenMP support. It is
+#' responsible for the multithreading capabilities of [fcwt()]. If OpenMP is
+#' not enabled the parameter `n_threads` of [fcwt()] is ignored.
 #'
 #' @details
-#' OpenMP can be used by the underlying fCWT library if
-#' * the fftw library on your platform was compiled with OpenMP support and
-#' * the fCWTr package itself was compiled with OpenMP support.
+#' OpenMP is used (both by fCWTr itself and by the fftw library) if
+#' * the compiler supports OpenMP, and
+#' * the fftw library on your platform comes with OpenMP support
+#'   (`libfftw3f_omp`).
 #'
-#' When using pre-built package binaries (like it is typical when you are using
-#' R on Windows), it depends on the (CRAN) build server whether or not
-#' these conditions are met. They cannot be influenced by the package author.
+#' On Windows, OpenMP support is disabled, since the fftw library provided
+#' by Rtools is compiled without OpenMP support.
 #'
-#' If the user is building the R package yourself, the user needs to make sure
-#' that the fftw library on her platform are built with OpenMP support.
-#' The fCWTr package is configured to use OpenMP if fftw-OpenMP support is
-#' available.
+#' When using pre-built package binaries, it depends on the (CRAN) build server
+#' whether or not these conditions are met. When installing the package from
+#' source, the installation script detects whether these conditions are met.
 #'
 #' @return ( `TRUE` | `FALSE` )
 #'  Returns `TRUE` if OpenMP support is enabled, `FALSE` otherwise.

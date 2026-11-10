@@ -20,7 +20,7 @@ The function errs if these conditions are not satisfied.
 }
 \details{
 The scalograms are stitched together in chronological fashion (i.e. the first
-argument will the initial piece, etc.).
+argument will be the initial piece, etc.).
 Time offset information is kept from the first piece.
 }
 \examples{

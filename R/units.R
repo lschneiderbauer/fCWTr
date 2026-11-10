@@ -21,7 +21,7 @@ u <- function(x, unit = "1") {
   stopifnot(is.numeric(x))
   stopifnot(is.character(unit))
   # x must be a pure number
-  stopifnot("Argument must a unitless number" = !inherits(x, "units"))
+  stopifnot("Argument must be a unitless number" = !inherits(x, "units"))
 
   # mode required because we pass a string instead of an expression
   units::set_units(x, unit, mode = "standard")
@@ -46,7 +46,7 @@ u <- function(x, unit = "1") {
 #'  # from x in units of "meter"
 #'  du(x, "m")
 #'
-#'  # drop the unit of a dimensionaless "unit" quantity
+#'  # drop the unit of a dimensionless "unit" quantity
 #'  du(x / x)
 #'
 #' @seealso [units::drop_units()]
@@ -75,7 +75,7 @@ ddu <- function(x) {
 #' @noRd
 has_comp_unit <- function(x, unit) {
   stopifnot(
-    "The first argument needs to of s3 class `unit`" = inherits(x, "units")
+    "The first argument needs to be of S3 class `units`" = inherits(x, "units")
   )
 
   units::ud_are_convertible(units(x), units(u(1, unit)))

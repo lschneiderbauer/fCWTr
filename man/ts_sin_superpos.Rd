@@ -5,13 +5,14 @@
 \alias{ts_sin_superpos}
 \title{Superimposed sine waves of different frequencies and different amplitudes}
 \format{
-A numeric vector containing a time series signal.
+A numeric vector of length 6000 containing a time series signal.
 }
 \usage{
 ts_sin_superpos
 }
 \description{
-Assuming a sample rate of 44100 Hz, the superimposed signals' frequencies are
-440 Hz, 880 Hz, 100 Hz, 500 Hz, 1200 Hz and 50 Hz.
+Assuming a sample rate of 44100 Hz, the signal consists of two consecutive
+parts of 3000 samples each: superimposed sine waves of 440 Hz, 880 Hz and
+100 Hz in the first part, and of 500 Hz, 1200 Hz and 50 Hz in the second part.
 }
 \keyword{datasets}

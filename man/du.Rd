@@ -27,7 +27,7 @@ The dimensionless number is defined by the ratio of \code{x} and one unit \code{
  # from x in units of "meter"
  du(x, "m")
 
- # drop the unit of a dimensionaless "unit" quantity
+ # drop the unit of a dimensionless "unit" quantity
  du(x / x)
 
 }

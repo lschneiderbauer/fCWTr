@@ -9,26 +9,20 @@
 \arguments{
 \item{x}{An "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
 
-\item{i, j}{Indices corresponding to time slices of the spectogram which specify
-elements to extract. Indices are numeric vectors or empty (missing)
-or NULL. Numeric values are coerced to integer or whole numbers as by as.integer
-or for large values by \code{trunc()} (and hence truncated towards zero).
-
-The time offset of the scalogram is adjusted to correspond to \code{min(i)}.
-
-For [-indexing only: i, j, ... can be logical vectors, indicating elements/slices
-to select. Such vectors are recycled if necessary to match the corresponding extent.
-i, j, ... can also be negative integers, indicating elements/slices to leave out of the selection.
-When indexing arrays by [ a single argument i can be a matrix with as many
-columns as there are dimensions of x; the result is then a vector with
-elements corresponding to the sets of indices in each row of i.
-An index value of NULL is treated as if it were integer(0).}
+\item{i, j}{Indices selecting time slices (rows, \code{i}) and frequencies (columns, \code{j};
+ordered from the highest to the lowest frequency).
+Positive, negative, or logical indices are allowed, as long as they select
+a contiguous, ascending range (e.g. \code{10:20} or \code{-(1:5)}), since the result
+must again have evenly spaced time and frequency axes.
+A missing index selects everything.
+Use \code{\link[=as.matrix]{as.matrix()}} for arbitrary subsetting.}
 }
 \value{
 Another "fcwtr_scalogram" object that contains only part of the data.
 }
 \description{
-Extract parts of a scalogram
+Selects a time range and/or a frequency range of a scalogram. The time
+offset and the frequency range of the result are adjusted accordingly.
 }
 \examples{
 fcwt(

@@ -18,6 +18,8 @@
 
     -   the time axis of the result was wrong if `x_sample_freq / y_sample_freq` is not an integer: the result now records the actual output sampling rate (which can be slightly higher than `y_sample_freq`).
 
+    -   with `freq_scale = "linear"`, the frequencies actually computed did not match the reported ones (only the lowest one did): they now range from `freq_begin` to `freq_end` (both inclusive), as for `freq_scale = "log"`.
+
 -   `fcwt()`: `n_threads` must be at least 1.
 
 -   `fcwt()` no longer changes the global OpenMP thread setting of the R session.
@@ -25,6 +27,22 @@
 -   very large inputs (more than 2^31 output values) are now supported (previously: integer overflow), and failing memory allocations raise an error instead of leading to undefined behavior.
 
 -   `fcwt()` needs considerably less memory: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).
+
+-   `fcwt_batch()`:
+
+    -   the defaults of `sigma` and `n_freqs` are now the same as for `fcwt()` (previously `sigma = 1`, and `n_freqs` was a third lower).
+
+    -   the default `max_batch_size` is now chosen such that processing a batch needs about 500 MB of memory, taking into account the reduced memory usage of `fcwt()` and the averaging over time windows (`y_sample_freq`). Previously, the batches were often unnecessarily small, which lead to large losses from boundary effects.
+
+-   subsetting a scalogram with `[`:
+
+    -   selecting frequencies (columns) now adjusts the frequency range; previously, the frequency labels were wrong.
+
+    -   negative and logical indices now adjust the time offset correctly. Indices that do not select a contiguous range raise an error (they cannot be represented by evenly spaced axes), use `as.matrix()` instead.
+
+-   `as.data.frame()` / `as_tibble()`: the `time` column is again given in the inverse unit of the sampling frequency (e.g. `1/kHz`), as documented, instead of always in seconds.
+
+-   documentation fixes and improvements.
 
 # fCWTr 0.3.0
 

@@ -44,7 +44,7 @@ sigma_res <- function(sigma, freq) {
 #'
 #' @return
 #'  A number `p` representing the relative frequency resolution. I.e. at a given
-#'  resolution `f`, the frequency resolution is `f*p`.
+#'  frequency `f`, the frequency resolution is `f*p`.
 #'
 #' @examples
 #' sigma_freq_res_rel(1)
@@ -112,7 +112,7 @@ sigma_from_freq_res <- function(res, freq) {
 #' the value of sigma for a particular time resolution requirement.
 #'
 #' @param res
-#'  The required time resolution in frequency units (see [u()]).
+#'  The required time resolution in time units (see [u()]).
 #'
 #' @param freq
 #'  The reference frequency where the required resolution must hold.

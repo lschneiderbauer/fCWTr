@@ -112,3 +112,78 @@ test_that("invalid sizes raise an error", {
     "Window size"
   )
 })
+
+test_that("subsetting frequencies keeps the frequency labels", {
+  sc <- fcwt(ts_sin_440[1:1000], x_sample_freq = 44100, y_sample_freq = 44100,
+             freq_begin = 50, freq_end = 1000, n_freqs = 10, sigma = 1)
+
+  freqs <- unique(as.data.frame(sc)$freq)
+  freqs_sub <- unique(as.data.frame(sc[, 2:4])$freq)
+
+  expect_equal(as.numeric(freqs_sub), as.numeric(freqs[2:4]))
+  expect_equal(as.matrix(sc[, 2:4]), as.matrix(sc)[, 2:4])
+})
+
+test_that("subsetting time slices adjusts the time offset", {
+  sc <- fcwt(ts_sin_440[1:1000], x_sample_freq = 44100, y_sample_freq = 44100,
+             freq_begin = 50, freq_end = 1000, n_freqs = 5, sigma = 1)
+  t_all <- as.data.frame(sc)$time
+
+  expect_equal(as.data.frame(sc[-(1:3), ])$time[[1]], t_all[[4]])
+  expect_equal(as.data.frame(sc[c(FALSE, TRUE, rep(TRUE, 998)), ])$time[[1]], t_all[[2]])
+
+  # cannot be represented by an evenly spaced axis
+  expect_error(sc[c(1, 3), ], "contiguous")
+  expect_error(sc[c(FALSE, TRUE), ], "contiguous")
+  expect_error(sc[, c(1, 3)], "contiguous")
+  expect_error(sc[2000, ], "contiguous")
+})
+
+test_that("time is given in the inverse unit of the sampling frequency", {
+  sc <- fcwt(ts_sin_440[1:1000], x_sample_freq = u(44.1, "kHz"),
+             y_sample_freq = u(44.1, "kHz"), freq_begin = 50, freq_end = 1000,
+             n_freqs = 5, sigma = 1)
+  df <- as.data.frame(sc)
+
+  expect_equal(as.character(units(df$time)), "1/kHz")
+  expect_equal(as.numeric(df$time[[11]]), 10 / 44.1)
+
+  # also with a time offset
+  df2 <- as.data.frame(sc[11:1000, ])
+  expect_equal(as.character(units(df2$time)), "1/kHz")
+  expect_equal(as.numeric(df2$time[[1]]), 10 / 44.1)
+})
+
+test_that("frequencies of a linear scale match the labels", {
+  set.seed(3)
+  x <- rnorm(4096)
+  single <- function(f) {
+    # transform at exactly one frequency f
+    fcwt_raw(x, 1000, f / 2, f, 1L, 2, 1L, 1L, FALSE)
+  }
+
+  sc <- fcwt(x, x_sample_freq = 1000, y_sample_freq = 1000, freq_begin = 50,
+             freq_end = 150, n_freqs = 3, freq_scale = "linear", sigma = 2,
+             rm_coi = FALSE)
+  freqs <- as.numeric(unique(as.data.frame(sc)$freq))
+
+  expect_equal(freqs, c(150, 100, 50))
+  # (not exact: the single-frequency transform computes its scale slightly
+  # differently, which shifts the discretized wavelet; with the previous bug,
+  # the relative differences were of order 1)
+  for (k in 1:3) {
+    expect_equal(as.matrix(sc)[, k], single(freqs[[k]]), tolerance = 1e-2)
+  }
+})
+
+test_that("fcwt_batch() has the same defaults as fcwt()", {
+  shared <- c("sigma", "y_sample_freq", "freq_begin", "freq_end", "n_freqs",
+              "freq_scale", "n_threads")
+  expect_equal(formals(fcwt_batch)[shared], formals(fcwt)[shared])
+})
+
+test_that("fcwt_batch() works with a single frequency", {
+  res <- fcwt_batch(ts_sin_440, x_sample_freq = 44100, y_sample_freq = 441,
+                    freq_begin = 400, freq_end = 500, n_freqs = 1, sigma = 2)
+  expect_equal(sc_dim_freq(res), 1)
+})

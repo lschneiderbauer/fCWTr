@@ -25,7 +25,7 @@ fcwt(
 a connection to physical units which is used in other frequency definitions
 as well as the units of the output data. Expects either a value with frequency
 units, generated with \code{\link[=u]{u()}}, or a pure number, in which case it is
-interpreted in units of 'Hertz'.}
+interpreted in units of 'Hertz'. It does not need to be an integer.}
 
 \item{sigma}{Sets a dimensionless parameter \eqn{\Sigma} controlling the wavelet spread.
 Changing this parameter adjusts the time/frequency uncertainty balance,
@@ -37,7 +37,9 @@ For more information, see \code{vignette("sigma", package = "fCWTr")}).
 
 Defaults to \eqn{2\pi}. Note that there is not really a natural choice for
 sigma, it depends on the use case. So the default choice can very well be
-quite a bad choice (it probably is for audio data).}
+quite a bad choice (it probably is for audio data).
+See \code{\link[=sigma_from_time_res]{sigma_from_time_res()}}, \code{\link[=sigma_from_freq_res]{sigma_from_freq_res()}} and
+\code{\link[=sigma_from_freq_res_rel]{sigma_from_freq_res_rel()}} to determine sigma from resolution requirements.}
 
 \item{y_sample_freq}{Sampling rate of output time series, in frequency units (see \code{\link[=u]{u()}}).
 The default value is set so that it aligns with the physical time resolution
@@ -49,9 +51,11 @@ samples, the actual output sampling rate is \code{x_sample_freq / k}, where
 \code{k = floor(x_sample_freq / y_sample_freq)}. It is equal to or slightly
 higher than \code{y_sample_freq} and is stored in the result.}
 
-\item{freq_begin, freq_end}{Optionally specifies the frequency range \verb{[freq_end, freq_begin]}. If not
+\item{freq_begin, freq_end}{Optionally specifies the frequency range \verb{[freq_begin, freq_end]}
+(both inclusive). If not
 specified the maximal meaningful frequency range, depending on the input signal,
-is taken.
+is taken: from \code{2 * x_sample_freq / length(x)} up to the Nyquist frequency
+\code{x_sample_freq / 2}.
 A frequency-valued number, generated with \code{\link[=u]{u()}}, or a pure number, that is
 interpreted in units of 'Hertz'.}
 
@@ -68,23 +72,22 @@ not exactly aligned, the output signal will be dampened. In this case it
 can be useful to increase \code{n_freqs} and perform appropriate averaging
 afterwards: the output signal will show improved response.}
 
-\item{freq_scale}{( \code{"log"} | \code{"linear"} )
-Should the frequency scale be linear or logarithmic?
-"linear"  / "log" for linear / logarithmic.
+\item{freq_scale}{One of \code{"log"} (default) or \code{"linear"}: should the \code{n_freqs} frequencies be
+distributed logarithmically or linearly between \code{freq_begin} and \code{freq_end}?
 The default scale is logarithmic since differences on a logarithmic scale
 are proportional to the frequency uncertainties.
 In this sense, the logarithmic frequency scale is actually the natural
 scale for the continuous wavelet transform.}
 
-\item{rm_coi}{( \link{TRUE} | \link{FALSE} )
+\item{rm_coi}{\code{TRUE} (default) or \code{FALSE}.
 Boundary effects can result in nonphysical artifacts. If \code{rm_coi = TRUE},
-those are effectively removed by setting corresponding values to \link{NA}.
-We define the essential support of the
-(Gaussian) wavelet to be four times its standard deviation,
-\eqn{\Delta t = \frac{\sigma}{f}}, and so a wavelet touches
+those are effectively removed by setting corresponding values to \code{NA}.
+We define the essential support of the (Gaussian) wavelet at frequency
+\eqn{f} to be four times its standard deviation \eqn{\Sigma / f}, i.e.
+\eqn{\Delta t = 4 \frac{\Sigma}{f}}, and so a wavelet touches
 the boundary if the distance of the center of the wavelet to the boundary
-is less then \eqn{\Delta t /2}. Values that fall into that range are removed
-if \code{rm_coi = TRUE}.}
+is less than \eqn{\Delta t / 2}. Values that fall into that range
+(the "cone of influence") are removed if \code{rm_coi = TRUE}.}
 
 \item{n_threads}{Number of threads used by the computation, if supported by your platform.
 Defaults to 2 threads (to accommodate CRAN requirements).
@@ -92,8 +95,13 @@ If \code{\link[=openmp_enabled]{openmp_enabled()}} returns \code{FALSE}, this ar
 only a single thread is used.}
 }
 \value{
-The spectogram, a numeric real-valued matrix with dimensions
-\code{dim = c(length(x), n_freqs)}, curated with some additional properties.
+The scalogram, a numeric real-valued matrix with a time (rows) and a
+frequency (columns) dimension, curated with some additional properties.
+Its dimensions are \code{c(ceiling(length(x) / k), n_freqs)}, where \code{k} is the
+number of input samples averaged per output sample (see \code{y_sample_freq};
+\code{k = 1} if \code{y_sample_freq = x_sample_freq}). The columns are ordered from
+the highest (\code{freq_end}) to the lowest (\code{freq_begin}) frequency.
+
 This matrix is wrapped into a S3-class \code{fcwtr_scalogram} so that plotting and
 coercion functions can be used conveniently. Use \code{\link[=as.matrix]{as.matrix()}} to strip
 the curated information. Or use \code{\link[=as.data.frame]{as.data.frame()}} to convert to another

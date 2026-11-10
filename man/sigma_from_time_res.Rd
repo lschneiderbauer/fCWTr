@@ -7,7 +7,7 @@
 sigma_from_time_res(res, freq)
 }
 \arguments{
-\item{res}{The required time resolution in frequency units (see \code{\link[=u]{u()}}).}
+\item{res}{The required time resolution in time units (see \code{\link[=u]{u()}}).}
 
 \item{freq}{The reference frequency where the required resolution must hold.
 Must be a quantity with frequency units (see \code{\link[=u]{u()}}).}
