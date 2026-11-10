@@ -191,5 +191,5 @@ fcwt_batch(
 #>   o Relative frequency resolution:  0.06366198 
 #> * Time/frequency matrix summary
 #>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-#> 1.000e-11 8.530e-09 1.848e-08 1.991e-05 4.624e-08 2.117e-03 
+#> 1.000e-08 4.060e-06 8.440e-06 8.707e-03 2.034e-05 9.055e-01 
 ```

@@ -38,7 +38,7 @@ fcwt(
   as.matrix()
 #>                [,1]         [,2]         [,3]         [,4]         [,5]
 #>   [1,]           NA           NA           NA           NA           NA
-#>               [,6] [,7] [,8] [,9] [,10]
-#>   [1,]          NA   NA   NA   NA    NA
+#>             [,6] [,7] [,8] [,9] [,10]
+#>   [1,]        NA   NA   NA   NA    NA
 #>  [ reached 'max' / getOption("max.print") -- omitted 312 rows ]
 ```

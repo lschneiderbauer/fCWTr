@@ -61,5 +61,5 @@ fcwt(
 #>   o Relative frequency resolution:  0.1013212 
 #> * Time/frequency matrix summary
 #>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs 
-#> 7.432e-06 3.889e-05 4.135e-05 1.139e-04 5.253e-05 1.624e-03      3044 
+#> 1.141e-07 7.504e-07 1.504e-06 8.172e-05 6.844e-06 1.578e-03      3044 
 ```

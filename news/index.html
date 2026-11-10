@@ -43,7 +43,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="fcwtr-031">fCWTr 0.3.1<a class="anchor" aria-label="anchor" href="#fcwtr-031"></a></h2>
-<ul><li>fix CRAN issues</li>
+<ul><li><p>fix CRAN issues</p></li>
+<li>
+<p>bug fixes in the transform (results change numerically):</p>
+<ul><li><p>values of a frequency band no longer leak into the following (lower-frequency) bands.</p></li>
+<li><p>for odd signal lengths, every other frequency band was shifted by one sample in time.</p></li>
+<li><p>averaging over time windows (<code>y_sample_freq</code> lower than <code>x_sample_freq</code>) under-estimated the mean.</p></li>
+<li><p><code>n_freqs = 1</code> with <code>freq_scale = "log"</code> returned garbage.</p></li>
+<li><p>fix undefined behavior (memory alignment) that could lead to crashes on some CPUs.</p></li>
+</ul></li>
+<li><p><code><a href="../reference/fcwt.html">fcwt()</a></code>: <code>n_threads</code> must be at least 1.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="fcwtr-030">fCWTr 0.3.0<a class="anchor" aria-label="anchor" href="#fcwtr-030"></a></h2>
