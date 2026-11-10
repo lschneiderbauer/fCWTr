@@ -574,10 +574,11 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000,
     ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
     geom_raster() +
     viridis::scale_fill_viridis(discrete = FALSE) +
-    units::scale_x_units(name = "Time", unit = time_unit) +
-    units::scale_y_units(
-      name = "Frequency", unit = freq_unit,
-      transform = transform
-    ) +
+    # set axis names via labs(), not via the scales' `name` argument:
+    # with ggplot2 >= 4.0, units only appends the unit ("[s]") to label titles,
+    # an explicit scale name takes precedence and is shown without unit.
+    units::scale_x_units(unit = time_unit) +
+    units::scale_y_units(unit = freq_unit, transform = transform) +
+    ggplot2::labs(x = "Time", y = "Frequency") +
     ggplot2::theme_minimal()
 }
