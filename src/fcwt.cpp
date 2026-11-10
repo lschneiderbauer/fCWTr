@@ -126,13 +126,30 @@ Scales::Scales(Wavelet *wav, SCALETYPE st, int afs, float af0, float af1, int af
     fourwavl = wav->four_wavelen;
     nscales = afn;
 
-    if(st==SCALETYPE::FCWT_LOGSCALES)
-        calculate_logscale_array(2.0f, wav->four_wavelen, afs, af0, af1, afn);
-    // else if(st==SCALETYPE::FCWT_LINSCALES)
-    //    calculate_linscale_array(wav->four_wavelen, afs, af0, af1, afn);
-    else
-        calculate_linfreq_array(wav->four_wavelen, afs, af0, af1, afn);
+    // if the constructor throws, the destructor is not called: free manually
+    try {
+        if(st==SCALETYPE::FCWT_LOGSCALES)
+            calculate_logscale_array(2.0f, wav->four_wavelen, afs, af0, af1, afn);
+        // else if(st==SCALETYPE::FCWT_LINSCALES)
+        //    calculate_linscale_array(wav->four_wavelen, afs, af0, af1, afn);
+        else
+            calculate_linfreq_array(wav->four_wavelen, afs, af0, af1, afn);
 
+        // Guard against invalid scales: downstream (in particular the AVX code
+        // path of daughter_wavelet_multiplication) uses them to compute array
+        // indices, and e.g. a NaN scale leads to out-of-bounds memory access.
+        for(int i=0; i<afn; i++) {
+            if(!std::isfinite(scales[i]) || scales[i] <= 0) {
+                throw std::runtime_error(
+                    "Internal error: computed wavelet scales are invalid (not finite or not positive)."
+                );
+            }
+        }
+    } catch(...) {
+        free(scales);
+        scales = NULL;
+        throw;
+    }
 }
 
 /*

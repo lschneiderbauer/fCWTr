@@ -46,6 +46,8 @@ limitations under the License.
 #include <chrono>
 #include <cassert>
 #include <math.h>
+#include <cmath>
+#include <stdexcept>
 #include <complex>
 
 #include <iostream>

@@ -50,3 +50,11 @@ test_that("a single frequency on log scale works", {
   expect_true(all(is.finite(r)))
   expect_gt(max(r), 1e-3)
 })
+
+test_that("invalid scales raise an error instead of crashing", {
+  # f0 = 0 leads to an infinite scale (bypassing the R-level argument checks)
+  expect_error(
+    fcwt_raw(sin(1:64), 1000L, 0, 100, 5L, 2, 1L, 1L, FALSE, FALSE),
+    "scales are invalid"
+  )
+})
