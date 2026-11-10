@@ -22,10 +22,10 @@ sigma_freq_res_rel(1)
 
 }
 \seealso{
-Other sigma: 
-\code{\link{sigma_from_freq_res}()},
-\code{\link{sigma_from_freq_res_rel}()},
-\code{\link{sigma_from_time_res}()},
-\code{\link{sigma_res}()}
+Other sigma:
+\code{\link[=sigma_from_freq_res]{sigma_from_freq_res()}},
+\code{\link[=sigma_from_freq_res_rel]{sigma_from_freq_res_rel()}},
+\code{\link[=sigma_from_time_res]{sigma_from_time_res()}},
+\code{\link[=sigma_res]{sigma_res()}}
 }
 \concept{sigma}

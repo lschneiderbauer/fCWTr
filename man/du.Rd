@@ -11,7 +11,7 @@ du(x, unit = "1")
 subsequent calculations.}
 
 \item{unit}{A character indicating the unit. See \code{\link[units:valid_udunits]{units::valid_udunits()}} and
-\code{\link[units:valid_udunits]{units::valid_udunits_prefixes()}} for possible units.}
+\code{\link[units:valid_udunits_prefixes]{units::valid_udunits_prefixes()}} for possible units.}
 }
 \value{
 A dimensionless number defined by the ratio of \code{x} and one unit \code{u(1, unit)}.

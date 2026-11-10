@@ -30,10 +30,10 @@ sigma_res(1, u(440, "Hz"))
 
 }
 \seealso{
-Other sigma: 
-\code{\link{sigma_freq_res_rel}()},
-\code{\link{sigma_from_freq_res}()},
-\code{\link{sigma_from_freq_res_rel}()},
-\code{\link{sigma_from_time_res}()}
+Other sigma:
+\code{\link[=sigma_freq_res_rel]{sigma_freq_res_rel()}},
+\code{\link[=sigma_from_freq_res]{sigma_from_freq_res()}},
+\code{\link[=sigma_from_freq_res_rel]{sigma_from_freq_res_rel()}},
+\code{\link[=sigma_from_time_res]{sigma_from_time_res()}}
 }
 \concept{sigma}

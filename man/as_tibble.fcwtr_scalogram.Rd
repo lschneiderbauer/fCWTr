@@ -35,7 +35,7 @@ This method is conceptually identical to \code{\link[=as.data.frame]{as.data.fra
 it simply returns a \code{\link[tibble:tibble]{tibble::tibble()}} instead of a \code{\link[=data.frame]{data.frame()}}.
 }
 \examples{
-\dontshow{if (requireNamespace("tibble", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("tibble", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 library(tibble)
 
 fcwt(

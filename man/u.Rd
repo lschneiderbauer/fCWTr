@@ -10,10 +10,10 @@ u(x, unit = "1")
 \item{x}{A numeric vector to be augmented with a unit.}
 
 \item{unit}{A character indicating the unit. See \code{\link[units:valid_udunits]{units::valid_udunits()}} and
-\code{\link[units:valid_udunits]{units::valid_udunits_prefixes()}} for possible units.}
+\code{\link[units:valid_udunits_prefixes]{units::valid_udunits_prefixes()}} for possible units.}
 }
 \description{
-A wrapper around \code{\link[units:units]{units::set_units()}} mostly to have a short name to
+A wrapper around \code{\link[units:set_units]{units::set_units()}} mostly to have a short name to
 create a dimensionful quantity.
 }
 \examples{
@@ -25,5 +25,5 @@ u(100, "m") > u(1, "km")
 
 }
 \seealso{
-\code{\link[units:units]{units::set_units()}}
+\code{\link[units:set_units]{units::set_units()}}
 }

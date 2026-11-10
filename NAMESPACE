@@ -20,6 +20,8 @@ export(sigma_from_time_res)
 export(sigma_res)
 export(u)
 importFrom(graphics,plot)
-importFrom(utils,setTxtProgressBar)
-importFrom(utils,txtProgressBar)
+importFrom(utils,
+  setTxtProgressBar,
+  txtProgressBar
+)
 useDynLib(fCWTr, .registration = TRUE)
