@@ -1,22 +1,9 @@
 #include "cpp11.hpp"
 #include "fcwt.h"
-#include <algorithm>
 #include <complex>
 
 double my_abs(const std::complex<float> &arg) {
   return std::abs(arg);
-}
-
-double my_real(const std::complex<float> &arg) {
-  return std::real(arg);
-}
-
-double my_imag(const std::complex<float> &arg) {
-  return std::imag(arg);
-}
-
-float dbl_to_float(const double &dbl) {
-  return static_cast<float>(dbl);
 }
 
 [[cpp11::register]]
@@ -37,9 +24,11 @@ cpp11::r_bool has_avx() {
   #endif
 }
 
+// Returns the absolute values of the CWT as a (time x frequency) matrix in
+// column-major order, averaged over windows of `window_size` samples.
 [[cpp11::register]]
-std::vector<double> fcwt_raw(
-    std::vector<double> signal,
+cpp11::writable::doubles fcwt_raw(
+    cpp11::doubles signal,
     double fs, // sample frequency (same unit as f0, f1)
     double f0, // beginning of frequency range
     double f1, // end of frequency range
@@ -47,10 +36,9 @@ std::vector<double> fcwt_raw(
     double sigma,
     int window_size,
     int nthreads,
-    bool scaletype, // TRUE = linear, FALSE = log
-    bool optplans)
+    bool scaletype) // TRUE = linear, FALSE = log
 {
-  if (signal.size() < 1 || signal.size() > (size_t)FCWT_MAX_SIZE) {
+  if (signal.size() < 1 || signal.size() > (R_xlen_t)FCWT_MAX_SIZE) {
     cpp11::stop("Signal length must be between 1 and 2^30 (use `fcwt_batch()` for longer signals).");
   }
   if (fn < 1) {
@@ -59,97 +47,61 @@ std::vector<double> fcwt_raw(
   if (window_size < 1) {
     cpp11::stop("Window size must be at least 1.");
   }
+  if (nthreads < 1) {
+    cpp11::stop("Number of threads must be at least 1.");
+  }
 
   int n = signal.size(); //signal length (fits into int, see check above)
 
   // cast double input to float
   std::vector<float> signal_f(n);
-  std::transform(signal.cbegin(), signal.cend(), signal_f.begin(), dbl_to_float);
-
-  //output: n x scales complex numbers
-  // std::vector<float> output(n*noctaves*nsuboctaves*2);
-  // n * fn can exceed the int range: compute sizes and indices in size_t.
-  // (std::vector throws std::bad_alloc if the memory is not available,
-  // which cpp11 turns into an R error.)
-  std::vector<std::complex<float>> output((size_t)n * fn);
-
-  //Create a wavelet object
-  Wavelet *wavelet;
-
-  //Initialize a Morlet wavelet having sigma=sigma;
-  Morlet morl(sigma);
-  wavelet = &morl;
-
-  //Create the continuous wavelet transform object
-  //constructor(wavelet, nthreads, optplan)
-  //
-  //Arguments
-  //wavelet   - pointer to wavelet object
-  //nthreads  - number of threads to use
-  //optplan   - use FFTW optimization plans if true
-  //normalization - take extra time to normalize time-frequency matrix
-  FCWT fcwt(wavelet, nthreads, optplans, true);
-
-  //Generate frequencies
-  //constructor(wavelet, dist, fs, f0, f1, fn)
-  //
-  //Arguments
-  //wavelet   - pointer to wavelet object
-  //dist      - FCWT_LOGSCALES | FCWT_LINFREQS for logarithmic or linear distribution frequency range
-  //fs        - sample frequency
-  //f0        - beginning of frequency range
-  //f1        - end of frequency range
-  //fn        - number of wavelets to generate across frequency range
-  SCALETYPE st;
-
-  if (scaletype) {
-    st = FCWT_LINFREQS;
-  } else {
-    st = FCWT_LOGSCALES;
+  for (int i = 0; i < n; i++) {
+    signal_f[i] = static_cast<float>(signal[i]);
   }
-  Scales scs(wavelet, st, fs, f0, f1, fn);
 
-  //Perform a CWT
-  //cwt(input, length, output, scales)
-  //
-  //Arguments:
-  //input     - floating pointer to input array
-  //length    - integer signal length
-  //output    - floating pointer to output array
-  //scales    - pointer to scales object
-  fcwt.cwt(&signal_f[0], n, &output[0], &scs);
-
-  std::vector<double> abs_output;
-
-  // in case of averaging
+  // number of time steps after averaging over windows
   // (integer ceil division: a float cannot represent large n exactly)
   int target_time_n = (int)(((size_t)n + window_size - 1) / window_size);
 
-  // convert to absolute value
-  abs_output = std::vector<double> ((size_t)target_time_n * fn);
+  // The result is written directly into an R vector (no copy on return).
+  // The complex transform itself is never stored as a whole: every row is
+  // processed as soon as it is computed (see the callback below).
+  // n * fn can exceed the int range: compute sizes and indices in size_t.
+  cpp11::writable::doubles abs_output((R_xlen_t)((size_t)target_time_n * fn));
+  double *out = REAL(static_cast<SEXP>(abs_output));
 
-  if (window_size > 1) {
-    // perform my_abs and averaging at the same time
-    for (int f = 0; f < fn; f++) {
-      // for each frequency do the window averaging
+  //Initialize a Morlet wavelet having sigma=sigma;
+  Morlet morl(sigma);
+
+  //Create the continuous wavelet transform object
+  FCWT fcwt(&morl, nthreads);
+
+  SCALETYPE st = scaletype ? FCWT_LINFREQS : FCWT_LOGSCALES;
+  Scales scs(st, fs, f0, f1, fn);
+
+  // Absolute value (and window averaging) of one row (frequency)
+  auto process_row = [&](int f, const std::complex<float> *row) {
+    double *out_row = out + (size_t)f * target_time_n;
+
+    if (window_size > 1) {
       for (int w = 0; w < target_time_n; w++) {
-
-        // first iteration
-        double mean = 0; // does not contribute because first term cancels
+        double mean = 0;
         int count = 0;
         for (size_t i = (size_t)w * window_size; i < (size_t)(w+1) * window_size && i < (size_t)n; i++) {
           count += 1;
           // running mean (note: floating point division, count is an int)
-          mean = (double)(count - 1) / count * mean + my_abs(output[(size_t)f * n + i]) / count;
+          mean = (double)(count - 1) / count * mean + my_abs(row[i]) / count;
         }
-
-        abs_output[(size_t)f * target_time_n + w] = mean;
+        out_row[w] = mean;
+      }
+    } else {
+      for (int i = 0; i < n; i++) {
+        out_row[i] = my_abs(row[i]);
       }
     }
-  } else {
-    std::transform(output.cbegin(), output.cend(), abs_output.begin(), my_abs);
-  }
+  };
 
+  fcwt.cwt(signal_f.data(), n, &scs, process_row);
 
-  return(abs_output);
+  return abs_output;
 }

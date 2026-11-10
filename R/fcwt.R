@@ -179,8 +179,7 @@ fcwt <- function(x,
       as.integer(n_freqs), sigma,
       as.integer(w$size_n),
       as.integer(n_threads),
-      freq_scale_lgl,
-      FALSE
+      freq_scale_lgl
     )
 
   # if (!abs) {

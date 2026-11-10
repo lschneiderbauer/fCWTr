@@ -17,61 +17,43 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /*
- Minor modifications made by Lukas Schneiderbauer
+ Modified by Lukas Schneiderbauer for the R package fCWTr: reduced to the
+ parts used by the package (real input, Morlet wavelet, FFT-based transform),
+ output is handed over row by row, bug fixes. See the git history of fCWTr
+ for details.
 */
 
 
 #ifndef FCWT_H
 #define FCWT_H
 
-#ifdef _WIN32
-  #ifdef FCWT_LIBRARY_DLL_BUILDING
-    #define FCWT_LIBRARY_API __declspec(dllexport)
-  #else
-    #if FCWT_LIBRARY_DLL
-      #define FCWT_LIBRARY_API __declspec(dllimport)
-    #else /* static or header-only library on Windows */
-      #define FCWT_LIBRARY_API
-    #endif
-  #endif
-#else /* Unix */
-  #define FCWT_LIBRARY_API
-#endif
-
-#include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
-#include <stdbool.h>
-#include <vector>
-#include <chrono>
-#include <cassert>
 #include <math.h>
 #include <cmath>
-#include <stdexcept>
-#include <new>
+#include <algorithm>
 #include <complex>
-
-#include <iostream>
-#include <sstream>
+#include <functional>
+#include <new>
+#include <stdexcept>
+#include <vector>
 
 #ifndef _OPENMP
     // if we have no platform support, enable single_threading
     #define SINGLE_THREAD
 #endif
 #ifdef _WIN32
-    #include <windows.h>
+    #include <malloc.h> // _aligned_malloc
 
     // disable on windows since rtools does compile fftw without openmp support
     #define SINGLE_THREAD
-#else
-    #include <unistd.h>
 #endif
 #ifndef SINGLE_THREAD
     #include <omp.h>
 #endif
 
 #include "fftw3.h"
-#include <memory>
+
 //check if avx is supported and include the header
 #if defined(__AVX__)
     #include <immintrin.h>
@@ -83,99 +65,73 @@ limitations under the License.
 #endif
 
 #define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
-#define sqrt2PI               2.50662827463100050241576528f
 #define IPI4                  0.75112554446f
 
 using namespace std;
 
-enum SCALETYPE {FCWT_LINSCALES,FCWT_LOGSCALES,FCWT_LINFREQS};
+enum SCALETYPE {FCWT_LOGSCALES,FCWT_LINFREQS};
 
+// Mother wavelet, given in the frequency domain.
 class Wavelet {
 public:
-    Wavelet() {};
-    // virtual void generate(float* real, float* imag, int size, float scale) { printf("ERROR [generate time complex]: Override this virtual class"); };
-    virtual void generate(int size) { printf("ERROR [generate freq]: Override this virtual class"); };
-    virtual int getSupport(float scale) { printf("ERROR [getsupport]: Override this virtual class"); return 0; };
-    // virtual void getWavelet(float scale, complex<float>* pwav, int pn) { printf("ERROR [getsupport]: Override this virtual class"); };
+    Wavelet(): width(0), mother(NULL) {};
+    virtual ~Wavelet() {};
+
+    // (Re-)generate the mother wavelet for an FFT of the given size.
+    virtual void generate(int size) = 0;
 
     int width;
-    float four_wavelen;
-    bool imag_frequency, doublesided;
     float *mother;
 };
 
 class Morlet : public Wavelet {
 public:
-    FCWT_LIBRARY_API Morlet(float bandwidth); //frequency domain
+    Morlet(float bandwidth);
     ~Morlet() { free(mother); };
 
-    void generate(int size); //frequency domain
-    // void generate(float* real, float* imag, int size, float scale); //time domain
-    int getSupport(float scale) { return (int)(fb*scale*3.0f); };
-    // void getWavelet(float scale, complex<float>* pwav, int pn);
-    float fb;
+    void generate(int size);
 
-private:
-    float ifb, fb2;
+    float fb;
 };
 
 class Scales {
 public:
-    FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, double fs, float f0, float f1, int fn);
+    // Only ratios of the frequencies and fs enter the computation, so they
+    // just need to be given in the same unit.
+    Scales(SCALETYPE st, double fs, float f0, float f1, int fn);
     ~Scales();
 
-    // void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
-    // void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
-
     float* scales;
-    double fs;
-    float fourwavl;
     int nscales;
 
 private:
-    void calculate_logscale_array(float base, float four_wavl, double fs, float f0, float f1, int fn);
-    // void calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn);
-    void calculate_linfreq_array(float four_wavl, double fs, float f0, float f1, int fn);
+    void calculate_logscale_array(float base, double fs, float f0, float f1, int fn);
+    void calculate_linfreq_array(double fs, float f0, float f1, int fn);
 };
 
 class FCWT {
 public:
-    FCWT_LIBRARY_API FCWT(Wavelet *pwav, int pthreads, bool puse_optimalization_schemes, bool puse_normalization):
+    // Receives the result for one scale: the scale's index and `psize`
+    // (normalized) complex values. Called for each scale, in order.
+    typedef std::function<void(int, const complex<float>*)> RowCallback;
+
+    FCWT(Wavelet *pwav, int pthreads):
         wavelet(pwav),
-        threads(pthreads),
-        use_optimalization_schemes(puse_optimalization_schemes),
-        use_normalization(puse_normalization) {};
+        threads(pthreads) {};
 
-    void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, int poptimizationflags);
-    void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, string poptimizationflags);
-    void FCWT_LIBRARY_API cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales);
-    void FCWT_LIBRARY_API cwt(complex<float> *pinput, int psize, complex<float>* poutput, Scales *scales);
-    void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
-    void FCWT_LIBRARY_API cwt(complex<float> *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
-
-    Wavelet *wavelet;
+    // Continuous wavelet transform of the real signal pinput (length psize).
+    // Instead of writing all results into one large output matrix, every
+    // row (scale) is handed to row_callback right after it is computed, so
+    // the caller can process it (e.g. take the absolute value, average) and
+    // the full complex result never needs to be kept in memory.
+    void cwt(const float *pinput, int psize, Scales *scales, const RowCallback &row_callback);
 
 private:
-    void cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput);
-    void cwt_static(float *pinput, int psize, float* poutput, float* scales);
-    void cwt_dynamic(float *pinput, int psize, float* poutput, float* scales);
-    void convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, fftwf_complex *lastscalemem, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale);
-    void convolve(float* in, complex<float> *out, Wavelet *wav, float scale);
-    void fftbased(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, float *out, float* mother, int size, float scale, bool imaginary, bool doublesided);
-    void firbased(float* in, float *out, Wavelet *wav, float scale);
-    void fft_normalize(complex<float>* out, int size);
-    void main(float *Rinput,float *Routput);
-    void load_FFT_optimization_plan();
-    void daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *output, float const *mother, float scale, int isize, bool imaginary, bool doublesided);
+    void daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *output, float const *mother, float scale, int isize);
+    void fft_normalize(complex<float>* out, int count, int fftsize);
 
-    void calculate_logscale_array(float base, float four_wavl, float *scales);
-    void calculate_linscale_array(float four_wavl, float *scales);
-
+    Wavelet *wavelet;
     int threads;
-    int size;
-    float fs, f0, f1, fn;
-    bool use_optimalization_schemes;
-    bool use_normalization;
 };
 
 // aligned_alloc() requires the size to be a multiple of the alignment (32)
@@ -208,6 +164,7 @@ public:
     AlignedBuffer(const AlignedBuffer&) = delete;
     AlignedBuffer& operator=(const AlignedBuffer&) = delete;
 
+    float* float_ptr() { return (float*)ptr; }
     fftwf_complex* complex_ptr() { return (fftwf_complex*)ptr; }
 
 private:

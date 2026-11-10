@@ -20,18 +20,18 @@ extern "C" SEXP _fCWTr_has_avx() {
   END_CPP11
 }
 // interface_fcwt.cpp
-std::vector<double> fcwt_raw(std::vector<double> signal, double fs, double f0, double f1, int fn, double sigma, int window_size, int nthreads, bool scaletype, bool optplans);
-extern "C" SEXP _fCWTr_fcwt_raw(SEXP signal, SEXP fs, SEXP f0, SEXP f1, SEXP fn, SEXP sigma, SEXP window_size, SEXP nthreads, SEXP scaletype, SEXP optplans) {
+cpp11::writable::doubles fcwt_raw(cpp11::doubles signal, double fs, double f0, double f1, int fn, double sigma, int window_size, int nthreads, bool scaletype);
+extern "C" SEXP _fCWTr_fcwt_raw(SEXP signal, SEXP fs, SEXP f0, SEXP f1, SEXP fn, SEXP sigma, SEXP window_size, SEXP nthreads, SEXP scaletype) {
   BEGIN_CPP11
-    return cpp11::as_sexp(fcwt_raw(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(signal), cpp11::as_cpp<cpp11::decay_t<double>>(fs), cpp11::as_cpp<cpp11::decay_t<double>>(f0), cpp11::as_cpp<cpp11::decay_t<double>>(f1), cpp11::as_cpp<cpp11::decay_t<int>>(fn), cpp11::as_cpp<cpp11::decay_t<double>>(sigma), cpp11::as_cpp<cpp11::decay_t<int>>(window_size), cpp11::as_cpp<cpp11::decay_t<int>>(nthreads), cpp11::as_cpp<cpp11::decay_t<bool>>(scaletype), cpp11::as_cpp<cpp11::decay_t<bool>>(optplans)));
+    return cpp11::as_sexp(fcwt_raw(cpp11::as_cpp<cpp11::decay_t<cpp11::doubles>>(signal), cpp11::as_cpp<cpp11::decay_t<double>>(fs), cpp11::as_cpp<cpp11::decay_t<double>>(f0), cpp11::as_cpp<cpp11::decay_t<double>>(f1), cpp11::as_cpp<cpp11::decay_t<int>>(fn), cpp11::as_cpp<cpp11::decay_t<double>>(sigma), cpp11::as_cpp<cpp11::decay_t<int>>(window_size), cpp11::as_cpp<cpp11::decay_t<int>>(nthreads), cpp11::as_cpp<cpp11::decay_t<bool>>(scaletype)));
   END_CPP11
 }
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_fCWTr_fcwt_raw",   (DL_FUNC) &_fCWTr_fcwt_raw,   10},
-    {"_fCWTr_has_avx",    (DL_FUNC) &_fCWTr_has_avx,     0},
-    {"_fCWTr_has_openmp", (DL_FUNC) &_fCWTr_has_openmp,  0},
+    {"_fCWTr_fcwt_raw",   (DL_FUNC) &_fCWTr_fcwt_raw,   9},
+    {"_fCWTr_has_avx",    (DL_FUNC) &_fCWTr_has_avx,    0},
+    {"_fCWTr_has_openmp", (DL_FUNC) &_fCWTr_has_openmp, 0},
     {NULL, NULL, 0}
 };
 }

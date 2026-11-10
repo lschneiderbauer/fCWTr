@@ -24,6 +24,8 @@
 
 -   very large inputs (more than 2^31 output values) are now supported (previously: integer overflow), and failing memory allocations raise an error instead of leading to undefined behavior.
 
+-   `fcwt()` needs considerably less memory: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).
+
 # fCWTr 0.3.0
 
 -   `fcwt():`

@@ -1,6 +1,6 @@
 raw_cwt <- function(x, fs, f0, f1, fn, window = 1L, threads = 1L, linear = TRUE) {
   matrix(
-    fcwt_raw(x, fs, f0, f1, fn, 2, window, threads, linear, FALSE),
+    fcwt_raw(x, fs, f0, f1, fn, 2, window, threads, linear),
     ncol = fn
   )
 }
@@ -54,7 +54,7 @@ test_that("a single frequency on log scale works", {
 test_that("invalid scales raise an error instead of crashing", {
   # f0 = 0 leads to an infinite scale (bypassing the R-level argument checks)
   expect_error(
-    fcwt_raw(sin(1:64), 1000L, 0, 100, 5L, 2, 1L, 1L, FALSE, FALSE),
+    fcwt_raw(sin(1:64), 1000L, 0, 100, 5L, 2, 1L, 1L, FALSE),
     "scales are invalid"
   )
 })
@@ -65,8 +65,8 @@ test_that("non-integer and sub-Hz sample frequencies are supported", {
   x <- sin(2 * pi * 0.4 * (1:1000) / 2.5)
 
   expect_equal(
-    fcwt_raw(x, 2.5, 0.1, 1.2, 10L, 2, 1L, 1L, FALSE, FALSE),
-    fcwt_raw(x, 2500, 100, 1200, 10L, 2, 1L, 1L, FALSE, FALSE)
+    fcwt_raw(x, 2.5, 0.1, 1.2, 10L, 2, 1L, 1L, FALSE),
+    fcwt_raw(x, 2500, 100, 1200, 10L, 2, 1L, 1L, FALSE)
   )
 
   # previously the sample frequency was truncated to an integer (0.5 -> 0)
@@ -79,10 +79,10 @@ test_that("non-integer and sub-Hz sample frequencies are supported", {
 test_that("Nyquist check works for odd sample frequencies", {
   # 500.4 Hz is below Nyquist (500.5 Hz) for fs = 1001 Hz
   expect_no_error(
-    fcwt_raw(sin(1:256), 1001, 100, 500.4, 5L, 2, 1L, 1L, TRUE, FALSE)
+    fcwt_raw(sin(1:256), 1001, 100, 500.4, 5L, 2, 1L, 1L, TRUE)
   )
   expect_error(
-    fcwt_raw(sin(1:256), 1001, 100, 500.6, 5L, 2, 1L, 1L, TRUE, FALSE),
+    fcwt_raw(sin(1:256), 1001, 100, 500.6, 5L, 2, 1L, 1L, TRUE),
     "Nyquist"
   )
 })
@@ -100,15 +100,15 @@ test_that("the scalogram records the actual output sample rate", {
 
 test_that("invalid sizes raise an error", {
   expect_error(
-    fcwt_raw(numeric(0), 1000, 1, 400, 5L, 2, 1L, 1L, FALSE, FALSE),
+    fcwt_raw(numeric(0), 1000, 1, 400, 5L, 2, 1L, 1L, FALSE),
     "Signal length"
   )
   expect_error(
-    fcwt_raw(rnorm(64), 1000, 1, 400, 0L, 2, 1L, 1L, FALSE, FALSE),
+    fcwt_raw(rnorm(64), 1000, 1, 400, 0L, 2, 1L, 1L, FALSE),
     "Number of frequencies"
   )
   expect_error(
-    fcwt_raw(rnorm(64), 1000, 1, 400, 5L, 2, 0L, 1L, FALSE, FALSE),
+    fcwt_raw(rnorm(64), 1000, 1, 400, 5L, 2, 0L, 1L, FALSE),
     "Window size"
   )
 })
