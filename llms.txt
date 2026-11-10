@@ -116,7 +116,7 @@ output
 #>   o Relative frequency resolution:  0.127324 
 #> * Time/frequency matrix summary
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-#>   0.000   0.000   0.000   0.003   0.001   0.064    6671
+#>  0.0000  0.0001  0.0012  0.1278  0.0345  2.8091    6671
 ```
 
 The result can also be converted into a data frame:
@@ -130,12 +130,12 @@ as.data.frame(output) |>
 #> 2           1 0.001 [s] 2100 [Hz]           NA
 #> 3           2 0.002 [s] 2100 [Hz]           NA
 #> 4           3 0.003 [s] 2100 [Hz]           NA
-#> 5           4 0.004 [s] 2100 [Hz] 5.170488e-05
-#> 6           5 0.005 [s] 2100 [Hz] 2.023599e-05
-#> 7           6 0.006 [s] 2100 [Hz] 7.007858e-06
-#> 8           7 0.007 [s] 2100 [Hz] 2.413503e-06
-#> 9           8 0.008 [s] 2100 [Hz] 1.058135e-06
-#> 10          9 0.009 [s] 2100 [Hz] 6.853825e-07
+#> 5           4 0.004 [s] 2100 [Hz] 3.461469e-03
+#> 6           5 0.005 [s] 2100 [Hz] 1.478523e-03
+#> 7           6 0.006 [s] 2100 [Hz] 5.462569e-04
+#> 8           7 0.007 [s] 2100 [Hz] 1.859199e-04
+#> 9           8 0.008 [s] 2100 [Hz] 6.946518e-05
+#> 10          9 0.009 [s] 2100 [Hz] 3.650397e-05
 ```
 
 We can also directly plot the resulting scalogram:
