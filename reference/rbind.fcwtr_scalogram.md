@@ -47,7 +47,7 @@ res <-
 print(res)
 #> _Scalogram_
 #> * (Time/Frequency) dimension:  ( 18 , 10 )
-#> * Sampling rate: 150 [Hz]
+#> * Sampling rate: 0.15 [kHz]
 #> * Frequency scale: 50 [Hz] - 1000 [Hz], log
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
@@ -64,7 +64,7 @@ res_doubled <- rbind(res, res)
 print(res_doubled)
 #> _Scalogram_
 #> * (Time/Frequency) dimension:  ( 36 , 10 )
-#> * Sampling rate: 150 [Hz]
+#> * Sampling rate: 0.15 [kHz]
 #> * Frequency scale: 50 [Hz] - 1000 [Hz], log
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
