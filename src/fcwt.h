@@ -48,6 +48,7 @@ limitations under the License.
 #include <math.h>
 #include <cmath>
 #include <stdexcept>
+#include <new>
 #include <complex>
 
 #include <iostream>
@@ -158,7 +159,7 @@ private:
     void cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput);
     void cwt_static(float *pinput, int psize, float* poutput, float* scales);
     void cwt_dynamic(float *pinput, int psize, float* poutput, float* scales);
-    void convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale);
+    void convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, fftwf_complex *lastscalemem, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale);
     void convolve(float* in, complex<float> *out, Wavelet *wav, float scale);
     void fftbased(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, float *out, float* mother, int size, float scale, bool imaginary, bool doublesided);
     void firbased(float* in, float *out, Wavelet *wav, float scale);
@@ -182,6 +183,40 @@ inline size_t aligned_size(size_t bytes)
 {
     return ((bytes + 31) / 32) * 32;
 }
+
+// 32-byte aligned memory (needed by the AVX code path), owned RAII-style:
+// it is freed automatically, also if an exception is thrown in between.
+// Throws std::bad_alloc if the allocation fails.
+class AlignedBuffer {
+public:
+    explicit AlignedBuffer(size_t bytes) {
+        #ifdef _WIN32
+            ptr = _aligned_malloc(aligned_size(bytes), 32);
+        #else
+            ptr = aligned_alloc(32, aligned_size(bytes));
+        #endif
+        if(!ptr) throw std::bad_alloc();
+        memset(ptr, 0, bytes);
+    }
+    ~AlignedBuffer() {
+        #ifdef _WIN32
+            _aligned_free(ptr);
+        #else
+            free(ptr);
+        #endif
+    }
+    AlignedBuffer(const AlignedBuffer&) = delete;
+    AlignedBuffer& operator=(const AlignedBuffer&) = delete;
+
+    fftwf_complex* complex_ptr() { return (fftwf_complex*)ptr; }
+
+private:
+    void* ptr;
+};
+
+// Largest supported signal length: the FFT size (next power of 2) must fit
+// into an int, which is what FFTW's planner interface expects.
+const int FCWT_MAX_SIZE = 1 << 30;
 
 inline int find2power(int n)
 {

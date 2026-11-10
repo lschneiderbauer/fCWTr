@@ -20,6 +20,10 @@
 
 -   `fcwt()`: `n_threads` must be at least 1.
 
+-   `fcwt()` no longer changes the global OpenMP thread setting of the R session.
+
+-   very large inputs (more than 2^31 output values) are now supported (previously: integer overflow), and failing memory allocations raise an error instead of leading to undefined behavior.
+
 # fCWTr 0.3.0
 
 -   `fcwt():`

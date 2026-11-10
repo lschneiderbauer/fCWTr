@@ -61,6 +61,7 @@ void Morlet::generate(int size) {
 
     free(mother); // generate() may be called repeatedly
     mother = (float*)malloc(sizeof(float)*width);
+    if(!mother) throw std::bad_alloc();
 
     //calculate array
     for(int w = 0; w < width; w++) {
@@ -125,6 +126,7 @@ Scales::Scales(Wavelet *wav, SCALETYPE st, double afs, float af0, float af1, int
 
     fs = afs;
     scales = (float*)malloc(afn*sizeof(float));
+    if(!scales) throw std::bad_alloc();
     fourwavl = wav->four_wavelen;
     nscales = afn;
 
@@ -262,7 +264,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         int s4 = (isize>>2)-1;
 
         #ifndef SINGLE_THREAD
-            #pragma omp parallel for
+            #pragma omp parallel for num_threads(athreads)
         #endif
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
@@ -328,7 +330,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         int s1 = isize-1;
 
         #ifndef SINGLE_THREAD
-            #pragma omp parallel for
+            #pragma omp parallel for num_threads(athreads)
         #endif
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
@@ -446,25 +448,15 @@ void FCWT::load_FFT_optimization_plan() {
 */
 
 //Convolve in time domain using a single wavelet
-void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale) {
+void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, fftwf_complex *lastscalemem, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale) {
 
     if(lastscale) {
-        #ifdef _WIN32
-            fftwf_complex *lastscalemem = (fftwf_complex*)_aligned_malloc(newsize*sizeof(fftwf_complex), 32);
-        #else
-            fftwf_complex *lastscalemem = (fftwf_complex*)aligned_alloc(32, aligned_size(newsize*sizeof(fftwf_complex)));
-        #endif
-        memset(lastscalemem,0,sizeof(fftwf_complex)*newsize);
-
+        // The inverse FFT writes newsize >= size values. For all but the last
+        // scale they spill into the next row of out (which is overwritten
+        // afterwards), for the last scale we need a separate buffer.
         fftbased(p, Ihat, O1, (float*)lastscalemem, wav->mother, newsize, scale, wav->imag_frequency, wav->doublesided);
         if(use_normalization) fft_normalize((complex<float>*)lastscalemem, newsize);
         memcpy(out, (complex<float>*)lastscalemem, sizeof(complex<float>)*size);
-
-        #ifdef _WIN32
-          _aligned_free(lastscalemem);
-        #else
-          free(lastscalemem);
-        #endif
     } else {
         // if(!out) {
         //     std::cout << "OUT NOT A POINTER" << std::endl;
@@ -499,58 +491,52 @@ void FCWT::fft_normalize(complex<float>* out, int size) {
 
 void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput) {
 
-    fftwf_complex *Ihat, *O1;
+    if(psize < 1 || psize > FCWT_MAX_SIZE) {
+        throw std::runtime_error("Signal length must be between 1 and 2^30.");
+    }
+
     size = psize;
 
     //Find nearest power of 2
     const int nt = find2power(size);
     const int newsize = 1 << nt;
 
-    //Initialize intermediate result
-    #ifdef _WIN32
-        Ihat = (fftwf_complex*)_aligned_malloc(newsize*sizeof(fftwf_complex), 32);
-        O1 = (fftwf_complex*)_aligned_malloc(newsize*sizeof(fftwf_complex), 32);
-    #else
-        Ihat = (fftwf_complex*)aligned_alloc(32, aligned_size(newsize*sizeof(fftwf_complex)));
-        O1 = (fftwf_complex*)aligned_alloc(32, aligned_size(newsize*sizeof(fftwf_complex)));
-    #endif
+    // Allocate all buffers up front: if an allocation fails (std::bad_alloc),
+    // everything allocated so far is freed automatically, and no FFTW plan
+    // has been created yet.
+    AlignedBuffer Ihat_buf((size_t)newsize*sizeof(fftwf_complex));
+    AlignedBuffer O1_buf((size_t)newsize*sizeof(fftwf_complex));
+    AlignedBuffer lastscale_buf((size_t)newsize*sizeof(fftwf_complex));
+    fftwf_complex *Ihat = Ihat_buf.complex_ptr();
+    fftwf_complex *O1 = O1_buf.complex_ptr();
 
-    //Copy input to new input buffer
-    memset(Ihat,0,sizeof(fftwf_complex)*newsize);
-    memset(O1,0,sizeof(fftwf_complex)*newsize);
+    // zero-padded copy of the input (complex input: two floats per value)
+    std::vector<float> input((size_t)newsize * (complexinput ? 2 : 1), 0.0f);
+    memcpy(input.data(), pinput, sizeof(float)*(size_t)size*(complexinput ? 2 : 1));
+
+    //Generate mother wavelet function
+    wavelet->generate(newsize);
 
     #ifndef SINGLE_THREAD
-        //Initialize FFTW plans
-        omp_set_num_threads(threads);
-
-        //Initialize FFTW plans
+        // Note: we do not call omp_set_num_threads() here, as that would change
+        // the OpenMP default for the whole R session. Our own parallel regions
+        // set the number of threads explicitly, FFTW gets it here:
         fftwf_init_threads();
-
         fftwf_plan_with_nthreads(threads);
     #endif
 
     fftwf_plan pinv;
     fftwf_plan p;
 
-    // //Load optimization schemes if necessary
-    // load_FFT_optimization_plan();
-
     // //Perform forward FFT on input signal
-    float *input;
     if(complexinput) {
-        input = (float*)calloc(newsize,sizeof(complex<float>));
-        memcpy(input,pinput,sizeof(complex<float>)*size);
-        p = fftwf_plan_dft_1d(newsize, (fftwf_complex*)input, Ihat, FFTW_FORWARD, FFTW_ESTIMATE);
+        p = fftwf_plan_dft_1d(newsize, (fftwf_complex*)input.data(), Ihat, FFTW_FORWARD, FFTW_ESTIMATE);
     } else {
-        input = (float*)malloc(newsize*sizeof(float));
-        memset(input,0,newsize*sizeof(float));
-        memcpy(input,pinput,sizeof(float)*size);
-        p = fftwf_plan_dft_r2c_1d(newsize, input, Ihat, FFTW_ESTIMATE);
+        p = fftwf_plan_dft_r2c_1d(newsize, input.data(), Ihat, FFTW_ESTIMATE);
     }
 
     fftwf_execute(p);
     fftwf_destroy_plan(p);
-    free(input);
 
     // pinv is re-used via fftwf_execute_dft() on output pointers of varying
     // alignment (offsets into poutput, temporary buffers). FFTW requires the
@@ -558,9 +544,6 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     // plan is created with FFTW_UNALIGNED (otherwise: undefined behavior,
     // e.g. crashes with AVX/AVX-512 codelets).
     pinv = fftwf_plan_dft_1d(newsize, O1, (fftwf_complex*)poutput, FFTW_BACKWARD, FFTW_ESTIMATE | FFTW_UNALIGNED);
-
-    //Generate mother wavelet function
-    wavelet->generate(newsize);
 
     for(int i=1; i<(newsize>>1); i++) {
         Ihat[newsize-i][0] = Ihat[i][0];
@@ -571,19 +554,12 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
 
     for(int i = 0; i < scales->nscales; i++) {
         //FFT-base convolution in the frequency domain
-        convolve(pinv, Ihat, O1, out, wavelet, size, newsize, scales->scales[i], i==(scales->nscales-1));
+        convolve(pinv, Ihat, O1, lastscale_buf.complex_ptr(), out, wavelet, size, newsize, scales->scales[i], i==(scales->nscales-1));
         out = out + size;
     }
 
-    // //Cleanup
+    // //Cleanup (buffers are freed automatically)
     fftwf_destroy_plan(pinv);
-    #ifdef _WIN32
-        _aligned_free(Ihat);
-        _aligned_free(O1);
-    #else
-        free(Ihat);
-        free(O1);
-    #endif
 }
 
 

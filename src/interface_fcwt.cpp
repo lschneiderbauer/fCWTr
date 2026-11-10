@@ -50,7 +50,17 @@ std::vector<double> fcwt_raw(
     bool scaletype, // TRUE = linear, FALSE = log
     bool optplans)
 {
-  int n = signal.size(); //signal length
+  if (signal.size() < 1 || signal.size() > (size_t)FCWT_MAX_SIZE) {
+    cpp11::stop("Signal length must be between 1 and 2^30 (use `fcwt_batch()` for longer signals).");
+  }
+  if (fn < 1) {
+    cpp11::stop("Number of frequencies must be at least 1.");
+  }
+  if (window_size < 1) {
+    cpp11::stop("Window size must be at least 1.");
+  }
+
+  int n = signal.size(); //signal length (fits into int, see check above)
 
   // cast double input to float
   std::vector<float> signal_f(n);
@@ -58,7 +68,10 @@ std::vector<double> fcwt_raw(
 
   //output: n x scales complex numbers
   // std::vector<float> output(n*noctaves*nsuboctaves*2);
-  std::vector<std::complex<float>> output(n*fn);
+  // n * fn can exceed the int range: compute sizes and indices in size_t.
+  // (std::vector throws std::bad_alloc if the memory is not available,
+  // which cpp11 turns into an R error.)
+  std::vector<std::complex<float>> output((size_t)n * fn);
 
   //Create a wavelet object
   Wavelet *wavelet;
@@ -109,10 +122,11 @@ std::vector<double> fcwt_raw(
   std::vector<double> abs_output;
 
   // in case of averaging
-  int target_time_n = std::ceil((float)n / window_size);
+  // (integer ceil division: a float cannot represent large n exactly)
+  int target_time_n = (int)(((size_t)n + window_size - 1) / window_size);
 
   // convert to absolute value
-  abs_output = std::vector<double> (target_time_n*fn);
+  abs_output = std::vector<double> ((size_t)target_time_n * fn);
 
   if (window_size > 1) {
     // perform my_abs and averaging at the same time
@@ -123,13 +137,13 @@ std::vector<double> fcwt_raw(
         // first iteration
         double mean = 0; // does not contribute because first term cancels
         int count = 0;
-        for (int i = w * window_size; i < (w+1)*window_size && i < n; i++) {
+        for (size_t i = (size_t)w * window_size; i < (size_t)(w+1) * window_size && i < (size_t)n; i++) {
           count += 1;
           // running mean (note: floating point division, count is an int)
-          mean = (double)(count - 1) / count * mean + my_abs(output[f*n + i]) / count;
+          mean = (double)(count - 1) / count * mean + my_abs(output[(size_t)f * n + i]) / count;
         }
 
-        abs_output[f*target_time_n + w] = mean;
+        abs_output[(size_t)f * target_time_n + w] = mean;
       }
     }
   } else {

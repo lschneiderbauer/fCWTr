@@ -97,3 +97,18 @@ test_that("the scalogram records the actual output sample rate", {
   expect_equal(as.numeric(attr(sc, "sample_freq")), 11025)
   expect_equal(max(as.numeric(as.data.frame(sc)$time)), 1, tolerance = 1e-3)
 })
+
+test_that("invalid sizes raise an error", {
+  expect_error(
+    fcwt_raw(numeric(0), 1000, 1, 400, 5L, 2, 1L, 1L, FALSE, FALSE),
+    "Signal length"
+  )
+  expect_error(
+    fcwt_raw(rnorm(64), 1000, 1, 400, 0L, 2, 1L, 1L, FALSE, FALSE),
+    "Number of frequencies"
+  )
+  expect_error(
+    fcwt_raw(rnorm(64), 1000, 1, 400, 5L, 2, 0L, 1L, FALSE, FALSE),
+    "Window size"
+  )
+})
