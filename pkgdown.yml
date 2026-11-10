@@ -1,9 +1,9 @@
-pandoc: 3.1.11
-pkgdown: 2.1.1
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   sigma: sigma.html
-last_built: 2025-01-17T23:56Z
+last_built: 2026-11-10T20:58Z
 urls:
   reference: https://lschneiderbauer.github.io/fCWTr/reference
   article: https://lschneiderbauer.github.io/fCWTr/articles
