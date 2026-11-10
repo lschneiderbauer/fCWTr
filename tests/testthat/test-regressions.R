@@ -58,3 +58,42 @@ test_that("invalid scales raise an error instead of crashing", {
     "scales are invalid"
   )
 })
+
+test_that("non-integer and sub-Hz sample frequencies are supported", {
+  # only the ratio of frequencies and sample frequency matters:
+  # 2.5 Hz with frequencies f must give the same result as 2500 Hz with 1000 * f
+  x <- sin(2 * pi * 0.4 * (1:1000) / 2.5)
+
+  expect_equal(
+    fcwt_raw(x, 2.5, 0.1, 1.2, 10L, 2, 1L, 1L, FALSE, FALSE),
+    fcwt_raw(x, 2500, 100, 1200, 10L, 2, 1L, 1L, FALSE, FALSE)
+  )
+
+  # previously the sample frequency was truncated to an integer (0.5 -> 0)
+  sc <- fcwt(x, x_sample_freq = u(500, "mHz"), freq_begin = u(10, "mHz"),
+             freq_end = u(200, "mHz"), n_freqs = 5, rm_coi = FALSE)
+  expect_true(all(is.finite(as.matrix(sc))))
+  expect_gt(max(as.matrix(sc)), 0)
+})
+
+test_that("Nyquist check works for odd sample frequencies", {
+  # 500.4 Hz is below Nyquist (500.5 Hz) for fs = 1001 Hz
+  expect_no_error(
+    fcwt_raw(sin(1:256), 1001, 100, 500.4, 5L, 2, 1L, 1L, TRUE, FALSE)
+  )
+  expect_error(
+    fcwt_raw(sin(1:256), 1001, 100, 500.6, 5L, 2, 1L, 1L, TRUE, FALSE),
+    "Nyquist"
+  )
+})
+
+test_that("the scalogram records the actual output sample rate", {
+  x <- sin(2 * pi * 440 * (1:44100) / 44100) # 1 s
+
+  # 44100 / 10000 is not an integer: window of 4 samples -> 11025 Hz
+  sc <- fcwt(x, x_sample_freq = 44100, y_sample_freq = 10000,
+             freq_begin = 100, freq_end = 1000, n_freqs = 5, rm_coi = FALSE)
+
+  expect_equal(as.numeric(attr(sc, "sample_freq")), 11025)
+  expect_equal(max(as.numeric(as.data.frame(sc)$time)), 1, tolerance = 1e-3)
+})

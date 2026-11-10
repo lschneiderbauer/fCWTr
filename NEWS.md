@@ -14,6 +14,10 @@
 
     -   fix undefined behavior (memory alignment) that could lead to crashes on some CPUs.
 
+    -   the sampling frequency `x_sample_freq` was truncated to an integer (in Hz), so non-integer sampling frequencies lead to wrong frequencies, and sampling frequencies below 1 Hz did not work at all.
+
+    -   the time axis of the result was wrong if `x_sample_freq / y_sample_freq` is not an integer: the result now records the actual output sampling rate (which can be slightly higher than `y_sample_freq`).
+
 -   `fcwt()`: `n_threads` must be at least 1.
 
 # fCWTr 0.3.0

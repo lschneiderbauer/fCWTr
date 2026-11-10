@@ -40,7 +40,7 @@ cpp11::r_bool has_avx() {
 [[cpp11::register]]
 std::vector<double> fcwt_raw(
     std::vector<double> signal,
-    int fs, // sample frequency
+    double fs, // sample frequency (same unit as f0, f1)
     double f0, // beginning of frequency range
     double f1, // end of frequency range
     int fn, // number of wavelets to generate across frequency range

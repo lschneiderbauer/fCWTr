@@ -120,21 +120,21 @@ private:
 
 class Scales {
 public:
-    FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
+    FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, double fs, float f0, float f1, int fn);
     ~Scales();
 
     // void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
     // void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
 
     float* scales;
-    int fs;
+    double fs;
     float fourwavl;
     int nscales;
 
 private:
-    void calculate_logscale_array(float base, float four_wavl, int fs, float f0, float f1, int fn);
+    void calculate_logscale_array(float base, float four_wavl, double fs, float f0, float f1, int fn);
     // void calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn);
-    void calculate_linfreq_array(float four_wavl, int fs, float f0, float f1, int fn);
+    void calculate_linfreq_array(float four_wavl, double fs, float f0, float f1, int fn);
 };
 
 class FCWT {

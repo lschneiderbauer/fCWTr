@@ -119,7 +119,9 @@ Scales::~Scales() {
     free(scales);
 }
 
-Scales::Scales(Wavelet *wav, SCALETYPE st, int afs, float af0, float af1, int afn) {
+// Only ratios of frequencies and fs enter the computation, so all of them just
+// need to be given in the same unit (fs need not be an integer).
+Scales::Scales(Wavelet *wav, SCALETYPE st, double afs, float af0, float af1, int afn) {
 
     fs = afs;
     scales = (float*)malloc(afn*sizeof(float));
@@ -166,7 +168,7 @@ void Scales::getFrequencies(float *pfreqs, int pnf) {
 };
 */
 
-void Scales::calculate_logscale_array(float base, float four_wavl, int fs, float f0, float f1, int fn) {
+void Scales::calculate_logscale_array(float base, float four_wavl, double fs, float f0, float f1, int fn) {
 
     //If a signal has fs=100hz and you want to measure [0.1-50]Hz, you need scales 2 to 1000;
     float nf0 = f0;
@@ -175,7 +177,7 @@ void Scales::calculate_logscale_array(float base, float four_wavl, int fs, float
     float s1 = (fs/nf0);
 
     //Cannot pass the nyquist frequency
-    if (f1 > fs/2)
+    if (f1 > fs/2.0)
       throw std::runtime_error(
         "Max frequency cannot be higher than the Nyquist frequency: sampling frequency / 2"
       );
@@ -190,14 +192,14 @@ void Scales::calculate_logscale_array(float base, float four_wavl, int fs, float
     }
 }
 
-void Scales::calculate_linfreq_array(float four_wavl, int fs, float f0, float f1, int fn) {
+void Scales::calculate_linfreq_array(float four_wavl, double fs, float f0, float f1, int fn) {
 
     float nf0 = f0;
     float nf1 = f1;
     //If a signal has fs=100hz and you want to measure [0.1-50]Hz, you need scales 2 to 1000;
 
     //Cannot pass the nyquist frequency
-    if (f1 > fs/2)
+    if (f1 > fs/2.0)
       throw std::runtime_error(
         "Max frequency cannot be higher than the Nyquist frequency: sampling frequency / 2"
       );
@@ -219,7 +221,7 @@ void Scales::calculate_linscale_array(float four_wavl, int fs, float f0, float f
     float s1 = fs/nf0;
 
     //Cannot pass the nyquist frequency
-    if (f1 > fs/2)
+    if (f1 > fs/2.0)
       throw std::runtime_error(
         "Max frequency cannot be higher than the Nyquist frequency: sampling frequency / 2"
       );
