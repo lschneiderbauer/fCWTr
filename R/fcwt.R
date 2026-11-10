@@ -143,7 +143,7 @@ fcwt <- function(x,
   stopifnot(is.numeric(x))
   stopifnot(is.numeric(n_freqs), n_freqs > 0)
   stopifnot(is.numeric(sigma), sigma > 0)
-  stopifnot(is.numeric(n_threads))
+  stopifnot(is.numeric(n_threads), n_threads >= 1)
 
   x_sample_freq <- as_freq(x_sample_freq)
   freq_begin <- as_freq(freq_begin)

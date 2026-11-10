@@ -59,6 +59,7 @@ void Morlet::generate(int size) {
     float toradians = (2*PI)/(float)size;
     float norm = sqrt(2*PI)*IPI4;
 
+    free(mother); // generate() may be called repeatedly
     mother = (float*)malloc(sizeof(float)*width);
 
     //calculate array
@@ -167,7 +168,7 @@ void Scales::calculate_logscale_array(float base, float four_wavl, int fs, float
     float dpower = power1-power0;
 
     for(int i=0; i<fn; i++) {
-        float power = power0 + (dpower/(fn-1))*i;
+        float power = (fn > 1) ? power0 + (dpower/(fn-1))*i : power0;
         scales[i] = pow(base,power);
     }
 }
@@ -226,7 +227,9 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
     int endpoint = ((int)endpointf);
 
     #ifdef AVX
-        int endpoint4 = endpoint>>2;
+        // round up, so that the last (up to 3) entries are processed as well
+        // (indices into mother are clamped to isize-1 below)
+        int endpoint4 = (endpoint+3)>>2;
 
         //has avx instructions
         __m256* O8 = (__m256*)output;
@@ -244,7 +247,8 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         #endif
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
-            int end = batchsize*(i+1);
+            // last batch takes the remainder of the integer division
+            int end = (i == athreads-1) ? endpoint4 : batchsize*(i+1);
 
             for(int q4=start; q4<end; q4++) {
                 float q = (float)q4*4;
@@ -309,7 +313,8 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         #endif
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
-            int end = batchsize*(i+1);
+            // last batch takes the remainder of the integer division
+            int end = (i == athreads-1) ? endpoint : batchsize*(i+1);
 
             for(int q1=start; q1<end; q1++) {
                 float q = (float)q1;
@@ -428,7 +433,7 @@ void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, comple
         #ifdef _WIN32
             fftwf_complex *lastscalemem = (fftwf_complex*)_aligned_malloc(newsize*sizeof(fftwf_complex), 32);
         #else
-            fftwf_complex *lastscalemem = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
+            fftwf_complex *lastscalemem = (fftwf_complex*)aligned_alloc(32, aligned_size(newsize*sizeof(fftwf_complex)));
         #endif
         memset(lastscalemem,0,sizeof(fftwf_complex)*newsize);
 
@@ -452,30 +457,24 @@ void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, comple
 
 void FCWT::fftbased(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, float *out, float* mother, int size, float scale, bool imaginary, bool doublesided) {
 
-    void *pt = out;
+    // O1 is re-used for every scale, but daughter_wavelet_multiplication() only
+    // writes the entries up to a scale-dependent endpoint. Clear it, so that
+    // no values of the previous scale leak into this one.
+    memset(O1, 0, sizeof(fftwf_complex)*size);
 
     //Perform daughter wavelet generation and multiplication with the Fourier transformed input signal
     daughter_wavelet_multiplication(Ihat,O1,mother,scale,size,imaginary,doublesided);
 
-    std::size_t space = 16;
-    std::align(16,sizeof(fftwf_complex),pt,space);
-
-    fftwf_execute_dft(p,O1,(fftwf_complex*)pt);
+    // The plan p is created with FFTW_UNALIGNED, so we can write to out
+    // directly. (Previously, out was shifted via std::align, which moved
+    // the result by one sample for odd signal lengths.)
+    fftwf_execute_dft(p,O1,(fftwf_complex*)out);
 }
 
 void FCWT::fft_normalize(complex<float>* out, int size) {
 
-    int nbatch = threads;
-    int batchsize = (int)ceil((float)size/((float)threads));
-
-    //#pragma omp parallel for
-    for(int i=0; i<nbatch; i++) {
-        int start = batchsize*i;
-        int end = min(size,batchsize*(i+1));
-
-        for(int i8=start; i8<end; i8++) {
-            out[i8] = out[i8] / (float)size;
-        }
+    for(int i=0; i<size; i++) {
+        out[i] = out[i] / (float)size;
     }
 }
 
@@ -493,8 +492,8 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
         Ihat = (fftwf_complex*)_aligned_malloc(newsize*sizeof(fftwf_complex), 32);
         O1 = (fftwf_complex*)_aligned_malloc(newsize*sizeof(fftwf_complex), 32);
     #else
-        Ihat = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
-        O1 = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
+        Ihat = (fftwf_complex*)aligned_alloc(32, aligned_size(newsize*sizeof(fftwf_complex)));
+        O1 = (fftwf_complex*)aligned_alloc(32, aligned_size(newsize*sizeof(fftwf_complex)));
     #endif
 
     //Copy input to new input buffer

@@ -2,6 +2,20 @@
 
 -   fix CRAN issues
 
+-   bug fixes in the transform (results change numerically):
+
+    -   values of a frequency band no longer leak into the following (lower-frequency) bands.
+
+    -   for odd signal lengths, every other frequency band was shifted by one sample in time.
+
+    -   averaging over time windows (`y_sample_freq` lower than `x_sample_freq`) under-estimated the mean.
+
+    -   `n_freqs = 1` with `freq_scale = "log"` returned garbage.
+
+    -   fix undefined behavior (memory alignment) that could lead to crashes on some CPUs.
+
+-   `fcwt()`: `n_threads` must be at least 1.
+
 # fCWTr 0.3.0
 
 -   `fcwt():`

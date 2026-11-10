@@ -175,6 +175,12 @@ private:
     bool use_normalization;
 };
 
+// aligned_alloc() requires the size to be a multiple of the alignment (32)
+inline size_t aligned_size(size_t bytes)
+{
+    return ((bytes + 31) / 32) * 32;
+}
+
 inline int find2power(int n)
 {
     int m, m2;

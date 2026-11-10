@@ -125,7 +125,8 @@ std::vector<double> fcwt_raw(
         int count = 0;
         for (int i = w * window_size; i < (w+1)*window_size && i < n; i++) {
           count += 1;
-          mean = (count - 1)/count * mean + my_abs(output[f*n + i]) / count;
+          // running mean (note: floating point division, count is an int)
+          mean = (double)(count - 1) / count * mean + my_abs(output[f*n + i]) / count;
         }
 
         abs_output[f*target_time_n + w] = mean;
