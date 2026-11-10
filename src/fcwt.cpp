@@ -534,7 +534,12 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     fftwf_destroy_plan(p);
     free(input);
 
-    pinv = fftwf_plan_dft_1d(newsize, O1, (fftwf_complex*)poutput, FFTW_BACKWARD, FFTW_ESTIMATE);
+    // pinv is re-used via fftwf_execute_dft() on output pointers of varying
+    // alignment (offsets into poutput, temporary buffers). FFTW requires the
+    // new arrays to have the same alignment as the planning arrays unless the
+    // plan is created with FFTW_UNALIGNED (otherwise: undefined behavior,
+    // e.g. crashes with AVX/AVX-512 codelets).
+    pinv = fftwf_plan_dft_1d(newsize, O1, (fftwf_complex*)poutput, FFTW_BACKWARD, FFTW_ESTIMATE | FFTW_UNALIGNED);
 
     //Generate mother wavelet function
     wavelet->generate(newsize);
