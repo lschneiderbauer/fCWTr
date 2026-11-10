@@ -2,27 +2,22 @@
 
 This is a resubmission. In this version I have
 
--   added the macos recipe 'fftw-s' to 'SystemRequirements'
--   rewrote the configure script to use pkg-config in order to test for fftw library with single precision support.
+-   rewritten the configure error message: it now explicitly states that the
+    *single-precision* fftw3 library (libfftw3f) is required, and lists the
+    packages to install on common platforms (e.g. on Fedora: 'fftw-devel' and
+    'fftw-libs-single'; on Debian/Ubuntu: 'libfftw3-dev'; macOS recipe 'fftw-s').
+-   expanded 'SystemRequirements' to explain what 'fftw3f' means
+    (fftw3 with single-precision support) and to name the corresponding
+    deb/rpm/brew packages.
+-   added a fallback in configure: if pkg-config is unavailable or does not
+    know about 'fftw3f', configure now tries to link against -lfftw3f directly
+    before failing.
+-   fixed a quoting bug in configure that prevented CXXFLAGS from being set.
 
 ## R CMD check results
 
-0 errors \| 0 warnings \| 2 notes
+0 errors | 0 warnings | 1 note
 
--   CRAN incoming feasability
-
-    -   New submission - Package was archived on CRAN
-
-    -   Note: "Possibly misspelled words in DESCRIPTION: Broek (17:32) Lukas (16:57)."
-
-        -   *Remark*: I double-checked the spelling and it is correct.
-
-    -   X-CRAN-Comment: Archived on 2024-07-01 as issues were not corrected in time.
-
-    -   Incorrect 'SystemRequirements' (needs single-precision 'fftw' and does not test for it).
-
--   checking for future file timestamps
-
-    -   unable to verify current time
-
-        -   *Remark*: apparently the web service in use is not reachable, the problem seems not to be on my end.
+-   New submission - Package was archived on CRAN
+-   Possibly misspelled words in DESCRIPTION: Broek, Lukas
+    (these are names of the authors and are spelled correctly).

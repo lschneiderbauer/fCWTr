@@ -59,7 +59,11 @@ devtools::install_github("lschneiderbauer/fCWTr")
 
 Note that the installation process might fail if the package needs to be compiled from source and system requirements are not satisfied. The error message should give you hints, however, on what's missing on your system.
 
--   Common confusion: fftw is installed, but compiled without single precision support. Please consult [fftw.org](https://www.fftw.org) for help.
+-   Common confusion: fftw is installed, but without single precision support (`libfftw3f`). Some distributions ship it as a separate package:
+    -   Debian/Ubuntu: `libfftw3-dev`
+    -   Fedora/RHEL: `fftw-devel` and `fftw-libs-single`
+    -   macOS: `brew install fftw` (or the CRAN macOS recipe `fftw-s`)
+    -   If you build fftw yourself, configure it with `--enable-float`. See [fftw.org](https://www.fftw.org/faq/section2.html#singleprec).
 
 ## Example
 

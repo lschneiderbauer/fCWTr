@@ -2548,8 +2548,13 @@ if test -z "${R_HOME}"; then
   echo "could not determine R_HOME"
   exit 1
 fi
-CXX=`"${R_HOME}/bin/R" CMD config CXX`
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS` `"${R_HOME}/bin/R" CMD config CXXPICFLAGS`
+# use the C++17 compiler, matching CXX_STD = CXX17 in src/Makevars
+# (R-exts: SHLIB_OPENMP_CXXFLAGS/default flags need not apply to it)
+CXX=`"${R_HOME}/bin/R" CMD config CXX17`
+CXXFLAGS="`"${R_HOME}/bin/R" CMD config CXX17FLAGS` `"${R_HOME}/bin/R" CMD config CXX17PICFLAGS`"
+if test -z "${CXX}"; then
+  as_fn_error $? "No C++17 compiler is available (R CMD config CXX17 is empty)." "$LINENO" 5
+fi
 CPPFLAGS="`"${R_HOME}/bin/R" CMD config CPPFLAGS`"
 LDFLAGS="`"${R_HOME}/bin/R" CMD config LDFLAGS`"
 ac_ext=cpp
@@ -3767,6 +3772,7 @@ printf "%s\n" "no" >&6; }
 fi
 
 
+
 if test -e penmp || test -e mp; then
   as_fn_error $? "AC_OPENMP clobbers files named 'mp' and 'penmp'. Aborting configure because one of these files already exists." "$LINENO" 5
 fi
@@ -4236,35 +4242,118 @@ printf "%s\n" "$ac_cv_prog_cxx_openmp" >&6; }
 
 
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for pkg-config" >&5
-printf %s "checking for pkg-config... " >&6; }
+FFTWF_MISSING_MSG="
+  --------------------------------------------------------------
+  fCWTr requires the fftw3 library built with SINGLE-PRECISION
+  support (libfftw3f, i.e. the 'fftwf_*' API), including headers.
+  A double-precision-only fftw installation is not sufficient.
 
-if "$PKG_CONFIG" --version
+  Install it e.g. via:
+    Debian/Ubuntu:  libfftw3-dev   (contains libfftw3f)
+    Fedora/RHEL:    fftw-devel and fftw-libs-single
+    openSUSE:       fftw3-devel
+    Arch Linux:     fftw
+    macOS:          'fftw-s' (CRAN macOS recipe) or 'brew install fftw'
+    Windows:        provided by Rtools
+
+  If you built fftw yourself, configure it with --enable-float.
+  If it is installed in a non-standard location, make sure
+  pkg-config finds 'fftw3f.pc' (set PKG_CONFIG_PATH), or set
+  CPPFLAGS/LDFLAGS (e.g. in ~/.R/Makevars) accordingly.
+  --------------------------------------------------------------
+"
+
+have_fftw3f_pc=no
+if test -n "$PKG_CONFIG"
 then :
 
-else case e in #(
-  e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-  as_fn_error $? "Provided flags don't work and pkg-config is not present." "$LINENO" 5 ;;
-esac
-fi
-
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether pkg-config knows about fftw3f" >&5
-printf %s "checking whether pkg-config knows about fftw3f... " >&6; }
-
-if $PKG_CONFIG fftw3f
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether pkg-config knows about fftw3f (single-precision fftw3)" >&5
+printf %s "checking whether pkg-config knows about fftw3f (single-precision fftw3)... " >&6; }
+  if "$PKG_CONFIG" --exists fftw3f
 then :
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
+     have_fftw3f_pc=yes
+     CPPFLAGS="${CPPFLAGS} `$PKG_CONFIG --cflags fftw3f`"
+     LIBS="`$PKG_CONFIG --libs fftw3f` ${LIBS}"
 else case e in #(
   e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-     as_fn_error $? "Install libfftw3-dev or equivalent first" "$LINENO" 5 ;;
+printf "%s\n" "no" >&6; } ;;
 esac
 fi
 
-CPPFLAGS="${CPPFLAGS} `$PKG_CONFIG --cflags fftw3f`"
-LIBS="${LIBS} `$PKG_CONFIG --libs fftw3f`"
+fi
+
+# Fallback (no pkg-config or no fftw3f.pc): try linking directly.
+if test "$have_fftw3f_pc" = no
+then :
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing fftwf_plan_dft_r2c_1d" >&5
+printf %s "checking for library containing fftwf_plan_dft_r2c_1d... " >&6; }
+if test ${ac_cv_search_fftwf_plan_dft_r2c_1d+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int fftwf_plan_dft_r2c_1d ();
+}
+int
+main (void)
+{
+return conftest::fftwf_plan_dft_r2c_1d ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' fftw3f
+do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_search_fftwf_plan_dft_r2c_1d=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext
+  if test ${ac_cv_search_fftwf_plan_dft_r2c_1d+y}
+then :
+  break
+fi
+done
+if test ${ac_cv_search_fftwf_plan_dft_r2c_1d+y}
+then :
+
+else case e in #(
+  e) ac_cv_search_fftwf_plan_dft_r2c_1d=no ;;
+esac
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_fftwf_plan_dft_r2c_1d" >&5
+printf "%s\n" "$ac_cv_search_fftwf_plan_dft_r2c_1d" >&6; }
+ac_res=$ac_cv_search_fftwf_plan_dft_r2c_1d
+if test "$ac_res" != no
+then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+else case e in #(
+  e) as_fn_error $? "single-precision fftw3 library (libfftw3f) not found.
+$FFTWF_MISSING_MSG" "$LINENO" 5 ;;
+esac
+fi
+
+
+fi
 
 # needs to be after pkg-config checks
 # to have correct paths already
@@ -4309,7 +4398,8 @@ printf "%s\n" "#define HAVE_FFTW3_H 1" >>confdefs.h
 
 else case e in #(
   e)
-  as_fn_error $? "fftw3.h header file not found in: $CPPFLAGS" "$LINENO" 5
+  as_fn_error $? "fftw3.h header file not found (CPPFLAGS: $CPPFLAGS).
+$FFTWF_MISSING_MSG" "$LINENO" 5
  ;;
 esac
 fi
