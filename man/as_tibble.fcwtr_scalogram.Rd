@@ -19,10 +19,9 @@ starting at 0.}
 \item{time}{The time of the time slice in physical units, relative to the
 beginning of the input signal (time slices that were cut off,
 e.g. by subsetting, are taken into account).
-The time unit is the inverse of the frequency unit chosen by
-the user for the \code{x_sample_freq} argument of \code{\link[=fcwt]{fcwt()}}
-(e.g. \code{1/kHz} for \code{x_sample_freq = u(44.1, "kHz")}), and can
-be converted with \code{units::set_units()}.}
+The time unit (s, ms, us, or ns) is chosen depending on the
+magnitude of the values, and can be converted with
+\code{units::set_units()}.}
 \item{freq}{The frequency, in the units chosen by the user for the
 \code{freq_begin} and \code{freq_end} arguments of \code{\link[=fcwt]{fcwt()}}.}
 \item{value}{The fCWT result for the particular time-frequency combination.}

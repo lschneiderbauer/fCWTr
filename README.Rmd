@@ -79,7 +79,7 @@ signal <- ts_sin_superpos
 output <-
   fcwt(
     signal,
-    x_sample_freq = u(44.1, "kHz"),
+    x_sample_freq = u(44, "kHz"),
     sigma = 5,
     y_sample_freq = u(1, "kHz"),
     freq_begin = u(16, "Hz"),
@@ -105,7 +105,7 @@ as.data.frame(output) |>
 We can also directly plot the resulting scalogram:
 
 ```{r example_plot}
-plot(output, time_unit = "ms")
+plot(output)
 ```
 
 For long sequences, the required memory can exceed your available local memory. In this case it can be useful to reduce the time resolution of the result and process the data in batches. This can be done with `fcwt_batch()`. In case the batch size is not explicitly provided, some heuristics are used to determine a batch size automatically:

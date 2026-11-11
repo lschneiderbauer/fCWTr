@@ -95,7 +95,7 @@ test_that("the scalogram records the actual output sample rate", {
              freq_begin = 100, freq_end = 1000, n_freqs = 5, rm_coi = FALSE)
 
   expect_equal(as.numeric(attr(sc, "sample_freq")), 11025)
-  expect_equal(max(as.numeric(as.data.frame(sc)$time)), 1, tolerance = 1e-3)
+  expect_equal(du(max(as.data.frame(sc)$time), "s"), 1, tolerance = 1e-3)
 })
 
 test_that("invalid sizes raise an error", {
@@ -139,19 +139,47 @@ test_that("subsetting time slices adjusts the time offset", {
   expect_error(sc[2000, ], "contiguous")
 })
 
-test_that("time is given in the inverse unit of the sampling frequency", {
+test_that("time is given in a unit suiting its magnitude", {
+  # 1000 samples at 44.1 kHz: about 22.7 ms
   sc <- fcwt(ts_sin_440[1:1000], x_sample_freq = u(44.1, "kHz"),
              y_sample_freq = u(44.1, "kHz"), freq_begin = 50, freq_end = 1000,
              n_freqs = 5, sigma = 1)
   df <- as.data.frame(sc)
 
-  expect_equal(as.character(units(df$time)), "1/kHz")
+  expect_equal(as.character(units(df$time)), "ms")
   expect_equal(as.numeric(df$time[[11]]), 10 / 44.1)
 
   # also with a time offset
   df2 <- as.data.frame(sc[11:1000, ])
-  expect_equal(as.character(units(df2$time)), "1/kHz")
+  expect_equal(as.character(units(df2$time)), "ms")
   expect_equal(as.numeric(df2$time[[1]]), 10 / 44.1)
+
+  # the unit does not depend on the unit of the sampling frequency
+  sc_hz <- fcwt(ts_sin_440[1:1000], x_sample_freq = 44100,
+                y_sample_freq = 44100, freq_begin = 50, freq_end = 1000,
+                n_freqs = 5, sigma = 1)
+  expect_equal(as.data.frame(sc_hz)$time, df$time)
+
+  # 1 s
+  sc_long <- fcwt(ts_sin_440, x_sample_freq = 44100, y_sample_freq = 441,
+                  freq_begin = 50, freq_end = 1000, n_freqs = 5, sigma = 1)
+  expect_equal(as.character(units(as.data.frame(sc_long)$time)), "ms")
+  sc_long2 <- fcwt(c(ts_sin_440, ts_sin_440), x_sample_freq = 44100,
+                   y_sample_freq = 441, freq_begin = 50, freq_end = 1000,
+                   n_freqs = 5, sigma = 1)
+  expect_equal(as.character(units(as.data.frame(sc_long2)$time)), "s")
+})
+
+test_that("pretty_time() picks a suitable unit", {
+  unit_of <- function(x) as.character(units(pretty_time(x)))
+
+  expect_equal(unit_of(u(c(0, 0.136), "s")), "ms")
+  expect_equal(unit_of(u(600, "s")), "s")
+  expect_equal(unit_of(1 / u(c(1, 44.1), "kHz")), "ms")
+  expect_equal(unit_of(u(2.5e-6, "s")), "us")
+  expect_equal(unit_of(u(3e-9, "s")), "ns")
+  expect_equal(unit_of(u(0, "s")), "s")
+  expect_equal(as.numeric(pretty_time(u(0.136, "s"))), 136)
 })
 
 test_that("frequencies of a linear scale match the labels", {

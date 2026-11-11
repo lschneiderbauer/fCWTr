@@ -102,7 +102,7 @@ signal <- ts_sin_superpos
 output <-
   fcwt(
     signal,
-    x_sample_freq = u(44.1, "kHz"),
+    x_sample_freq = u(44, "kHz"),
     sigma = 5,
     y_sample_freq = u(1, "kHz"),
     freq_begin = u(16, "Hz"),
@@ -123,12 +123,12 @@ output
 #> * Frequency scale: 16 [Hz] - 2100 [Hz], linear
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
-#>   o Time resolution at  16 [Hz] :  1.25 [1/Hz] 
-#>   o Time resolution at  2100 [Hz] :  0.00952381 [1/Hz] 
+#>   o Time resolution at  16 [Hz] :  1.25 [s] 
+#>   o Time resolution at  2100 [Hz] :  9.52381 [ms] 
 #>   o Relative frequency resolution:  0.127324 
 #> * Time/frequency matrix summary
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-#>  0.0000  0.0001  0.0012  0.1278  0.0345  2.8091    6671
+#>  0.0000  0.0001  0.0011  0.1267  0.0339  2.8194    6671
 ```
 
 The result can also be converted into a data frame:
@@ -136,23 +136,23 @@ The result can also be converted into a data frame:
 ``` r
 as.data.frame(output) |>
   head(10)
-#>    time_index      time      freq        value
-#> 1           0 0.000 [s] 2100 [Hz]           NA
-#> 2           1 0.001 [s] 2100 [Hz]           NA
-#> 3           2 0.002 [s] 2100 [Hz]           NA
-#> 4           3 0.003 [s] 2100 [Hz]           NA
-#> 5           4 0.004 [s] 2100 [Hz] 3.461469e-03
-#> 6           5 0.005 [s] 2100 [Hz] 1.478523e-03
-#> 7           6 0.006 [s] 2100 [Hz] 5.462569e-04
-#> 8           7 0.007 [s] 2100 [Hz] 1.859199e-04
-#> 9           8 0.008 [s] 2100 [Hz] 6.946518e-05
-#> 10          9 0.009 [s] 2100 [Hz] 3.650397e-05
+#>    time_index   time      freq        value
+#> 1           0 0 [ms] 2100 [Hz]           NA
+#> 2           1 1 [ms] 2100 [Hz]           NA
+#> 3           2 2 [ms] 2100 [Hz]           NA
+#> 4           3 3 [ms] 2100 [Hz]           NA
+#> 5           4 4 [ms] 2100 [Hz] 3.326482e-03
+#> 6           5 5 [ms] 2100 [Hz] 1.388348e-03
+#> 7           6 6 [ms] 2100 [Hz] 4.916695e-04
+#> 8           7 7 [ms] 2100 [Hz] 1.552785e-04
+#> 9           8 8 [ms] 2100 [Hz] 5.435228e-05
+#> 10          9 9 [ms] 2100 [Hz] 3.173394e-05
 ```
 
 We can also directly plot the resulting scalogram:
 
 ``` r
-plot(output, time_unit = "ms")
+plot(output)
 ```
 
 <img src="man/figures/README-example_plot-1.png" alt="" width="100%" />

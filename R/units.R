@@ -107,6 +107,33 @@ hz <- function(x) {
   units::drop_units(conv(x, "Hz"))
 }
 
+#' Express a time quantity in a "pretty" unit
+#'
+#' The units package keeps the unit that results from a calculation (e.g.
+#' `1/kHz`), it does not choose a suitable prefix on its own. This picks the
+#' largest of s, ms, us, ns in which the largest (absolute, finite) value is
+#' still at least 1, e.g. 0.136 s -> 136 ms, 600 s -> 600 s.
+#' @noRd
+pretty_time <- function(x) {
+  stopifnot(has_comp_unit(x, "s"))
+
+  s <- sec(x)
+  m <- max(abs(s[is.finite(s)]), 0)
+
+  unit <-
+    if (m == 0 || m >= 1) {
+      "s"
+    } else if (m >= 1e-3) {
+      "ms"
+    } else if (m >= 1e-6) {
+      "us"
+    } else {
+      "ns"
+    }
+
+  conv(x, unit)
+}
+
 sec <- function(x) {
   units::drop_units(conv(x, "s"))
 }

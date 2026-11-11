@@ -304,13 +304,13 @@ print.fcwtr_scalogram <- function(x, ...) {
     format(attr(x, "freq_end")), ", ", attr(x, "freq_scale"), "\n",
     sep = ""
   )
-  cat("* Time offset:", format(attr(x, "time_offset")), "\n")
+  cat("* Time offset:", format(pretty_time(attr(x, "time_offset"))), "\n")
   cat("* Sigma: ", attr(x, "sigma"), "\n", sep = "")
 
   cat("  o Time resolution at ", format(attr(x, "freq_begin")), ": ",
-      format(sigma_res(attr(x, "sigma"), attr(x, "freq_begin"))$time) , "\n")
+      format(pretty_time(sigma_res(attr(x, "sigma"), attr(x, "freq_begin"))$time)) , "\n")
   cat("  o Time resolution at ", format(attr(x, "freq_end")), ": ",
-      format(sigma_res(attr(x, "sigma"), attr(x, "freq_end"))$time) , "\n")
+      format(pretty_time(sigma_res(attr(x, "sigma"), attr(x, "freq_end"))$time)) , "\n")
 
   cat("  o Relative frequency resolution: ",
       format(sigma_freq_res_rel(attr(x, "sigma"))), "\n")
@@ -343,10 +343,9 @@ print.fcwtr_scalogram <- function(x, ...) {
 #'   \item{time}{The time of the time slice in physical units, relative to the
 #'               beginning of the input signal (time slices that were cut off,
 #'               e.g. by subsetting, are taken into account).
-#'               The time unit is the inverse of the frequency unit chosen by
-#'               the user for the `x_sample_freq` argument of [fcwt()]
-#'               (e.g. `1/kHz` for `x_sample_freq = u(44.1, "kHz")`), and can
-#'               be converted with `units::set_units()`.}
+#'               The time unit (s, ms, us, or ns) is chosen depending on the
+#'               magnitude of the values, and can be converted with
+#'               `units::set_units()`.}
 #'   \item{freq}{The frequency, in the units chosen by the user for the
 #'               `freq_begin` and `freq_end` arguments of [fcwt()].}
 #'   \item{value}{The fCWT result for the particular time-frequency combination.}
@@ -368,9 +367,10 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 
   data.frame(
     time_index = dim_t[row(x)] - 1,
-    # note: the sum takes the unit of its first summand, so the time is given
-    # in the inverse unit of the sampling frequency (e.g. 1/kHz)
-    time = (dim_t[row(x)] - 1) / attr(x, "sample_freq") + attr(x, "time_offset"),
+    # in a time unit (s, ms, ...) that suits the magnitude of the values
+    time = pretty_time(
+      (dim_t[row(x)] - 1) / attr(x, "sample_freq") + attr(x, "time_offset")
+    ),
     freq = dim_f[col(x)],
     value = c(x)
   )
@@ -394,10 +394,9 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'   \item{time}{The time of the time slice in physical units, relative to the
 #'               beginning of the input signal (time slices that were cut off,
 #'               e.g. by subsetting, are taken into account).
-#'               The time unit is the inverse of the frequency unit chosen by
-#'               the user for the `x_sample_freq` argument of [fcwt()]
-#'               (e.g. `1/kHz` for `x_sample_freq = u(44.1, "kHz")`), and can
-#'               be converted with `units::set_units()`.}
+#'               The time unit (s, ms, us, or ns) is chosen depending on the
+#'               magnitude of the values, and can be converted with
+#'               `units::set_units()`.}
 #'   \item{freq}{The frequency, in the units chosen by the user for the
 #'               `freq_begin` and `freq_end` arguments of [fcwt()].}
 #'   \item{value}{The fCWT result for the particular time-frequency combination.}
@@ -526,7 +525,7 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #'   )
 #'
 #' plot(res, time_unit = "ms")
-plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
+plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = NULL, freq_unit = "Hz",
                                  transf = identity, ...) {
   print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, transf, ...))
 }
@@ -540,7 +539,9 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #'  to generate a reasonable graphics format. `n` is the number of time
 #'  steps that are plotted. Defaults to `n = 1000`.
 #' @param time_unit
-#'  A time unit that is used for the x-axis scale. Default to "s" - seconds.
+#'  A time unit that is used for the x-axis scale, e.g. `"s"` or `"ms"`.
+#'  By default (`NULL`), a suitable unit (s, ms, us, or ns) is chosen depending
+#'  on the length of the scalogram.
 #'  See `units::valid_udunits()` and `units::valid_udunits_prefixes()` for valid
 #'  expressions.
 #' @param freq_unit
@@ -573,7 +574,7 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = "s", freq_unit = "Hz",
 #'
 #' @exportS3Method ggplot2::autoplot
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
-                                     time_unit = "s", freq_unit = "Hz",
+                                     time_unit = NULL, freq_unit = "Hz",
                                      transf = identity, ...) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))

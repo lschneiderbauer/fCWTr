@@ -40,7 +40,7 @@
 
     -   negative and logical indices now adjust the time offset correctly. Indices that do not select a contiguous range raise an error (they cannot be represented by evenly spaced axes), use `as.matrix()` instead.
 
--   `as.data.frame()` / `as_tibble()`: the `time` column is again given in the inverse unit of the sampling frequency (e.g. `1/kHz`), as documented, instead of always in seconds.
+-   times are now given in a unit that suits their magnitude (s, ms, us, or ns): the `time` column of `as.data.frame()` / `as_tibble()`, the time offset and time resolutions in `print()`, and the time axis of `plot()` / `autoplot()` (whose `time_unit` argument now defaults to `NULL`, i.e. automatic).
 
 -   documentation fixes and improvements.
 

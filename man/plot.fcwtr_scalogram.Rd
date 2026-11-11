@@ -4,7 +4,7 @@
 \alias{plot.fcwtr_scalogram}
 \title{Scalogram plotting}
 \usage{
-\method{plot}{fcwtr_scalogram}(x, n = 1000, time_unit = "s", freq_unit = "Hz", transf = identity, ...)
+\method{plot}{fcwtr_scalogram}(x, n = 1000, time_unit = NULL, freq_unit = "Hz", transf = identity, ...)
 }
 \arguments{
 \item{x}{An "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
@@ -13,7 +13,9 @@
 to generate a reasonable graphics format. \code{n} is the number of time
 steps that are plotted. Defaults to \code{n = 1000}.}
 
-\item{time_unit}{A time unit that is used for the x-axis scale. Default to "s" - seconds.
+\item{time_unit}{A time unit that is used for the x-axis scale, e.g. \code{"s"} or \code{"ms"}.
+By default (\code{NULL}), a suitable unit (s, ms, us, or ns) is chosen depending
+on the length of the scalogram.
 See \code{units::valid_udunits()} and \code{units::valid_udunits_prefixes()} for valid
 expressions.}
 
