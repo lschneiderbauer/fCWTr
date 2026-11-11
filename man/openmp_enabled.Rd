@@ -16,12 +16,10 @@ responsible for the multithreading capabilities of \code{\link[=fcwt]{fcwt()}}. 
 not enabled the parameter \code{n_threads} of \code{\link[=fcwt]{fcwt()}} is ignored.
 }
 \details{
-OpenMP is used (both by fCWTr itself and by the fftw library) if
-\itemize{
-\item the compiler supports OpenMP, and
-\item the fftw library on your platform comes with OpenMP support
-(\code{libfftw3f_omp}).
-}
+OpenMP is used by fCWTr if the compiler supports it. In addition, the
+Fourier transforms are multithreaded only if the fftw library on your
+platform comes with OpenMP support (\code{libfftw3f_omp}); otherwise they run
+single-threaded.
 
 On Windows, OpenMP support is disabled, since the fftw library provided
 by Rtools is compiled without OpenMP support.

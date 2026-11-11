@@ -64,6 +64,8 @@
 
 -   The installation now explicitly checks for the single-precision fftw library (falling back to a direct link test if pkg-config does not find it), and gives clear instructions on which packages to install if it is missing. `SystemRequirements` describes the dependencies in more detail (fixes CRAN issues).
 
+-   The installation no longer fails if the compiler supports OpenMP, but the fftw library comes without OpenMP support (`libfftw3f_omp`): the Fourier transforms then run single-threaded.
+
 ### Documentation
 
 -   Many documentation fixes and improvements, and a package help page (`?fCWTr`).

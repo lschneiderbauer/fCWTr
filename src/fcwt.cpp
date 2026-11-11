@@ -269,10 +269,11 @@ void FCWT::cwt(const float *pinput, int psize, Scales *scales, const RowCallback
     //Generate mother wavelet function
     wavelet->generate(newsize);
 
-    #ifndef SINGLE_THREAD
-        // Note: we do not call omp_set_num_threads() here, as that would change
-        // the OpenMP default for the whole R session. Our own parallel regions
-        // set the number of threads explicitly, FFTW gets it here:
+    // Note: we do not call omp_set_num_threads() here, as that would change
+    // the OpenMP default for the whole R session. Our own parallel regions
+    // set the number of threads explicitly, FFTW gets it here (if its OpenMP
+    // version is available, see configure):
+    #if !defined(SINGLE_THREAD) && !defined(FCWT_NO_FFTW_THREADS)
         fftwf_init_threads();
         fftwf_plan_with_nthreads(threads);
     #endif

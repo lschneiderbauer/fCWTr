@@ -74,12 +74,16 @@ $FFTWF_MISSING_MSG])
 
 # there are no pkg-config files for fftw3-omp,
 # so check like this.
-# have_fftw_omp=no
+# If fftw comes without OpenMP support, its thread functions must not be
+# used (otherwise linking/loading fails): only our own loops use OpenMP then,
+# the FFTs run single-threaded.
 AC_SEARCH_LIBS(
  fftwf_plan_with_nthreads,
  fftw3f_omp,
  [have_fftw_omp=yes],
- [AC_MSG_RESULT([The fftw3-omp support not found.])]
+ [have_fftw_omp=no
+  AC_MSG_NOTICE([fftw without OpenMP support (libfftw3f_omp) found: FFTs will be single-threaded.])
+  CPPFLAGS="${CPPFLAGS} -DFCWT_NO_FFTW_THREADS"]
 )
 
 

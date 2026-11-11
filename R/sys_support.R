@@ -6,10 +6,10 @@
 #' not enabled the parameter `n_threads` of [fcwt()] is ignored.
 #'
 #' @details
-#' OpenMP is used (both by fCWTr itself and by the fftw library) if
-#' * the compiler supports OpenMP, and
-#' * the fftw library on your platform comes with OpenMP support
-#'   (`libfftw3f_omp`).
+#' OpenMP is used by fCWTr if the compiler supports it. In addition, the
+#' Fourier transforms are multithreaded only if the fftw library on your
+#' platform comes with OpenMP support (`libfftw3f_omp`); otherwise they run
+#' single-threaded.
 #'
 #' On Windows, OpenMP support is disabled, since the fftw library provided
 #' by Rtools is compiled without OpenMP support.

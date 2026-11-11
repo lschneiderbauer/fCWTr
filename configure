@@ -4407,7 +4407,9 @@ fi
 
 # there are no pkg-config files for fftw3-omp,
 # so check like this.
-# have_fftw_omp=no
+# If fftw comes without OpenMP support, its thread functions must not be
+# used (otherwise linking/loading fails): only our own loops use OpenMP then,
+# the FFTs run single-threaded.
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing fftwf_plan_with_nthreads" >&5
 printf %s "checking for library containing fftwf_plan_with_nthreads... " >&6; }
 if test ${ac_cv_search_fftwf_plan_with_nthreads+y}
@@ -4467,8 +4469,10 @@ then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
   have_fftw_omp=yes
 else case e in #(
-  e) { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: The fftw3-omp support not found." >&5
-printf "%s\n" "The fftw3-omp support not found." >&6; }
+  e) have_fftw_omp=no
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: fftw without OpenMP support (libfftw3f_omp) found: FFTs will be single-threaded." >&5
+printf "%s\n" "$as_me: fftw without OpenMP support (libfftw3f_omp) found: FFTs will be single-threaded." >&6;}
+  CPPFLAGS="${CPPFLAGS} -DFCWT_NO_FFTW_THREADS"
  ;;
 esac
 fi
