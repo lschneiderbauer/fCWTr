@@ -215,3 +215,25 @@ test_that("fcwt_batch() works with a single frequency", {
                     freq_begin = 400, freq_end = 500, n_freqs = 1, sigma = 2)
   expect_equal(sc_dim_freq(res), 1)
 })
+
+test_that("the cone of influence matches its definition", {
+  # straightforward (but memory-hungry) definition of the mask:
+  # boundary effects for t * f / sample_freq < 2 * sigma
+  coi_mask_def <- function(sc) {
+    dim_t <- sc_dim_time(sc)
+    f_rel <- ddu(sc_freqs(sc) / attr(sc, "sample_freq"))
+    t <- rep(seq_len(dim_t), times = length(f_rel))
+    f <- rep(f_rel, each = dim_t)
+    mask <- t * f < 2 * attr(sc, "sigma") | (dim_t - t + 1) * f < 2 * attr(sc, "sigma")
+    dim(mask) <- c(dim_t, length(f_rel))
+    mask
+  }
+
+  for (scale in c("log", "linear")) {
+    sc <- fcwt(ts_sin_440[1:3000], x_sample_freq = u(44.1, "kHz"),
+               y_sample_freq = u(11.025, "kHz"), freq_begin = 30,
+               freq_end = 2000, n_freqs = 37, freq_scale = scale, sigma = 5)
+
+    expect_equal(is.na(as.matrix(sc)), coi_mask_def(sc))
+  }
+})

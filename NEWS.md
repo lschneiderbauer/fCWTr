@@ -50,6 +50,8 @@
 
 -   Considerably less memory is needed: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).
 
+-   With `rm_coi = TRUE` (the default), the boundary values are now removed with much less memory overhead (peak memory about 2.5x instead of 6x the size of the result).
+
 -   The global OpenMP thread setting of the R session is no longer changed.
 
 ### `fcwt_batch()`

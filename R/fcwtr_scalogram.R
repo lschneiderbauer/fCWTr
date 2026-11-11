@@ -33,52 +33,27 @@ fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
   )
 }
 
-sc_set_coi_na <- function(x) {
-  stopifnot(inherits(x, "fcwtr_scalogram"))
-
-  x[sc_coi_mask(x)] <- NA_real_
-
-  x
-}
-
-sc_coi_mask <- function(x) {
-  stopifnot(inherits(x, "fcwtr_scalogram"))
-
-  coi_mask(
-    dim_t = sc_dim_time(x),
-    dim_f = sc_dim_freq(x),
-    sample_freq = attr(x, "sample_freq"),
-    freq_begin = attr(x, "freq_begin"),
-    freq_end = attr(x, "freq_end"),
-    freq_scale = attr(x, "freq_scale"),
-    sigma = attr(x, "sigma")
+# Number of time slices at each boundary that lie inside the "cone of
+# influence" (and are therefore affected by boundary effects), for each
+# frequency (column) of a scalogram with `dim_t` time slices.
+#
+# The standard deviation of the Gaussian wave packet at frequency f is
+# sigma / f; we choose 4 sigma / f as the support of a wave packet, so
+# boundary effects are expected for time steps t (relative to the boundary,
+# in units of the sampling period) with t * f / sample_freq < 2 sigma.
+#
+# Computed column by column, so that only small temporary objects are needed
+# (the mask of the whole scalogram has the same size as the scalogram).
+coi_n_slices <- function(dim_t, sample_freq, freq_begin, freq_end, freq_scale,
+                         sigma, dim_f) {
+  # frequencies in units of the sampling frequency
+  f_rel <- ddu(
+    seq2(freq_end, freq_begin, length.out = dim_f, scale = freq_scale) /
+      sample_freq
   )
-}
 
-#' @return A boolean matrix of the same dimensions as `x`. `TRUE` values
-#'         indicate values inside the boundary "cone of influence".
-#' @noRd
-coi_mask <- function(dim_t, dim_f, sample_freq, freq_begin, freq_end,
-                     freq_scale, sigma) {
-  # The standard deviation Dt of a the Gauß like wave packet at frequency f
-  # and sampling frequency f_s with given σ is given by
-  # Dt = σ / f
-  # we choose 4Σ to define the support of a wave packet
-  # (and so boundary effects are expected to occur until 2Σ)
-  coi_pred <- \(f, t) ddu(t * f) < 2 * sigma
-
-  # express in dimensionless quantities
-  t <- rep(1:dim_t, times = dim_f)
-  f <-
-    rep(
-      seq2(freq_end, freq_begin, length.out = dim_f, scale = freq_scale) / sample_freq,
-      each = dim_t
-    )
-
-  mask <- coi_pred(f, t) | coi_pred(f, dim_t - t + 1)
-  dim(mask) <- c(dim_t, dim_f)
-
-  mask
+  t <- seq_len(dim_t)
+  vapply(f_rel, function(f) sum(t * f < 2 * sigma), integer(1))
 }
 
 # invalid time steps on one side of the time series

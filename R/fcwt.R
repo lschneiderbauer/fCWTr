@@ -204,18 +204,29 @@ fcwt <- function(x,
   # sample rate can deviate from the requested `y_sample_freq`.
   y_sample_freq_actual <- x_sample_freq / w$size_n
 
-  sc <-
-    fcwtr_scalogram(
-      output,
-      # time (offset) in the inverse unit of the sampling frequency
-      time_offset = 0 / y_sample_freq_actual,
-      y_sample_freq_actual, freq_begin, freq_end,
-      freq_scale, sigma
+  if (rm_coi) {
+    # Set the values inside the cone of influence to NA, column by column.
+    # (This is done here, in place on the freshly created matrix: passing it
+    # to a function that modifies it would create a full copy.)
+    dim_t <- nrow(output)
+    n_coi <- coi_n_slices(
+      dim_t, y_sample_freq_actual, freq_begin, freq_end, freq_scale, sigma,
+      dim_f = n_freqs
     )
 
-  if (rm_coi) {
-    sc_set_coi_na(sc)
-  } else {
-    sc
+    for (j in seq_along(n_coi)) {
+      m <- min(n_coi[[j]], dim_t)
+      if (m > 0) {
+        output[c(seq_len(m), seq.int(dim_t - m + 1, dim_t)), j] <- NA_real_
+      }
+    }
   }
+
+  fcwtr_scalogram(
+    output,
+    # time (offset) in the inverse unit of the sampling frequency
+    time_offset = 0 / y_sample_freq_actual,
+    y_sample_freq_actual, freq_begin, freq_end,
+    freq_scale, sigma
+  )
 }
