@@ -4284,11 +4284,11 @@ fi
 
 fi
 
-# Fallback (no pkg-config or no fftw3f.pc): try linking directly.
-if test "$have_fftw3f_pc" = no
-then :
-
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing fftwf_plan_dft_r2c_1d" >&5
+# Check that we can actually link against single-precision fftw, also if
+# pkg-config knows about fftw3f (e.g. the headers and fftw3f.pc may be
+# installed while the library itself is missing). If the flags from
+# pkg-config do not suffice (or pkg-config is not available), try -lfftw3f.
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing fftwf_plan_dft_r2c_1d" >&5
 printf %s "checking for library containing fftwf_plan_dft_r2c_1d... " >&6; }
 if test ${ac_cv_search_fftwf_plan_dft_r2c_1d+y}
 then :
@@ -4352,8 +4352,6 @@ $FFTWF_MISSING_MSG" "$LINENO" 5 ;;
 esac
 fi
 
-
-fi
 
 # needs to be after pkg-config checks
 # to have correct paths already

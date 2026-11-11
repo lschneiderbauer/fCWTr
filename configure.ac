@@ -54,12 +54,13 @@ AS_IF([test -n "$PKG_CONFIG"], [
     [AC_MSG_RESULT([no])])
 ])
 
-# Fallback (no pkg-config or no fftw3f.pc): try linking directly.
-AS_IF([test "$have_fftw3f_pc" = no], [
-  AC_SEARCH_LIBS([fftwf_plan_dft_r2c_1d], [fftw3f], ,
-    [AC_MSG_ERROR([single-precision fftw3 library (libfftw3f) not found.
+# Check that we can actually link against single-precision fftw, also if
+# pkg-config knows about fftw3f (e.g. the headers and fftw3f.pc may be
+# installed while the library itself is missing). If the flags from
+# pkg-config do not suffice (or pkg-config is not available), try -lfftw3f.
+AC_SEARCH_LIBS([fftwf_plan_dft_r2c_1d], [fftw3f], ,
+  [AC_MSG_ERROR([single-precision fftw3 library (libfftw3f) not found.
 $FFTWF_MISSING_MSG])])
-])
 
 # needs to be after pkg-config checks
 # to have correct paths already
