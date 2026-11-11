@@ -19,12 +19,12 @@ Source:
 [`DESCRIPTION`](https://github.com/lschneiderbauer/fCWTr/blob/master/DESCRIPTION)
 
 Schneiderbauer L (2026). *fCWTr: Fast Continuous Wavelet Transform*. R
-package version 0.3.1, <https://lschneiderbauer.github.io/fCWTr/>.
+package version 0.4.0, <https://lschneiderbauer.github.io/fCWTr/>.
 
     @Manual{,
       title = {fCWTr: Fast Continuous Wavelet Transform},
       author = {Lukas Schneiderbauer},
       year = {2026},
-      note = {R package version 0.3.1},
+      note = {R package version 0.4.0},
       url = {https://lschneiderbauer.github.io/fCWTr/},
     }

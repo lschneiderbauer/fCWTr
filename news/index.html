@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fCWTr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,36 +42,66 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.1" id="fcwtr-031">fCWTr 0.3.1<a class="anchor" aria-label="anchor" href="#fcwtr-031"></a></h2>
-<ul><li><p>fix CRAN issues</p></li>
-<li>
-<p>bug fixes in the transform (results change numerically):</p>
-<ul><li><p>values of a frequency band no longer leak into the following (lower-frequency) bands.</p></li>
-<li><p>for odd signal lengths, every other frequency band was shifted by one sample in time.</p></li>
-<li><p>averaging over time windows (<code>y_sample_freq</code> lower than <code>x_sample_freq</code>) under-estimated the mean.</p></li>
-<li><p><code>n_freqs = 1</code> with <code>freq_scale = "log"</code> returned garbage.</p></li>
-<li><p>fix undefined behavior (memory alignment) that could lead to crashes on some CPUs.</p></li>
-<li><p>the sampling frequency <code>x_sample_freq</code> was truncated to an integer (in Hz), so non-integer sampling frequencies lead to wrong frequencies, and sampling frequencies below 1 Hz did not work at all.</p></li>
-<li><p>the time axis of the result was wrong if <code>x_sample_freq / y_sample_freq</code> is not an integer: the result now records the actual output sampling rate (which can be slightly higher than <code>y_sample_freq</code>).</p></li>
-<li><p>with <code>freq_scale = "linear"</code>, the frequencies actually computed did not match the reported ones (only the lowest one did): they now range from <code>freq_begin</code> to <code>freq_end</code> (both inclusive), as for <code>freq_scale = "log"</code>.</p></li>
-</ul></li>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="fcwtr-040">fCWTr 0.4.0<a class="anchor" aria-label="anchor" href="#fcwtr-040"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-4-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-0"></a></h3>
+<ul><li><p>Due to the bug fixes below, the results of <code><a href="../reference/fcwt.html">fcwt()</a></code> and <code><a href="../reference/fcwt_batch.html">fcwt_batch()</a></code> change numerically, in some cases considerably (in particular when averaging over time windows, for odd signal lengths, and for <code>freq_scale = "linear"</code>).</p></li>
+<li><p><code><a href="../reference/fcwt_batch.html">fcwt_batch()</a></code>: the defaults of <code>sigma</code> and <code>n_freqs</code> are now the same as for <code><a href="../reference/fcwt.html">fcwt()</a></code> (previously <code>sigma = 1</code>, and <code>n_freqs</code> was a third lower).</p></li>
+<li><p><code>[</code> (scalogram subsetting): indices that do not select a contiguous range now raise an error, since the result cannot be represented by evenly spaced time and frequency axes. Use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> for arbitrary subsetting.</p></li>
 <li><p><code><a href="../reference/fcwt.html">fcwt()</a></code>: <code>n_threads</code> must be at least 1.</p></li>
-<li><p><code><a href="../reference/fcwt.html">fcwt()</a></code> no longer changes the global OpenMP thread setting of the R session.</p></li>
-<li><p>very large inputs (more than 2^31 output values) are now supported (previously: integer overflow), and failing memory allocations raise an error instead of leading to undefined behavior.</p></li>
-<li><p><code><a href="../reference/fcwt.html">fcwt()</a></code> needs considerably less memory: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).</p></li>
-<li>
-<p><code><a href="../reference/fcwt_batch.html">fcwt_batch()</a></code>:</p>
-<ul><li><p>the defaults of <code>sigma</code> and <code>n_freqs</code> are now the same as for <code><a href="../reference/fcwt.html">fcwt()</a></code> (previously <code>sigma = 1</code>, and <code>n_freqs</code> was a third lower).</p></li>
-<li><p>the default <code>max_batch_size</code> is now chosen such that processing a batch needs about 500 MB of memory, taking into account the reduced memory usage of <code><a href="../reference/fcwt.html">fcwt()</a></code> and the averaging over time windows (<code>y_sample_freq</code>). Previously, the batches were often unnecessarily small, which lead to large losses from boundary effects.</p></li>
-</ul></li>
-<li>
-<p>subsetting a scalogram with <code>[</code>:</p>
-<ul><li><p>selecting frequencies (columns) now adjusts the frequency range; previously, the frequency labels were wrong.</p></li>
-<li><p>negative and logical indices now adjust the time offset correctly. Indices that do not select a contiguous range raise an error (they cannot be represented by evenly spaced axes), use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> instead.</p></li>
-</ul></li>
-<li><p>times are now given in a unit that suits their magnitude (s, ms, us, or ns): the <code>time</code> column of <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> / <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code>, the time offset and time resolutions in <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, and the time axis of <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> (whose <code>time_unit</code> argument now defaults to <code>NULL</code>, i.e. automatic).</p></li>
-<li><p>documentation fixes and improvements.</p></li>
+<li><p>R &gt;= 4.2 is required.</p></li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-4-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h3>
+<div class="section level4">
+<h4 id="fcwt-and-hence-fcwt_batch-0-4-0">
+<code>fcwt()</code> (and hence <code>fcwt_batch()</code>)<a class="anchor" aria-label="anchor" href="#fcwt-and-hence-fcwt_batch-0-4-0"></a></h4>
+<ul><li><p>Values of a frequency band no longer leak into the following (lower-frequency) bands.</p></li>
+<li><p>For odd signal lengths, every other frequency band was shifted by one sample in time.</p></li>
+<li><p>Averaging over time windows (<code>y_sample_freq</code> lower than <code>x_sample_freq</code>) under-estimated the mean.</p></li>
+<li><p>With <code>freq_scale = "linear"</code>, the frequencies actually computed did not match the reported ones (only the lowest one did): they now range from <code>freq_begin</code> to <code>freq_end</code> (both inclusive), as for <code>freq_scale = "log"</code>.</p></li>
+<li><p><code>n_freqs = 1</code> with <code>freq_scale = "log"</code> returned garbage (and could crash on CPUs with AVX support).</p></li>
+<li><p>The sampling frequency <code>x_sample_freq</code> was truncated to an integer (in Hz), so non-integer sampling frequencies lead to wrong frequencies, and sampling frequencies below 1 Hz did not work at all.</p></li>
+<li><p>The time axis of the result was wrong if <code>x_sample_freq / y_sample_freq</code> is not an integer: the result now records the actual output sampling rate (which can be slightly higher than <code>y_sample_freq</code>).</p></li>
+<li><p>Fix undefined behavior (memory alignment) that could lead to crashes on some platforms.</p></li>
+<li><p>Very large inputs (more than 2^31 output values) lead to an integer overflow, failing memory allocations to undefined behavior. The former are now supported, the latter raise an error.</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="fcwt_batch-0-4-0"><code>fcwt_batch()</code><a class="anchor" aria-label="anchor" href="#fcwt_batch-0-4-0"></a></h4>
+<ul><li>
+<code>n_freqs = 1</code> did not work.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="scalogram-methods-0-4-0">Scalogram methods<a class="anchor" aria-label="anchor" href="#scalogram-methods-0-4-0"></a></h4>
+<ul><li><p><code>[</code>: selecting frequencies (columns) now adjusts the frequency range (previously, the frequency labels were wrong), and negative and logical indices now adjust the time offset correctly.</p></li>
+<li><p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code>: the axis labels show the units again with ggplot2 &gt;= 4.0.</p></li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="new-features-and-improvements-0-4-0">New features and improvements<a class="anchor" aria-label="anchor" href="#new-features-and-improvements-0-4-0"></a></h3>
+<div class="section level4">
+<h4 id="fcwt-0-4-0"><code>fcwt()</code><a class="anchor" aria-label="anchor" href="#fcwt-0-4-0"></a></h4>
+<ul><li><p>Considerably less memory is needed: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).</p></li>
+<li><p>The global OpenMP thread setting of the R session is no longer changed.</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="fcwt_batch-0-4-0-1"><code>fcwt_batch()</code><a class="anchor" aria-label="anchor" href="#fcwt_batch-0-4-0-1"></a></h4>
+<ul><li>The default <code>max_batch_size</code> is now chosen such that processing a batch needs about 500 MB of memory, taking into account the reduced memory usage of <code><a href="../reference/fcwt.html">fcwt()</a></code> and the averaging over time windows (<code>y_sample_freq</code>). Previously, the batches were often unnecessarily small, which lead to large losses from boundary effects.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="scalogram-methods-0-4-0-1">Scalogram methods<a class="anchor" aria-label="anchor" href="#scalogram-methods-0-4-0-1"></a></h4>
+<ul><li>Times are now given in a unit that suits their magnitude (s, ms, us, or ns): the <code>time</code> column of <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> / <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code>, the time offset and time resolutions in <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, and the time axis of <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> (whose <code>time_unit</code> argument now defaults to <code>NULL</code>, i.e. automatic).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="installation-0-4-0">Installation<a class="anchor" aria-label="anchor" href="#installation-0-4-0"></a></h4>
+<ul><li>The installation now explicitly checks for the single-precision fftw library (falling back to a direct link test if pkg-config does not find it), and gives clear instructions on which packages to install if it is missing. <code>SystemRequirements</code> describes the dependencies in more detail (fixes CRAN issues).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="documentation-0-4-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-4-0"></a></h4>
+<ul><li>Many documentation fixes and improvements, and a package help page (<code><a href="../reference/fCWTr-package.html">?fCWTr</a></code>).</li>
+</ul></div>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="fcwtr-030">fCWTr 0.3.0<a class="anchor" aria-label="anchor" href="#fcwtr-030"></a></h2>
 <ul><li>
