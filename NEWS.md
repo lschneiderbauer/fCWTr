@@ -1,48 +1,72 @@
-# fCWTr 0.3.1
+# fCWTr 0.4.0
 
--   fix CRAN issues
+## Breaking changes
 
--   bug fixes in the transform (results change numerically):
+-   Due to the bug fixes below, the results of `fcwt()` and `fcwt_batch()` change numerically, in some cases considerably (in particular when averaging over time windows, for odd signal lengths, and for `freq_scale = "linear"`).
 
-    -   values of a frequency band no longer leak into the following (lower-frequency) bands.
+-   `fcwt_batch()`: the defaults of `sigma` and `n_freqs` are now the same as for `fcwt()` (previously `sigma = 1`, and `n_freqs` was a third lower).
 
-    -   for odd signal lengths, every other frequency band was shifted by one sample in time.
-
-    -   averaging over time windows (`y_sample_freq` lower than `x_sample_freq`) under-estimated the mean.
-
-    -   `n_freqs = 1` with `freq_scale = "log"` returned garbage.
-
-    -   fix undefined behavior (memory alignment) that could lead to crashes on some CPUs.
-
-    -   the sampling frequency `x_sample_freq` was truncated to an integer (in Hz), so non-integer sampling frequencies lead to wrong frequencies, and sampling frequencies below 1 Hz did not work at all.
-
-    -   the time axis of the result was wrong if `x_sample_freq / y_sample_freq` is not an integer: the result now records the actual output sampling rate (which can be slightly higher than `y_sample_freq`).
-
-    -   with `freq_scale = "linear"`, the frequencies actually computed did not match the reported ones (only the lowest one did): they now range from `freq_begin` to `freq_end` (both inclusive), as for `freq_scale = "log"`.
+-   `[` (scalogram subsetting): indices that do not select a contiguous range now raise an error, since the result cannot be represented by evenly spaced time and frequency axes. Use `as.matrix()` for arbitrary subsetting.
 
 -   `fcwt()`: `n_threads` must be at least 1.
 
--   `fcwt()` no longer changes the global OpenMP thread setting of the R session.
+-   R \>= 4.2 is required.
 
--   very large inputs (more than 2^31 output values) are now supported (previously: integer overflow), and failing memory allocations raise an error instead of leading to undefined behavior.
+## Bug fixes
 
--   `fcwt()` needs considerably less memory: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).
+### `fcwt()` (and hence `fcwt_batch()`)
 
--   `fcwt_batch()`:
+-   Values of a frequency band no longer leak into the following (lower-frequency) bands.
 
-    -   the defaults of `sigma` and `n_freqs` are now the same as for `fcwt()` (previously `sigma = 1`, and `n_freqs` was a third lower).
+-   For odd signal lengths, every other frequency band was shifted by one sample in time.
 
-    -   the default `max_batch_size` is now chosen such that processing a batch needs about 500 MB of memory, taking into account the reduced memory usage of `fcwt()` and the averaging over time windows (`y_sample_freq`). Previously, the batches were often unnecessarily small, which lead to large losses from boundary effects.
+-   Averaging over time windows (`y_sample_freq` lower than `x_sample_freq`) under-estimated the mean.
 
--   subsetting a scalogram with `[`:
+-   With `freq_scale = "linear"`, the frequencies actually computed did not match the reported ones (only the lowest one did): they now range from `freq_begin` to `freq_end` (both inclusive), as for `freq_scale = "log"`.
 
-    -   selecting frequencies (columns) now adjusts the frequency range; previously, the frequency labels were wrong.
+-   `n_freqs = 1` with `freq_scale = "log"` returned garbage (and could crash on CPUs with AVX support).
 
-    -   negative and logical indices now adjust the time offset correctly. Indices that do not select a contiguous range raise an error (they cannot be represented by evenly spaced axes), use `as.matrix()` instead.
+-   The sampling frequency `x_sample_freq` was truncated to an integer (in Hz), so non-integer sampling frequencies lead to wrong frequencies, and sampling frequencies below 1 Hz did not work at all.
 
--   times are now given in a unit that suits their magnitude (s, ms, us, or ns): the `time` column of `as.data.frame()` / `as_tibble()`, the time offset and time resolutions in `print()`, and the time axis of `plot()` / `autoplot()` (whose `time_unit` argument now defaults to `NULL`, i.e. automatic).
+-   The time axis of the result was wrong if `x_sample_freq / y_sample_freq` is not an integer: the result now records the actual output sampling rate (which can be slightly higher than `y_sample_freq`).
 
--   documentation fixes and improvements.
+-   Fix undefined behavior (memory alignment) that could lead to crashes on some platforms.
+
+-   Very large inputs (more than 2^31 output values) lead to an integer overflow, failing memory allocations to undefined behavior. The former are now supported, the latter raise an error.
+
+### `fcwt_batch()`
+
+-   `n_freqs = 1` did not work.
+
+### Scalogram methods
+
+-   `[`: selecting frequencies (columns) now adjusts the frequency range (previously, the frequency labels were wrong), and negative and logical indices now adjust the time offset correctly.
+
+-   `plot()` / `autoplot()`: the axis labels show the units again with ggplot2 \>= 4.0.
+
+## New features and improvements
+
+### `fcwt()`
+
+-   Considerably less memory is needed: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).
+
+-   The global OpenMP thread setting of the R session is no longer changed.
+
+### `fcwt_batch()`
+
+-   The default `max_batch_size` is now chosen such that processing a batch needs about 500 MB of memory, taking into account the reduced memory usage of `fcwt()` and the averaging over time windows (`y_sample_freq`). Previously, the batches were often unnecessarily small, which lead to large losses from boundary effects.
+
+### Scalogram methods
+
+-   Times are now given in a unit that suits their magnitude (s, ms, us, or ns): the `time` column of `as.data.frame()` / `as_tibble()`, the time offset and time resolutions in `print()`, and the time axis of `plot()` / `autoplot()` (whose `time_unit` argument now defaults to `NULL`, i.e. automatic).
+
+### Installation
+
+-   The installation now explicitly checks for the single-precision fftw library (falling back to a direct link test if pkg-config does not find it), and gives clear instructions on which packages to install if it is missing. `SystemRequirements` describes the dependencies in more detail (fixes CRAN issues).
+
+### Documentation
+
+-   Many documentation fixes and improvements, and a package help page (`?fCWTr`).
 
 # fCWTr 0.3.0
 
