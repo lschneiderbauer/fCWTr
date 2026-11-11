@@ -20,7 +20,7 @@ sigma_freq_res_rel(sigma)
 ## Value
 
 A number `p` representing the relative frequency resolution. I.e. at a
-given resolution `f`, the frequency resolution is `f*p`.
+given frequency `f`, the frequency resolution is `f*p`.
 
 ## See also
 

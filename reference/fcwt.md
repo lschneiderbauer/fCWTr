@@ -38,7 +38,8 @@ fcwt(
   frequency definitions as well as the units of the output data. Expects
   either a value with frequency units, generated with
   [`u()`](https://lschneiderbauer.github.io/fCWTr/reference/u.md), or a
-  pure number, in which case it is interpreted in units of 'Hertz'.
+  pure number, in which case it is interpreted in units of 'Hertz'. It
+  does not need to be an integer.
 
 - sigma:
 
@@ -54,7 +55,12 @@ fcwt(
 
   Defaults to \\2\pi\\. Note that there is not really a natural choice
   for sigma, it depends on the use case. So the default choice can very
-  well be quite a bad choice (it probably is for audio data).
+  well be quite a bad choice (it probably is for audio data). See
+  [`sigma_from_time_res()`](https://lschneiderbauer.github.io/fCWTr/reference/sigma_from_time_res.md),
+  [`sigma_from_freq_res()`](https://lschneiderbauer.github.io/fCWTr/reference/sigma_from_freq_res.md)
+  and
+  [`sigma_from_freq_res_rel()`](https://lschneiderbauer.github.io/fCWTr/reference/sigma_from_freq_res_rel.md)
+  to determine sigma from resolution requirements.
 
 - y_sample_freq:
 
@@ -71,9 +77,11 @@ fcwt(
 
 - freq_begin, freq_end:
 
-  Optionally specifies the frequency range `[freq_end, freq_begin]`. If
-  not specified the maximal meaningful frequency range, depending on the
-  input signal, is taken. A frequency-valued number, generated with
+  Optionally specifies the frequency range `[freq_begin, freq_end]`
+  (both inclusive). If not specified the maximal meaningful frequency
+  range, depending on the input signal, is taken: from
+  `2 * x_sample_freq / length(x)` up to the Nyquist frequency
+  `x_sample_freq / 2`. A frequency-valued number, generated with
   [`u()`](https://lschneiderbauer.github.io/fCWTr/reference/u.md), or a
   pure number, that is interpreted in units of 'Hertz'.
 
@@ -94,25 +102,24 @@ fcwt(
 
 - freq_scale:
 
-  ( `"log"` \| `"linear"` ) Should the frequency scale be linear or
-  logarithmic? "linear" / "log" for linear / logarithmic. The default
-  scale is logarithmic since differences on a logarithmic scale are
-  proportional to the frequency uncertainties. In this sense, the
-  logarithmic frequency scale is actually the natural scale for the
-  continuous wavelet transform.
+  One of `"log"` (default) or `"linear"`: should the `n_freqs`
+  frequencies be distributed logarithmically or linearly between
+  `freq_begin` and `freq_end`? The default scale is logarithmic since
+  differences on a logarithmic scale are proportional to the frequency
+  uncertainties. In this sense, the logarithmic frequency scale is
+  actually the natural scale for the continuous wavelet transform.
 
 - rm_coi:
 
-  ( [TRUE](https://rdrr.io/r/base/logical.html) \|
-  [FALSE](https://rdrr.io/r/base/logical.html) ) Boundary effects can
-  result in nonphysical artifacts. If `rm_coi = TRUE`, those are
-  effectively removed by setting corresponding values to
-  [NA](https://rdrr.io/r/base/NA.html). We define the essential support
-  of the (Gaussian) wavelet to be four times its standard deviation,
-  \\\Delta t = \frac{\sigma}{f}\\, and so a wavelet touches the boundary
-  if the distance of the center of the wavelet to the boundary is less
-  then \\\Delta t /2\\. Values that fall into that range are removed if
-  `rm_coi = TRUE`.
+  `TRUE` (default) or `FALSE`. Boundary effects can result in
+  nonphysical artifacts. If `rm_coi = TRUE`, those are effectively
+  removed by setting corresponding values to `NA`. We define the
+  essential support of the (Gaussian) wavelet at frequency \\f\\ to be
+  four times its standard deviation \\\Sigma / f\\, i.e. \\\Delta t = 4
+  \frac{\Sigma}{f}\\, and so a wavelet touches the boundary if the
+  distance of the center of the wavelet to the boundary is less than
+  \\\Delta t / 2\\. Values that fall into that range (the "cone of
+  influence") are removed if `rm_coi = TRUE`.
 
 - n_threads:
 
@@ -124,8 +131,14 @@ fcwt(
 
 ## Value
 
-The spectogram, a numeric real-valued matrix with dimensions
-`dim = c(length(x), n_freqs)`, curated with some additional properties.
+The scalogram, a numeric real-valued matrix with a time (rows) and a
+frequency (columns) dimension, curated with some additional properties.
+Its dimensions are `c(ceiling(length(x) / k), n_freqs)`, where `k` is
+the number of input samples averaged per output sample (see
+`y_sample_freq`; `k = 1` if `y_sample_freq = x_sample_freq`). The
+columns are ordered from the highest (`freq_end`) to the lowest
+(`freq_begin`) frequency.
+
 This matrix is wrapped into a S3-class `fcwtr_scalogram` so that
 plotting and coercion functions can be used conveniently. Use
 [`as.matrix()`](https://rdrr.io/r/base/matrix.html) to strip the curated
@@ -167,8 +180,8 @@ fcwt(
 #> * Frequency scale: 50 [Hz] - 1000 [Hz], log
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
-#>   o Time resolution at  50 [Hz] :  0.4 [1/Hz] 
-#>   o Time resolution at  1000 [Hz] :  0.02 [1/Hz] 
+#>   o Time resolution at  50 [Hz] :  400 [ms] 
+#>   o Time resolution at  1000 [Hz] :  20 [ms] 
 #>   o Relative frequency resolution:  0.127324 
 #> * Time/frequency matrix summary
 #>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs 

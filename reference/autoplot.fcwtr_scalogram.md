@@ -9,7 +9,7 @@ Create a ggplot object resembling a scalogram
 autoplot(
   object,
   n = 1000,
-  time_unit = "s",
+  time_unit = NULL,
   freq_unit = "Hz",
   transf = identity,
   ...
@@ -31,8 +31,9 @@ autoplot(
 
 - time_unit:
 
-  A time unit that is used for the x-axis scale. Default to "s" -
-  seconds. See
+  A time unit that is used for the x-axis scale, e.g. `"s"` or `"ms"`.
+  By default (`NULL`), a suitable unit (s, ms, us, or ns) is chosen
+  depending on the length of the scalogram. See
   [`units::valid_udunits()`](https://r-quantities.github.io/units/reference/valid_udunits.html)
   and
   [`units::valid_udunits_prefixes()`](https://r-quantities.github.io/units/reference/valid_udunits.html)
@@ -54,7 +55,7 @@ autoplot(
 
 - ...:
 
-  other arguments passed to specific methods
+  Additional arguments are ignored.
 
 ## Value
 

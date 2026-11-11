@@ -16,7 +16,7 @@ sigma_from_time_res(res, freq)
 
 - res:
 
-  The required time resolution in frequency units (see
+  The required time resolution in time units (see
   [`u()`](https://lschneiderbauer.github.io/fCWTr/reference/u.md)).
 
 - freq:

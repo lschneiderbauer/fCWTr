@@ -45,7 +45,7 @@ A dimensionless number defined by the ratio of `x` and one unit
  du(x, "m")
 #> [1] 1000
 
- # drop the unit of a dimensionaless "unit" quantity
+ # drop the unit of a dimensionless "unit" quantity
  du(x / x)
 #> [1] 1
 ```

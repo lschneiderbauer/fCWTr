@@ -5,7 +5,9 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extract parts of a scalogram — [.fcwtr_scalogram"><meta name="description" content="Extract parts of a scalogram"><meta property="og:description" content="Extract parts of a scalogram"><meta property="og:image" content="https://lschneiderbauer.github.io/fCWTr/logo.svg"></head><body>
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Extract parts of a scalogram — [.fcwtr_scalogram"><meta name="description" content="Selects a time range and/or a frequency range of a scalogram. The time
+offset and the frequency range of the result are adjusted accordingly."><meta property="og:description" content="Selects a time range and/or a frequency range of a scalogram. The time
+offset and the frequency range of the result are adjusted accordingly."><meta property="og:image" content="https://lschneiderbauer.github.io/fCWTr/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -43,7 +45,8 @@
     </div>
 
     <div class="ref-description section level2">
-    <p>Extract parts of a scalogram</p>
+    <p>Selects a time range and/or a frequency range of a scalogram. The time
+offset and the frequency range of the result are adjusted accordingly.</p>
     </div>
 
     <div class="section level2">
@@ -61,18 +64,13 @@
 
 
 <dt id="arg-i-j">i, j<a class="anchor" aria-label="anchor" href="#arg-i-j"></a></dt>
-<dd><p>Indices corresponding to time slices of the spectogram which specify
-elements to extract. Indices are numeric vectors or empty (missing)
-or NULL. Numeric values are coerced to integer or whole numbers as by as.integer
-or for large values by <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">trunc()</a></code> (and hence truncated towards zero).</p>
-<p>The time offset of the scalogram is adjusted to correspond to <code>min(i)</code>.</p>
-<p>For [-indexing only: i, j, ... can be logical vectors, indicating elements/slices
-to select. Such vectors are recycled if necessary to match the corresponding extent.
-i, j, ... can also be negative integers, indicating elements/slices to leave out of the selection.
-When indexing arrays by [ a single argument i can be a matrix with as many
-columns as there are dimensions of x; the result is then a vector with
-elements corresponding to the sets of indices in each row of i.
-An index value of NULL is treated as if it were integer(0).</p></dd>
+<dd><p>Indices selecting time slices (rows, <code>i</code>) and frequencies (columns, <code>j</code>;
+ordered from the highest to the lowest frequency).
+Positive, negative, or logical indices are allowed, as long as they select
+a contiguous, ascending range (e.g. <code>10:20</code> or <code>-(1:5)</code>), since the result
+must again have evenly spaced time and frequency axes.
+A missing index selects everything.
+Use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> for arbitrary subsetting.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -91,11 +89,11 @@ An index value of NULL is treated as if it were integer(0).</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> _Scalogram_</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * (Time/Frequency) dimension:  ( 1000 , 6 )</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Sampling rate: 44100 [Hz]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> * Frequency scale: 17.64 [Hz] - 22050 [Hz], log</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Frequency scale: 190.0211 [Hz] - 9984.067 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time offset: 0 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Sigma: 6.283185</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  17.64 [Hz] :  1.424759 [1/Hz] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  22050 [Hz] :  0.001139807 [1/Hz] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  190.0211 [Hz] :  132.2629 [ms] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  9984.067 [Hz] :  2.517285 [ms] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   o Relative frequency resolution:  0.1013212 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs </span>

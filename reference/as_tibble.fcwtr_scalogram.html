@@ -6,13 +6,11 @@
     }
   };
 </script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Convert the scalogram matrix to a tibble — as_tibble.fcwtr_scalogram"><meta name="description" content="Internally, the scalogram resulting from fcwt() is represented by
-a numeric matrix(). This method converts this matrix into a three-columned
-tibble::tibble() (two columns to represent the matrix indices, and one column
-for the corresponding value).
+a numeric matrix(). This method converts this matrix into a
+tibble::tibble() in long format, with one row per matrix entry.
 Note that this conversion has a significant run time cost."><meta property="og:description" content="Internally, the scalogram resulting from fcwt() is represented by
-a numeric matrix(). This method converts this matrix into a three-columned
-tibble::tibble() (two columns to represent the matrix indices, and one column
-for the corresponding value).
+a numeric matrix(). This method converts this matrix into a
+tibble::tibble() in long format, with one row per matrix entry.
 Note that this conversion has a significant run time cost."><meta property="og:image" content="https://lschneiderbauer.github.io/fCWTr/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -52,9 +50,8 @@ Note that this conversion has a significant run time cost."><meta property="og:i
 
     <div class="ref-description section level2">
     <p>Internally, the scalogram resulting from <code><a href="fcwt.html">fcwt()</a></code> is represented by
-a numeric <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>. This method converts this matrix into a three-columned
-<code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code> (two columns to represent the matrix indices, and one column
-for the corresponding value).
+a numeric <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix()</a></code>. This method converts this matrix into a
+<code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code> in long format, with one row per matrix entry.
 Note that this conversion has a significant run time cost.</p>
     </div>
 
@@ -79,16 +76,20 @@ Note that this conversion has a significant run time cost.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code> object representing the scalogram data with four columns:</p><dl><dt>time_index</dt>
-<dd><p>An integer index uniquely identifying time slices.</p></dd>
+<dd><p>An integer index uniquely identifying time slices,
+starting at 0.</p></dd>
 
 <dt>time</dt>
-<dd><p>The time difference to the first time slice in physical units.
-The time unit is the inverse of the frequency unit chosen by the user
-for the <code>sample_freq</code> argument of <code><a href="fcwt.html">fcwt()</a></code>.</p></dd>
+<dd><p>The time of the time slice in physical units, relative to the
+beginning of the input signal (time slices that were cut off,
+e.g. by subsetting, are taken into account).
+The time unit (s, ms, us, or ns) is chosen depending on the
+magnitude of the values, and can be converted with
+<code><a href="https://r-quantities.github.io/units/reference/units.html" class="external-link">units::set_units()</a></code>.</p></dd>
 
 <dt>freq</dt>
-<dd><p>The frequency in the same units as the <code>sample_freq</code> argument
-of <code><a href="fcwt.html">fcwt()</a></code>.</p></dd>
+<dd><p>The frequency, in the units chosen by the user for the
+<code>freq_begin</code> and <code>freq_end</code> arguments of <code><a href="fcwt.html">fcwt()</a></code>.</p></dd>
 
 <dt>value</dt>
 <dd><p>The fCWT result for the particular time-frequency combination.</p></dd>
@@ -112,18 +113,18 @@ it simply returns a <code><a href="https://tibble.tidyverse.org/reference/tibble
 <span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,130 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    time_index     time   freq      value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494;">[s]</span>   <span style="color: #949494;">[Hz]</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          0 0        <span style="text-decoration: underline;">22</span>050. <span style="color: #BB0000;">NA</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          1 0.000<span style="text-decoration: underline;">363</span> <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">262</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          2 0.000<span style="text-decoration: underline;">726</span> <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">153</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          3 0.001<span style="text-decoration: underline;">09</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">108</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          4 0.001<span style="text-decoration: underline;">45</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">087</span>9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          5 0.001<span style="text-decoration: underline;">81</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">076</span>2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          6 0.002<span style="text-decoration: underline;">18</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">068</span>6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          7 0.002<span style="text-decoration: underline;">54</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">063</span>3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          8 0.002<span style="text-decoration: underline;">90</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">059</span>5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          9 0.003<span style="text-decoration: underline;">27</span>  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">056</span>5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    time_index  time   freq      value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494;">[ms]</span>   <span style="color: #949494;">[Hz]</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          0 0     <span style="text-decoration: underline;">22</span>050. <span style="color: #BB0000;">NA</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          1 0.363 <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">262</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          2 0.726 <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">153</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          3 1.09  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">108</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          4 1.45  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">087</span>9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          5 1.81  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">076</span>2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          6 2.18  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">068</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          7 2.54  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">063</span>3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          8 2.90  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">059</span>5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          9 3.27  <span style="text-decoration: underline;">22</span>050.  0.000<span style="text-decoration: underline;">056</span>5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3,120 more rows</span></span>
 </code></pre></div>
     </div>

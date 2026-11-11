@@ -30,6 +30,11 @@
     records the actual output sampling rate (which can be slightly
     higher than `y_sample_freq`).
 
+  - with `freq_scale = "linear"`, the frequencies actually computed did
+    not match the reported ones (only the lowest one did): they now
+    range from `freq_begin` to `freq_end` (both inclusive), as for
+    `freq_scale = "log"`.
+
 - [`fcwt()`](https://lschneiderbauer.github.io/fCWTr/reference/fcwt.md):
   `n_threads` must be at least 1.
 
@@ -44,6 +49,42 @@
   needs considerably less memory: the complex transform is no longer
   stored as a whole, but processed frequency by frequency (e.g. about 4x
   less peak memory when averaging over time windows).
+
+- [`fcwt_batch()`](https://lschneiderbauer.github.io/fCWTr/reference/fcwt_batch.md):
+
+  - the defaults of `sigma` and `n_freqs` are now the same as for
+    [`fcwt()`](https://lschneiderbauer.github.io/fCWTr/reference/fcwt.md)
+    (previously `sigma = 1`, and `n_freqs` was a third lower).
+
+  - the default `max_batch_size` is now chosen such that processing a
+    batch needs about 500 MB of memory, taking into account the reduced
+    memory usage of
+    [`fcwt()`](https://lschneiderbauer.github.io/fCWTr/reference/fcwt.md)
+    and the averaging over time windows (`y_sample_freq`). Previously,
+    the batches were often unnecessarily small, which lead to large
+    losses from boundary effects.
+
+- subsetting a scalogram with `[`:
+
+  - selecting frequencies (columns) now adjusts the frequency range;
+    previously, the frequency labels were wrong.
+
+  - negative and logical indices now adjust the time offset correctly.
+    Indices that do not select a contiguous range raise an error (they
+    cannot be represented by evenly spaced axes), use
+    [`as.matrix()`](https://rdrr.io/r/base/matrix.html) instead.
+
+- times are now given in a unit that suits their magnitude (s, ms, us,
+  or ns): the `time` column of
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) /
+  [`as_tibble()`](https://tibble.tidyverse.org/reference/as_tibble.html),
+  the time offset and time resolutions in
+  [`print()`](https://rdrr.io/r/base/print.html), and the time axis of
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
+  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+  (whose `time_unit` argument now defaults to `NULL`, i.e. automatic).
+
+- documentation fixes and improvements.
 
 ## fCWTr 0.3.0
 

@@ -88,7 +88,7 @@ frequency dimension.</p>
 a connection to physical units which is used in other frequency definitions
 as well as the units of the output data. Expects either a value with frequency
 units, generated with <code><a href="u.html">u()</a></code>, or a pure number, in which case it is
-interpreted in units of 'Hertz'.</p></dd>
+interpreted in units of 'Hertz'. It does not need to be an integer.</p></dd>
 
 
 <dt id="arg-sigma">sigma<a class="anchor" aria-label="anchor" href="#arg-sigma"></a></dt>
@@ -100,7 +100,9 @@ resolution and a worse (better) time resolution.</p>
 <p>For more information, see <code><a href="../articles/sigma.html">vignette("sigma", package = "fCWTr")</a></code>).</p>
 <p>Defaults to \(2\pi\). Note that there is not really a natural choice for
 sigma, it depends on the use case. So the default choice can very well be
-quite a bad choice (it probably is for audio data).</p></dd>
+quite a bad choice (it probably is for audio data).
+See <code><a href="sigma_from_time_res.html">sigma_from_time_res()</a></code>, <code><a href="sigma_from_freq_res.html">sigma_from_freq_res()</a></code> and
+<code><a href="sigma_from_freq_res_rel.html">sigma_from_freq_res_rel()</a></code> to determine sigma from resolution requirements.</p></dd>
 
 
 <dt id="arg-y-sample-freq">y_sample_freq<a class="anchor" aria-label="anchor" href="#arg-y-sample-freq"></a></dt>
@@ -116,9 +118,11 @@ higher than <code>y_sample_freq</code> and is stored in the result.</p></dd>
 
 
 <dt id="arg-freq-begin-freq-end">freq_begin, freq_end<a class="anchor" aria-label="anchor" href="#arg-freq-begin-freq-end"></a></dt>
-<dd><p>Optionally specifies the frequency range <code>[freq_end, freq_begin]</code>. If not
+<dd><p>Optionally specifies the frequency range <code>[freq_begin, freq_end]</code>
+(both inclusive). If not
 specified the maximal meaningful frequency range, depending on the input signal,
-is taken.
+is taken: from <code>2 * x_sample_freq / length(x)</code> up to the Nyquist frequency
+<code>x_sample_freq / 2</code>.
 A frequency-valued number, generated with <code><a href="u.html">u()</a></code>, or a pure number, that is
 interpreted in units of 'Hertz'.</p></dd>
 
@@ -139,9 +143,8 @@ afterwards: the output signal will show improved response.</p></dd>
 
 
 <dt id="arg-freq-scale">freq_scale<a class="anchor" aria-label="anchor" href="#arg-freq-scale"></a></dt>
-<dd><p>( <code>"log"</code> | <code>"linear"</code> )
-Should the frequency scale be linear or logarithmic?
-"linear"  / "log" for linear / logarithmic.
+<dd><p>One of <code>"log"</code> (default) or <code>"linear"</code>: should the <code>n_freqs</code> frequencies be
+distributed logarithmically or linearly between <code>freq_begin</code> and <code>freq_end</code>?
 The default scale is logarithmic since differences on a logarithmic scale
 are proportional to the frequency uncertainties.
 In this sense, the logarithmic frequency scale is actually the natural
@@ -149,15 +152,15 @@ scale for the continuous wavelet transform.</p></dd>
 
 
 <dt id="arg-rm-coi">rm_coi<a class="anchor" aria-label="anchor" href="#arg-rm-coi"></a></dt>
-<dd><p>( <a href="https://rdrr.io/r/base/logical.html" class="external-link">TRUE</a> | <a href="https://rdrr.io/r/base/logical.html" class="external-link">FALSE</a> )
+<dd><p><code>TRUE</code> (default) or <code>FALSE</code>.
 Boundary effects can result in nonphysical artifacts. If <code>rm_coi = TRUE</code>,
-those are effectively removed by setting corresponding values to <a href="https://rdrr.io/r/base/NA.html" class="external-link">NA</a>.
-We define the essential support of the
-(Gaussian) wavelet to be four times its standard deviation,
-\(\Delta t = \frac{\sigma}{f}\), and so a wavelet touches
+those are effectively removed by setting corresponding values to <code>NA</code>.
+We define the essential support of the (Gaussian) wavelet at frequency
+\(f\) to be four times its standard deviation \(\Sigma / f\), i.e.
+\(\Delta t = 4 \frac{\Sigma}{f}\), and so a wavelet touches
 the boundary if the distance of the center of the wavelet to the boundary
-is less then \(\Delta t /2\). Values that fall into that range are removed
-if <code>rm_coi = TRUE</code>.</p></dd>
+is less than \(\Delta t / 2\). Values that fall into that range
+(the "cone of influence") are removed if <code>rm_coi = TRUE</code>.</p></dd>
 
 
 <dt id="arg-n-threads">n_threads<a class="anchor" aria-label="anchor" href="#arg-n-threads"></a></dt>
@@ -169,9 +172,13 @@ only a single thread is used.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The spectogram, a numeric real-valued matrix with dimensions
-<code>dim = c(length(x), n_freqs)</code>, curated with some additional properties.
-This matrix is wrapped into a S3-class <code>fcwtr_scalogram</code> so that plotting and
+    <p>The scalogram, a numeric real-valued matrix with a time (rows) and a
+frequency (columns) dimension, curated with some additional properties.
+Its dimensions are <code>c(ceiling(length(x) / k), n_freqs)</code>, where <code>k</code> is the
+number of input samples averaged per output sample (see <code>y_sample_freq</code>;
+<code>k = 1</code> if <code>y_sample_freq = x_sample_freq</code>). The columns are ordered from
+the highest (<code>freq_end</code>) to the lowest (<code>freq_begin</code>) frequency.</p>
+<p>This matrix is wrapped into a S3-class <code>fcwtr_scalogram</code> so that plotting and
 coercion functions can be used conveniently. Use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> to strip
 the curated information. Or use <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> to convert to another
 data format.</p>
@@ -210,8 +217,8 @@ Nat Comput Sci 2, 47–58 (2022). <a href="https://doi.org/10.1038/s43588-021-00
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Frequency scale: 50 [Hz] - 1000 [Hz], log</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time offset: 0 [s] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Sigma: 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  50 [Hz] :  0.4 [1/Hz] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  1000 [Hz] :  0.02 [1/Hz] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  50 [Hz] :  400 [ms] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   o Time resolution at  1000 [Hz] :  20 [ms] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   o Relative frequency resolution:  0.127324 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> * Time/frequency matrix summary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs </span>

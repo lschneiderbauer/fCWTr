@@ -53,11 +53,24 @@
 <li><p>fix undefined behavior (memory alignment) that could lead to crashes on some CPUs.</p></li>
 <li><p>the sampling frequency <code>x_sample_freq</code> was truncated to an integer (in Hz), so non-integer sampling frequencies lead to wrong frequencies, and sampling frequencies below 1 Hz did not work at all.</p></li>
 <li><p>the time axis of the result was wrong if <code>x_sample_freq / y_sample_freq</code> is not an integer: the result now records the actual output sampling rate (which can be slightly higher than <code>y_sample_freq</code>).</p></li>
+<li><p>with <code>freq_scale = "linear"</code>, the frequencies actually computed did not match the reported ones (only the lowest one did): they now range from <code>freq_begin</code> to <code>freq_end</code> (both inclusive), as for <code>freq_scale = "log"</code>.</p></li>
 </ul></li>
 <li><p><code><a href="../reference/fcwt.html">fcwt()</a></code>: <code>n_threads</code> must be at least 1.</p></li>
 <li><p><code><a href="../reference/fcwt.html">fcwt()</a></code> no longer changes the global OpenMP thread setting of the R session.</p></li>
 <li><p>very large inputs (more than 2^31 output values) are now supported (previously: integer overflow), and failing memory allocations raise an error instead of leading to undefined behavior.</p></li>
 <li><p><code><a href="../reference/fcwt.html">fcwt()</a></code> needs considerably less memory: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).</p></li>
+<li>
+<p><code><a href="../reference/fcwt_batch.html">fcwt_batch()</a></code>:</p>
+<ul><li><p>the defaults of <code>sigma</code> and <code>n_freqs</code> are now the same as for <code><a href="../reference/fcwt.html">fcwt()</a></code> (previously <code>sigma = 1</code>, and <code>n_freqs</code> was a third lower).</p></li>
+<li><p>the default <code>max_batch_size</code> is now chosen such that processing a batch needs about 500 MB of memory, taking into account the reduced memory usage of <code><a href="../reference/fcwt.html">fcwt()</a></code> and the averaging over time windows (<code>y_sample_freq</code>). Previously, the batches were often unnecessarily small, which lead to large losses from boundary effects.</p></li>
+</ul></li>
+<li>
+<p>subsetting a scalogram with <code>[</code>:</p>
+<ul><li><p>selecting frequencies (columns) now adjusts the frequency range; previously, the frequency labels were wrong.</p></li>
+<li><p>negative and logical indices now adjust the time offset correctly. Indices that do not select a contiguous range raise an error (they cannot be represented by evenly spaced axes), use <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> instead.</p></li>
+</ul></li>
+<li><p>times are now given in a unit that suits their magnitude (s, ms, us, or ns): the <code>time</code> column of <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> / <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code>, the time offset and time resolutions in <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, and the time axis of <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> (whose <code>time_unit</code> argument now defaults to <code>NULL</code>, i.e. automatic).</p></li>
+<li><p>documentation fixes and improvements.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="fcwtr-030">fCWTr 0.3.0<a class="anchor" aria-label="anchor" href="#fcwtr-030"></a></h2>

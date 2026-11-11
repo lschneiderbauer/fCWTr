@@ -8,7 +8,7 @@ Requires [ggplot2](https://ggplot2.tidyverse.org/).
 
 ``` r
 # S3 method for class 'fcwtr_scalogram'
-plot(x, n = 1000, time_unit = "s", freq_unit = "Hz", transf = identity, ...)
+plot(x, n = 1000, time_unit = NULL, freq_unit = "Hz", transf = identity, ...)
 ```
 
 ## Arguments
@@ -26,8 +26,9 @@ plot(x, n = 1000, time_unit = "s", freq_unit = "Hz", transf = identity, ...)
 
 - time_unit:
 
-  A time unit that is used for the x-axis scale. Default to "s" -
-  seconds. See
+  A time unit that is used for the x-axis scale, e.g. `"s"` or `"ms"`.
+  By default (`NULL`), a suitable unit (s, ms, us, or ns) is chosen
+  depending on the length of the scalogram. See
   [`units::valid_udunits()`](https://r-quantities.github.io/units/reference/valid_udunits.html)
   and
   [`units::valid_udunits_prefixes()`](https://r-quantities.github.io/units/reference/valid_udunits.html)
@@ -49,7 +50,7 @@ plot(x, n = 1000, time_unit = "s", freq_unit = "Hz", transf = identity, ...)
 
 - ...:
 
-  other arguments passed to specific methods
+  Additional arguments are ignored.
 
 ## Value
 

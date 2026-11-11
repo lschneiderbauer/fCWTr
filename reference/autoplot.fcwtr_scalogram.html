@@ -52,7 +52,7 @@
 <span><span class="fu">autoplot</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>  time_unit <span class="op">=</span> <span class="st">"s"</span>,</span>
+<span>  time_unit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  freq_unit <span class="op">=</span> <span class="st">"Hz"</span>,</span>
 <span>  transf <span class="op">=</span> <span class="va">identity</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -74,7 +74,9 @@ steps that are plotted. Defaults to <code>n = 1000</code>.</p></dd>
 
 
 <dt id="arg-time-unit">time_unit<a class="anchor" aria-label="anchor" href="#arg-time-unit"></a></dt>
-<dd><p>A time unit that is used for the x-axis scale. Default to "s" - seconds.
+<dd><p>A time unit that is used for the x-axis scale, e.g. <code>"s"</code> or <code>"ms"</code>.
+By default (<code>NULL</code>), a suitable unit (s, ms, us, or ns) is chosen depending
+on the length of the scalogram.
 See <code><a href="https://r-quantities.github.io/units/reference/valid_udunits.html" class="external-link">units::valid_udunits()</a></code> and <code><a href="https://r-quantities.github.io/units/reference/valid_udunits.html" class="external-link">units::valid_udunits_prefixes()</a></code> for valid
 expressions.</p></dd>
 
@@ -92,7 +94,7 @@ transform the scalogram values before plotting.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>other arguments passed to specific methods</p></dd>
+<dd><p>Additional arguments are ignored.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -26,8 +26,8 @@ Returns a new time-wise combined "fcwtr_scalogram" object.
 ## Details
 
 The scalograms are stitched together in chronological fashion (i.e. the
-first argument will the initial piece, etc.). Time offset information is
-kept from the first piece.
+first argument will be the initial piece, etc.). Time offset information
+is kept from the first piece.
 
 ## Examples
 
@@ -51,8 +51,8 @@ print(res)
 #> * Frequency scale: 50 [Hz] - 1000 [Hz], log
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
-#>   o Time resolution at  50 [Hz] :  0.4 [1/Hz] 
-#>   o Time resolution at  1000 [Hz] :  0.02 [1/Hz] 
+#>   o Time resolution at  50 [Hz] :  400 [ms] 
+#>   o Time resolution at  1000 [Hz] :  20 [ms] 
 #>   o Relative frequency resolution:  0.127324 
 #> * Time/frequency matrix summary
 #>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs 
@@ -68,8 +68,8 @@ print(res_doubled)
 #> * Frequency scale: 50 [Hz] - 1000 [Hz], log
 #> * Time offset: 0 [s] 
 #> * Sigma: 5
-#>   o Time resolution at  50 [Hz] :  0.4 [1/Hz] 
-#>   o Time resolution at  1000 [Hz] :  0.02 [1/Hz] 
+#>   o Time resolution at  50 [Hz] :  400 [ms] 
+#>   o Time resolution at  1000 [Hz] :  20 [ms] 
 #>   o Relative frequency resolution:  0.127324 
 #> * Time/frequency matrix summary
 #>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs 
