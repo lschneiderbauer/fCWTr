@@ -1,7 +1,15 @@
 ## Resubmission
 
 This is a resubmission, addressing the installation issue with the
-single-precision fftw library. In this version I have
+single-precision fftw library.
+
+The previous submission (0.4.0) was flagged by the incoming checks for
+excessive CPU time (CPU time > elapsed time in examples, tests and
+vignettes). This is fixed: the number of OpenMP threads, including the ones
+started by fftw, is now limited to `n_threads` (default 2) during the
+computation.
+
+In this version I have
 
 -   made configure check explicitly that the *single-precision* fftw3
     library (libfftw3f) can be linked, also when pkg-config knows about
@@ -28,7 +36,7 @@ I tested the installation in a Fedora (45) container, both without
 'fftw-libs-single' (configure fails with the explanatory message) and with
 it (installation and tests succeed).
 
-This version (0.4.0) also contains a number of bug fixes and improvements
+This version (0.4.1) also contains a number of bug fixes and improvements
 of the package itself, see NEWS.md.
 
 ## Test environments

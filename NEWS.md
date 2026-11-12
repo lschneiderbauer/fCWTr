@@ -1,4 +1,4 @@
-# fCWTr 0.4.0
+# fCWTr 0.4.1
 
 ## Breaking changes
 
