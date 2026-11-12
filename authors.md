@@ -16,15 +16,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/lschneiderbauer/fCWTr/blob/v0.4.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/lschneiderbauer/fCWTr/blob/master/DESCRIPTION)
 
 Schneiderbauer L (2026). *fCWTr: Fast Continuous Wavelet Transform*. R
-package version 0.4.0, <https://lschneiderbauer.github.io/fCWTr/>.
+package version 0.4.1, <https://lschneiderbauer.github.io/fCWTr/>.
 
     @Manual{,
       title = {fCWTr: Fast Continuous Wavelet Transform},
       author = {Lukas Schneiderbauer},
       year = {2026},
-      note = {R package version 0.4.0},
+      note = {R package version 0.4.1},
       url = {https://lschneiderbauer.github.io/fCWTr/},
     }
