@@ -31,7 +31,7 @@ test_that("result does not depend on the number of threads", {
 
   expect_equal(
     raw_cwt(x, 1000L, 1, 400, 30L, threads = 1L, linear = FALSE),
-    raw_cwt(x, 1000L, 1, 400, 30L, threads = 4L, linear = FALSE)
+    raw_cwt(x, 1000L, 1, 400, 30L, threads = 2L, linear = FALSE)
   )
 })
 

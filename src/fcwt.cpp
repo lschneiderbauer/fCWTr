@@ -239,6 +239,24 @@ namespace {
         PlanGuard(const PlanGuard&) = delete;
         PlanGuard& operator=(const PlanGuard&) = delete;
     };
+
+    #ifndef SINGLE_THREAD
+    // Sets the default number of OpenMP threads while in scope, and restores
+    // the previous value afterwards (also on exceptions), so that the setting
+    // of the R session is not changed permanently.
+    // This is necessary since FFTW's OpenMP parallel regions do not specify
+    // a number of threads: they would use all available cores (most of them
+    // idling/spinning, which also slows down the computation considerably).
+    struct OmpThreadsGuard {
+        int previous;
+        explicit OmpThreadsGuard(int n): previous(omp_get_max_threads()) {
+            omp_set_num_threads(n);
+        }
+        ~OmpThreadsGuard() { omp_set_num_threads(previous); }
+        OmpThreadsGuard(const OmpThreadsGuard&) = delete;
+        OmpThreadsGuard& operator=(const OmpThreadsGuard&) = delete;
+    };
+    #endif
 }
 
 void FCWT::cwt(const float *pinput, int psize, Scales *scales, const RowCallback &row_callback) {
@@ -269,10 +287,14 @@ void FCWT::cwt(const float *pinput, int psize, Scales *scales, const RowCallback
     //Generate mother wavelet function
     wavelet->generate(newsize);
 
-    // Note: we do not call omp_set_num_threads() here, as that would change
-    // the OpenMP default for the whole R session. Our own parallel regions
-    // set the number of threads explicitly, FFTW gets it here (if its OpenMP
-    // version is available, see configure):
+    // Limit the number of OpenMP threads (also those started by FFTW) to
+    // `threads` while computing, and restore the R session's setting after.
+    #ifndef SINGLE_THREAD
+        OmpThreadsGuard omp_threads(threads);
+    #endif
+
+    // FFTW gets the number of threads here (if its OpenMP version is
+    // available, see configure):
     #if !defined(SINGLE_THREAD) && !defined(FCWT_NO_FFTW_THREADS)
         fftwf_init_threads();
         fftwf_plan_with_nthreads(threads);
