@@ -82,6 +82,7 @@
 <div class="section level4">
 <h4 id="fcwt-0-4-0"><code>fcwt()</code><a class="anchor" aria-label="anchor" href="#fcwt-0-4-0"></a></h4>
 <ul><li><p>Considerably less memory is needed: the complex transform is no longer stored as a whole, but processed frequency by frequency (e.g. about 4x less peak memory when averaging over time windows).</p></li>
+<li><p>With <code>rm_coi = TRUE</code> (the default), the boundary values are now removed with much less memory overhead (peak memory about 2.5x instead of 6x the size of the result).</p></li>
 <li><p>The global OpenMP thread setting of the R session is no longer changed.</p></li>
 </ul></div>
 <div class="section level4">
@@ -94,7 +95,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="installation-0-4-0">Installation<a class="anchor" aria-label="anchor" href="#installation-0-4-0"></a></h4>
-<ul><li>The installation now explicitly checks for the single-precision fftw library (falling back to a direct link test if pkg-config does not find it), and gives clear instructions on which packages to install if it is missing. <code>SystemRequirements</code> describes the dependencies in more detail (fixes CRAN issues).</li>
+<ul><li><p>The installation now explicitly checks for the single-precision fftw library (falling back to a direct link test if pkg-config does not find it), and gives clear instructions on which packages to install if it is missing. <code>SystemRequirements</code> describes the dependencies in more detail (fixes CRAN issues).</p></li>
+<li><p>The installation no longer fails if the compiler supports OpenMP, but the fftw library comes without OpenMP support (<code>libfftw3f_omp</code>): the Fourier transforms then run single-threaded.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="documentation-0-4-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-4-0"></a></h4>

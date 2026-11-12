@@ -46,7 +46,7 @@ liking.
 
 [![Ainali, CC BY-SA 3.0
 \<https://creativecommons.org/licenses/by-sa/3.0\>, via Wikimedia
-Commons](images/Standard_deviation_diagram.svg)](https://upload.wikimedia.org/wikipedia/commons/3/3a/Standard_deviation_diagram_micro.svg)
+Commons](images/Standard_deviation_diagram.svg)](https://commons.wikimedia.org/wiki/File:Standard_deviation_diagram_micro.svg)
 
 In our case, we decide that \\4\\\sigma\\ is the effective width of our
 window function, and so we expect an effective resolution of

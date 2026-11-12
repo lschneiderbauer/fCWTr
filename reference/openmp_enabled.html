@@ -64,10 +64,11 @@ Returns <code>TRUE</code> if OpenMP support is enabled, <code>FALSE</code> other
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>OpenMP is used (both by fCWTr itself and by the fftw library) if</p><ul><li><p>the compiler supports OpenMP, and</p></li>
-<li><p>the fftw library on your platform comes with OpenMP support
-(<code>libfftw3f_omp</code>).</p></li>
-</ul><p>On Windows, OpenMP support is disabled, since the fftw library provided
+    <p>OpenMP is used by fCWTr if the compiler supports it. In addition, the
+Fourier transforms are multithreaded only if the fftw library on your
+platform comes with OpenMP support (<code>libfftw3f_omp</code>); otherwise they run
+single-threaded.</p>
+<p>On Windows, OpenMP support is disabled, since the fftw library provided
 by Rtools is compiled without OpenMP support.</p>
 <p>When using pre-built package binaries, it depends on the (CRAN) build server
 whether or not these conditions are met. When installing the package from

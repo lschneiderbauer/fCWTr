@@ -87,6 +87,10 @@
   stored as a whole, but processed frequency by frequency (e.g. about 4x
   less peak memory when averaging over time windows).
 
+- With `rm_coi = TRUE` (the default), the boundary values are now
+  removed with much less memory overhead (peak memory about 2.5x instead
+  of 6x the size of the result).
+
 - The global OpenMP thread setting of the R session is no longer
   changed.
 
@@ -119,6 +123,10 @@
   find it), and gives clear instructions on which packages to install if
   it is missing. `SystemRequirements` describes the dependencies in more
   detail (fixes CRAN issues).
+
+- The installation no longer fails if the compiler supports OpenMP, but
+  the fftw library comes without OpenMP support (`libfftw3f_omp`): the
+  Fourier transforms then run single-threaded.
 
 #### Documentation
 
