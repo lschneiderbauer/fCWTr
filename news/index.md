@@ -2,6 +2,8 @@
 
 ## fCWTr 0.4.1
 
+CRAN release: 2026-11-13
+
 ### Breaking changes
 
 - Due to the bug fixes below, the results of
