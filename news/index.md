@@ -1,5 +1,7 @@
 # Changelog
 
+## fCWTr (development version)
+
 ## fCWTr 0.4.1
 
 CRAN release: 2026-11-13
