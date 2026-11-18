@@ -16,7 +16,8 @@ A two dimensional numeric vector, inheriting the class "matrix".
 }
 \description{
 Strips attributes and class from a scalogram object to retrieve
-a pure matrix.
+a pure matrix. For a scalogram with phase information
+(\code{fcwt(..., phase = TRUE)}), this is the modulus.
 }
 \examples{
 options(max.print = 10)

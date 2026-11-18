@@ -1,5 +1,13 @@
 # fCWTr (development version)
 
+## Breaking changes
+
+-   `fcwt()`, `fcwt_batch()`: when pooling several input samples into one output sample (`y_sample_freq` lower than `x_sample_freq`), the modulus is now pooled as root mean square, `sqrt(mean(|W|^2))`, instead of the arithmetic mean of `|W|`. For a steady tone both agree; for noise and transient signals the values increase (by about 13% for white noise). The plotting functions pool in the same way.
+
+## New features
+
+-   `fcwt()`, `fcwt_batch()`: with `phase = TRUE`, phase information is returned in addition to the modulus: the instantaneous frequency (energy-weighted mean frequency of each output window, which can be far more precise than the frequency resolution of the wavelet) and a phase coherence (how steadily the phase advances within the window). The result is then a three-dimensional array with the layers `"modulus"`, `"inst_freq"` and `"coherence"`. `as.data.frame()` / `as_tibble()` gain the corresponding columns, and `plot()` / `autoplot()` a `layer` argument.
+
 # fCWTr 0.4.1
 
 ## Breaking changes

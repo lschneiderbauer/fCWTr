@@ -32,9 +32,10 @@
 #'  while processing a batch, which is roughly
 #'  \deqn{50 + 16 \cdot \frac{n_{freqs}}{k}}{50 + 16 * n_freqs / k}
 #'  bytes per input sample, where \eqn{k = x_{sample\_freq} / y_{sample\_freq}}
-#'  is the number of input samples that are averaged into one output sample:
+#'  is the number of input samples that are pooled into one output sample:
 #'  about 50 bytes are needed for the transform itself, the rest for the
-#'  output of the batch (and a temporary copy of it).
+#'  output of the batch (and a temporary copy of it), three times as much with
+#'  `phase = TRUE`.
 #'  The default is the largest power of two for which this amounts to at
 #'  most about 500 MB. (The Fourier transforms are fastest for powers of two,
 #'  other sizes are zero-padded to the next power of two, which also increases
@@ -45,7 +46,8 @@
 #'
 #'  The actual batch size is the largest batch size that is not larger than
 #'  `max_batch_size` and compatible with the requested `y_sample_freq`.
-#'  Each batch loses about `4 * sigma * x_sample_freq / freq_begin` samples to
+#'  Each batch loses about `4 * sigma * x_sample_freq / freq_begin` samples
+#'  (`6 * sigma * x_sample_freq / freq_begin` with `phase = TRUE`) to
 #'  boundary effects, so for low values of `freq_begin`, increase the batch
 #'  size as far as your memory allows (see also the loss ratio reported with
 #'  `progress_bar = TRUE`).
@@ -97,9 +99,11 @@ fcwt_batch <- function(x,
                            )
                          ),
                        freq_scale = c("log", "linear"),
+                       phase = FALSE,
                        max_batch_size =
                          default_max_batch_size(
-                           x_sample_freq, y_sample_freq, n_freqs
+                           x_sample_freq, y_sample_freq, n_freqs,
+                           n_layers = if (isTRUE(phase)) 3 else 1
                          ),
                        n_threads = 2L,
                        progress_bar = FALSE) {
@@ -129,7 +133,10 @@ fcwt_batch <- function(x,
   # make it also a multiple of the window size
   dt <-
     floor(
-      coi_invalid_time_steps(x_sample_freq, freq_begin, sigma) / w$size_n
+      coi_invalid_time_steps(
+        x_sample_freq, freq_begin, sigma,
+        width = if (isTRUE(phase)) coi_width_coherence else coi_width
+      ) / w$size_n
     ) * w$size_n
 
   # we also want the batch size to be a multiple of the
@@ -195,6 +202,7 @@ fcwt_batch <- function(x,
         n_freqs = n_freqs,
         freq_scale = freq_scale,
         sigma = sigma,
+        phase = phase,
         rm_coi = FALSE,
         n_threads = n_threads
       ) |>
@@ -229,15 +237,15 @@ batches <- function(batch_size, signal_size, dt) {
 # Measured memory needs per input sample of a batch:
 # - about 50 bytes for the transform itself (FFT buffers, copies of the
 #   signal), independent of n_freqs, and
-# - the batch's output, n_freqs values (8 bytes each) per k input samples
-#   (k: number of input samples averaged into one output sample), which is
-#   held about twice (result, and a copy when removing the boundaries).
+# - the batch's output, n_freqs * n_layers values (8 bytes each) per k input
+#   samples (k: number of input samples pooled into one output sample), which
+#   is held about twice (result, and a copy when removing the boundaries).
 default_max_batch_size <- function(x_sample_freq, y_sample_freq, n_freqs,
-                                   memory = 5e8) {
+                                   n_layers = 1, memory = 5e8) {
   k <- wnd_from_target_sample_freq(
     as_freq(y_sample_freq), as_freq(x_sample_freq)
   )$size_n
-  bytes_per_sample <- 50 + 2 * 8 * n_freqs / k
+  bytes_per_sample <- 50 + 2 * 8 * n_freqs * n_layers / k
 
   # a power of two: the FFT pads the signal to the next power of two anyway
   # (which would increase the memory needed), and is fastest for those sizes

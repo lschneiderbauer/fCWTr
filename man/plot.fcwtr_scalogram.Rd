@@ -4,7 +4,15 @@
 \alias{plot.fcwtr_scalogram}
 \title{Scalogram plotting}
 \usage{
-\method{plot}{fcwtr_scalogram}(x, n = 1000, time_unit = NULL, freq_unit = "Hz", transf = identity, ...)
+\method{plot}{fcwtr_scalogram}(
+  x,
+  n = 1000,
+  time_unit = NULL,
+  freq_unit = "Hz",
+  transf = identity,
+  layer = c("modulus", "inst_freq", "coherence"),
+  ...
+)
 }
 \arguments{
 \item{x}{An "fcwtr_scalogram" object resulting from \code{\link[=fcwt]{fcwt()}}.}
@@ -26,6 +34,14 @@ expressions.}
 
 \item{transf}{A function, taking a vector and returning a vector, that is used to
 transform the scalogram values before plotting.}
+
+\item{layer}{Which quantity to plot: \code{"modulus"} (default), or, for scalograms with
+phase information (\code{fcwt(..., phase = TRUE)}), \code{"inst_freq"} or
+\code{"coherence"}. The instantaneous frequency is shown as relative deviation
+from the frequency of the band, \code{inst_freq / freq - 1}.
+Both phase quantities are meaningless where there is (almost) no signal,
+so their tiles are faded out according to the modulus: the opacity is
+\code{sqrt(modulus / max(modulus))}.}
 
 \item{...}{Additional arguments are ignored.}
 }

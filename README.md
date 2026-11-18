@@ -90,7 +90,8 @@ system.
 ## Example
 
 This is a basic example where the continuous wavelet transform of a
-sample signal is calculated. The result is inspected and plotted.
+sample signal is calculated, including phase information. The result is
+inspected and plotted.
 
 ``` r
 library(fCWTr)
@@ -108,17 +109,21 @@ output <-
     freq_begin = u(16, "Hz"),
     freq_end = u(2100, "Hz"),
     n_freqs = 200,
-    freq_scale = "linear"
+    freq_scale = "linear",
+    phase = TRUE
   )
 
-# The result is a numeric matrix with time and frequency dimension
+# The result is a numeric array with time and frequency dimension,
+# and a layer dimension (modulus, instantaneous frequency, coherence).
+# (Without `phase = TRUE`, it is a time x frequency matrix of the modulus.)
 dim(output)
-#> [1] 137 200
+#> [1] 137 200   3
 
 # Some meta data is recorded too
 output
 #> _Scalogram_
 #> * (Time/Frequency) dimension:  ( 137 , 200 )
+#> * Layers: modulus, inst_freq, coherence
 #> * Sampling rate: 1 [kHz]
 #> * Frequency scale: 16 [Hz] - 2100 [Hz], linear
 #> * Time offset: 0 [s] 
@@ -126,9 +131,15 @@ output
 #>   o Time resolution at  16 [Hz] :  1.25 [s] 
 #>   o Time resolution at  2100 [Hz] :  9.52381 [ms] 
 #>   o Relative frequency resolution:  0.127324 
-#> * Time/frequency matrix summary
+#> * Time/frequency matrix summary: modulus
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-#>  0.0000  0.0001  0.0011  0.1267  0.0339  2.8194    6671
+#>  0.0000  0.0001  0.0011  0.1268  0.0339  2.8194    6671 
+#> * Time/frequency matrix summary: inst_freq
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#>   112.4   798.4  1197.3  1211.5  1655.9  2382.5    6671 
+#> * Time/frequency matrix summary: coherence
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#>  0.0806  0.9953  0.9995  0.9838  1.0000  1.0000    9026
 ```
 
 The result can also be converted into a data frame:
@@ -136,17 +147,17 @@ The result can also be converted into a data frame:
 ``` r
 as.data.frame(output) |>
   head(10)
-#>    time_index   time      freq        value
-#> 1           0 0 [ms] 2100 [Hz]           NA
-#> 2           1 1 [ms] 2100 [Hz]           NA
-#> 3           2 2 [ms] 2100 [Hz]           NA
-#> 4           3 3 [ms] 2100 [Hz]           NA
-#> 5           4 4 [ms] 2100 [Hz] 3.326482e-03
-#> 6           5 5 [ms] 2100 [Hz] 1.388348e-03
-#> 7           6 6 [ms] 2100 [Hz] 4.916695e-04
-#> 8           7 7 [ms] 2100 [Hz] 1.552785e-04
-#> 9           8 8 [ms] 2100 [Hz] 5.435228e-05
-#> 10          9 9 [ms] 2100 [Hz] 3.173394e-05
+#>    time_index   time      freq        value     inst_freq coherence
+#> 1           0 0 [ms] 2100 [Hz]           NA       NA [Hz]        NA
+#> 2           1 1 [ms] 2100 [Hz]           NA       NA [Hz]        NA
+#> 3           2 2 [ms] 2100 [Hz]           NA       NA [Hz]        NA
+#> 4           3 3 [ms] 2100 [Hz]           NA       NA [Hz]        NA
+#> 5           4 4 [ms] 2100 [Hz] 3.411506e-03 2095.257 [Hz]        NA
+#> 6           5 5 [ms] 2100 [Hz] 1.440355e-03 2094.897 [Hz]        NA
+#> 7           6 6 [ms] 2100 [Hz] 5.160864e-04 2093.478 [Hz]        NA
+#> 8           7 7 [ms] 2100 [Hz] 1.636461e-04 2086.992 [Hz] 0.9996087
+#> 9           8 8 [ms] 2100 [Hz] 5.591687e-05 2068.372 [Hz] 0.9999684
+#> 10          9 9 [ms] 2100 [Hz] 3.181690e-05 2071.137 [Hz] 0.9991412
 ```
 
 We can also directly plot the resulting scalogram:
@@ -156,6 +167,48 @@ plot(output)
 ```
 
 <img src="man/figures/README-example_plot-1.png" alt="" width="100%" />
+
+The phase information can be plotted as well. The instantaneous
+frequency is shown as deviation from the frequency of the band: bands
+just above a sine wave report a lower frequency (the one of the sine
+wave), bands just below a higher one. Tiles without (much) signal are
+faded out, since their phase carries no meaning.
+
+``` r
+plot(output, layer = "inst_freq")
+```
+
+<img src="man/figures/README-example_plot_inst_freq-1.png" alt="" width="100%" />
+
+The phase coherence tells how steadily the phase advances within each
+output time step: close to 1 for a steady oscillation, around 0.5 for
+noise. This distinction needs output time steps that are long compared
+to the wavelets (otherwise even noise looks steady), so here we look at
+sine waves in noise with a low output sampling rate:
+
+``` r
+set.seed(1)
+t <- seq_len(4 * 8000) / 8000 # 4 s at 8 kHz
+
+noisy_signal <-
+  rnorm(length(t)) +
+  0.5 * sin(2 * pi * 1000 * t) +
+  ifelse(t > 1 & t < 3, 0.5 * sin(2 * pi * 440 * t), 0)
+
+fcwt(
+  noisy_signal,
+  x_sample_freq = u(8, "kHz"),
+  sigma = 8,
+  y_sample_freq = u(5, "Hz"),
+  freq_begin = u(250, "Hz"),
+  freq_end = u(2000, "Hz"),
+  n_freqs = 100,
+  phase = TRUE
+) |>
+  plot(layer = "coherence")
+```
+
+<img src="man/figures/README-example_plot_coherence-1.png" alt="" width="100%" />
 
 For long sequences, the required memory can exceed your available local
 memory. In this case it can be useful to reduce the time resolution of
