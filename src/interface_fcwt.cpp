@@ -98,25 +98,45 @@ cpp11::writable::doubles fcwt_raw(
   SCALETYPE st = scaletype ? FCWT_LINFREQS : FCWT_LOGSCALES;
   Scales scs(st, fs, f0, f1, fn);
 
-  // Per-window accumulators for the lag products, re-used for every row.
-  std::vector<std::complex<double>> acc_freq, acc_coh;
-  std::vector<double> acc_coh_abs;
-  if (phase) {
-    acc_freq.resize(target_time_n);
-    acc_coh.resize(target_time_n);
-    acc_coh_abs.resize(target_time_n);
-  }
+  // |W|^2 of the current row, re-used by the phase computations.
+  // (All complex arithmetic below is written out in real numbers: with
+  // std::complex, compilers call slow library functions for multiplication
+  // and absolute values, to handle infinities and NaNs.)
+  std::vector<double> norm_buf(phase ? (size_t)n : 0);
 
   // Modulus (and window averaging), and phase information of one row (frequency)
-  auto process_row = [&](int f, const std::complex<float> *row) {
+  auto process_row = [&](int f, const std::complex<float> *row_c) {
+    // interleaved real and imaginary parts
+    const float *row = reinterpret_cast<const float *>(row_c);
     double *out_mod = out + (size_t)f * target_time_n;
 
-    for (int w = 0; w < target_time_n; w++) {
+    if (window_size == 1) {
+      // no pooling: avoid the overhead of the window loop
+      // (separate loops, so that the compiler can vectorize them)
+      if (phase) {
+        for (int i = 0; i < n; i++) {
+          double re = row[2 * (size_t)i];
+          double im = row[2 * (size_t)i + 1];
+          norm_buf[i] = re * re + im * im;
+          out_mod[i] = std::sqrt(norm_buf[i]);
+        }
+      } else {
+        for (int i = 0; i < n; i++) {
+          double re = row[2 * (size_t)i];
+          double im = row[2 * (size_t)i + 1];
+          out_mod[i] = std::sqrt(re * re + im * im);
+        }
+      }
+    } else for (int w = 0; w < target_time_n; w++) {
       double sum = 0;
       size_t begin = (size_t)w * window_size;
       size_t end = std::min(begin + window_size, (size_t)n);
       for (size_t i = begin; i < end; i++) {
-        sum += std::norm(std::complex<double>(row[i]));
+        double re = row[2 * i];
+        double im = row[2 * i + 1];
+        double nrm = re * re + im * im;
+        if (phase) norm_buf[i] = nrm;
+        sum += nrm;
       }
       out_mod[w] = std::sqrt(sum / (double)(end - begin));
     }
@@ -129,38 +149,50 @@ cpp11::writable::doubles fcwt_raw(
     const double scale = scs.scales[f]; // = fs / f_c
     const double two_pi = 6.283185307179586476925286766559;
 
-    std::fill(acc_freq.begin(), acc_freq.end(), std::complex<double>(0));
-    std::fill(acc_coh.begin(), acc_coh.end(), std::complex<double>(0));
-    std::fill(acc_coh_abs.begin(), acc_coh_abs.end(), 0.0);
-
-    // frequency: lag 1, the lag product b is attributed to b
-    for (long b = 0; b + 1 < (long)n; b++) {
-      acc_freq[b / window_size] +=
-        std::complex<double>(row[b + 1]) * std::conj(std::complex<double>(row[b]));
-    }
-
     // coherence: lag of two standard deviations of the wavelet,
     // the lag product b is attributed to its center b + lag / 2
     const long lag = std::max(1L, std::lround(2 * sigma * scale));
     const long half_lag = lag / 2;
-    for (long b = 0; b + lag < (long)n; b++) {
-      std::complex<double> w0(row[b]);
-      std::complex<double> w1(row[b + lag]);
-      long w = (b + half_lag) / window_size;
-      acc_coh[w] += w1 * std::conj(w0);
-      acc_coh_abs[w] += std::abs(w0) * std::abs(w1);
-    }
 
-    // demodulation by the center frequency
-    const std::complex<double> demod = std::polar(1.0, -two_pi / scale);
+    // demodulation of the frequency by the center frequency
+    const double demod_re = std::cos(two_pi / scale);
+    const double demod_im = -std::sin(two_pi / scale);
 
     for (int w = 0; w < target_time_n; w++) {
-      out_freq[w] = (acc_freq[w] == 0.0) ?
-        NA_REAL :
-        fs * (1 / scale + std::arg(acc_freq[w] * demod) / two_pi);
+      const long begin = (long)w * window_size;
+      const long end = std::min(begin + (long)window_size, (long)n);
 
-      out_coh[w] = (acc_coh_abs[w] > 0) ?
-        std::min(1.0, std::abs(acc_coh[w]) / acc_coh_abs[w]) :
+      // frequency: lag 1, the lag product b is attributed to b
+      double p_re = 0, p_im = 0;
+      for (long b = begin; b < std::min(end, (long)n - 1); b++) {
+        double r0 = row[2 * b], i0 = row[2 * b + 1];
+        double r1 = row[2 * b + 2], i1 = row[2 * b + 3];
+        // W(b + 1) * conj(W(b))
+        p_re += r1 * r0 + i1 * i0;
+        p_im += i1 * r0 - r1 * i0;
+      }
+      if (p_re == 0 && p_im == 0) {
+        out_freq[w] = NA_REAL;
+      } else {
+        double d_re = p_re * demod_re - p_im * demod_im;
+        double d_im = p_re * demod_im + p_im * demod_re;
+        out_freq[w] = fs * (1 / scale + std::atan2(d_im, d_re) / two_pi);
+      }
+
+      // coherence: lag products centered in the window,
+      // i.e. b + half_lag in [begin, end), and b + lag < n
+      double c_re = 0, c_im = 0, c_abs = 0;
+      const long b0 = std::max(0L, begin - half_lag);
+      const long b1 = std::min(end - half_lag, (long)n - lag);
+      for (long b = b0; b < b1; b++) {
+        double r0 = row[2 * b], i0 = row[2 * b + 1];
+        double r1 = row[2 * (b + lag)], i1 = row[2 * (b + lag) + 1];
+        c_re += r1 * r0 + i1 * i0;
+        c_im += i1 * r0 - r1 * i0;
+        c_abs += std::sqrt(norm_buf[b] * norm_buf[b + lag]);
+      }
+      out_coh[w] = (c_abs > 0) ?
+        std::min(1.0, std::sqrt(c_re * c_re + c_im * c_im) / c_abs) :
         NA_REAL;
     }
   };
