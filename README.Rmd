@@ -67,7 +67,7 @@ Note that the installation process might fail if the package needs to be compile
 
 ## Example
 
-This is a basic example where the continuous wavelet transform of a sample signal is calculated. The result is inspected and plotted.
+This is a basic example where the continuous wavelet transform of a sample signal is calculated, including phase information. The result is inspected and plotted.
 
 ```{r example}
 library(fCWTr)
@@ -85,10 +85,13 @@ output <-
     freq_begin = u(16, "Hz"),
     freq_end = u(2100, "Hz"),
     n_freqs = 200,
-    freq_scale = "linear"
+    freq_scale = "linear",
+    phase = TRUE
   )
 
-# The result is a numeric matrix with time and frequency dimension
+# The result is a numeric array with time and frequency dimension,
+# and a layer dimension (modulus, instantaneous frequency, coherence).
+# (Without `phase = TRUE`, it is a time x frequency matrix of the modulus.)
 dim(output)
 
 # Some meta data is recorded too
@@ -106,6 +109,36 @@ We can also directly plot the resulting scalogram:
 
 ```{r example_plot}
 plot(output)
+```
+
+The phase information can be plotted as well. The instantaneous frequency is shown as deviation from the frequency of the band: bands just above a sine wave report a lower frequency (the one of the sine wave), bands just below a higher one. Tiles without (much) signal are faded out, since their phase carries no meaning.
+
+```{r example_plot_inst_freq}
+plot(output, layer = "inst_freq")
+```
+
+The phase coherence tells how steadily the phase advances within each output time step: close to 1 for a steady oscillation, around 0.5 for noise. This distinction needs output time steps that are long compared to the wavelets (otherwise even noise looks steady), so here we look at sine waves in noise with a low output sampling rate:
+
+```{r example_plot_coherence}
+set.seed(1)
+t <- seq_len(4 * 8000) / 8000 # 4 s at 8 kHz
+
+noisy_signal <-
+  rnorm(length(t)) +
+  0.5 * sin(2 * pi * 1000 * t) +
+  ifelse(t > 1 & t < 3, 0.5 * sin(2 * pi * 440 * t), 0)
+
+fcwt(
+  noisy_signal,
+  x_sample_freq = u(8, "kHz"),
+  sigma = 8,
+  y_sample_freq = u(5, "Hz"),
+  freq_begin = u(250, "Hz"),
+  freq_end = u(2000, "Hz"),
+  n_freqs = 100,
+  phase = TRUE
+) |>
+  plot(layer = "coherence")
 ```
 
 For long sequences, the required memory can exceed your available local memory. In this case it can be useful to reduce the time resolution of the result and process the data in batches. This can be done with `fcwt_batch()`. In case the batch size is not explicitly provided, some heuristics are used to determine a batch size automatically:

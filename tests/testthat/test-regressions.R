@@ -1,6 +1,6 @@
 raw_cwt <- function(x, fs, f0, f1, fn, window = 1L, threads = 1L, linear = TRUE) {
   matrix(
-    fcwt_raw(x, fs, f0, f1, fn, 2, window, threads, linear),
+    fcwt_raw(x, fs, f0, f1, fn, 2, window, threads, linear, FALSE),
     ncol = fn
   )
 }
@@ -35,13 +35,13 @@ test_that("result does not depend on the number of threads", {
   )
 })
 
-test_that("window averaging computes the mean", {
+test_that("window pooling computes the root mean square", {
   x <- sin(2 * pi * 100 * (1:1024) / 1000)
 
   full <- raw_cwt(x, 1000L, 90, 110, 2L)
   avg <- raw_cwt(x, 1000L, 90, 110, 2L, window = 4L)
 
-  expect_equal(avg[100, ], colMeans(full[397:400, ]))
+  expect_equal(avg[100, ], sqrt(colMeans(full[397:400, ]^2)))
 })
 
 test_that("a single frequency on log scale works", {
@@ -54,7 +54,7 @@ test_that("a single frequency on log scale works", {
 test_that("invalid scales raise an error instead of crashing", {
   # f0 = 0 leads to an infinite scale (bypassing the R-level argument checks)
   expect_error(
-    fcwt_raw(sin(1:64), 1000L, 0, 100, 5L, 2, 1L, 1L, FALSE),
+    fcwt_raw(sin(1:64), 1000L, 0, 100, 5L, 2, 1L, 1L, FALSE, FALSE),
     "scales are invalid"
   )
 })
@@ -65,8 +65,8 @@ test_that("non-integer and sub-Hz sample frequencies are supported", {
   x <- sin(2 * pi * 0.4 * (1:1000) / 2.5)
 
   expect_equal(
-    fcwt_raw(x, 2.5, 0.1, 1.2, 10L, 2, 1L, 1L, FALSE),
-    fcwt_raw(x, 2500, 100, 1200, 10L, 2, 1L, 1L, FALSE)
+    fcwt_raw(x, 2.5, 0.1, 1.2, 10L, 2, 1L, 1L, FALSE, FALSE),
+    fcwt_raw(x, 2500, 100, 1200, 10L, 2, 1L, 1L, FALSE, FALSE)
   )
 
   # previously the sample frequency was truncated to an integer (0.5 -> 0)
@@ -79,10 +79,10 @@ test_that("non-integer and sub-Hz sample frequencies are supported", {
 test_that("Nyquist check works for odd sample frequencies", {
   # 500.4 Hz is below Nyquist (500.5 Hz) for fs = 1001 Hz
   expect_no_error(
-    fcwt_raw(sin(1:256), 1001, 100, 500.4, 5L, 2, 1L, 1L, TRUE)
+    fcwt_raw(sin(1:256), 1001, 100, 500.4, 5L, 2, 1L, 1L, TRUE, FALSE)
   )
   expect_error(
-    fcwt_raw(sin(1:256), 1001, 100, 500.6, 5L, 2, 1L, 1L, TRUE),
+    fcwt_raw(sin(1:256), 1001, 100, 500.6, 5L, 2, 1L, 1L, TRUE, FALSE),
     "Nyquist"
   )
 })
@@ -100,15 +100,15 @@ test_that("the scalogram records the actual output sample rate", {
 
 test_that("invalid sizes raise an error", {
   expect_error(
-    fcwt_raw(numeric(0), 1000, 1, 400, 5L, 2, 1L, 1L, FALSE),
+    fcwt_raw(numeric(0), 1000, 1, 400, 5L, 2, 1L, 1L, FALSE, FALSE),
     "Signal length"
   )
   expect_error(
-    fcwt_raw(rnorm(64), 1000, 1, 400, 0L, 2, 1L, 1L, FALSE),
+    fcwt_raw(rnorm(64), 1000, 1, 400, 0L, 2, 1L, 1L, FALSE, FALSE),
     "Number of frequencies"
   )
   expect_error(
-    fcwt_raw(rnorm(64), 1000, 1, 400, 5L, 2, 0L, 1L, FALSE),
+    fcwt_raw(rnorm(64), 1000, 1, 400, 5L, 2, 0L, 1L, FALSE, FALSE),
     "Window size"
   )
 })
@@ -187,7 +187,7 @@ test_that("frequencies of a linear scale match the labels", {
   x <- rnorm(4096)
   single <- function(f) {
     # transform at exactly one frequency f
-    fcwt_raw(x, 1000, f / 2, f, 1L, 2, 1L, 1L, FALSE)
+    fcwt_raw(x, 1000, f / 2, f, 1L, 2, 1L, 1L, FALSE, FALSE)
   }
 
   sc <- fcwt(x, x_sample_freq = 1000, y_sample_freq = 1000, freq_begin = 50,

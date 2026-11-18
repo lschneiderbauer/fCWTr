@@ -18,7 +18,11 @@ new_fcwtr_scalogram <- function(matrix,
 fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
                             freq_begin, freq_end,
                             freq_scale, sigma) {
-  stopifnot(is.matrix(matrix))
+  stopifnot(
+    is.matrix(matrix) ||
+      (length(dim(matrix)) == 3 &&
+        identical(dimnames(matrix)[[3]], sc_layer_names))
+  )
   stopifnot(freq_scale %in% c("linear", "log"))
   stopifnot(inherits(sample_freq, "units"))
   stopifnot(inherits(freq_begin, "units"))
@@ -33,6 +37,18 @@ fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
   )
 }
 
+# layers (third dimension) of a scalogram with phase information
+sc_layer_names <- c("modulus", "inst_freq", "coherence")
+
+# Half widths of the cone of influence, in units of the standard deviation
+# sigma / f of the wavelet in time:
+# - the wavelet coefficients themselves (modulus, instantaneous frequency,
+#   whose lag of one sample is negligible): half the support of the wavelet,
+# - the phase coherence, whose lag products span 2 sigma / f around their
+#   center: one more standard deviation.
+coi_width <- 2
+coi_width_coherence <- 3
+
 # Number of time slices at each boundary that lie inside the "cone of
 # influence" (and are therefore affected by boundary effects), for each
 # frequency (column) of a scalogram with `dim_t` time slices.
@@ -40,12 +56,13 @@ fcwtr_scalogram <- function(matrix, time_offset = u(0, "s"), sample_freq,
 # The standard deviation of the Gaussian wave packet at frequency f is
 # sigma / f; we choose 4 sigma / f as the support of a wave packet, so
 # boundary effects are expected for time steps t (relative to the boundary,
-# in units of the sampling period) with t * f / sample_freq < 2 sigma.
+# in units of the sampling period) with t * f / sample_freq < 2 sigma
+# (`width` = 2).
 #
 # Computed column by column, so that only small temporary objects are needed
 # (the mask of the whole scalogram has the same size as the scalogram).
 coi_n_slices <- function(dim_t, sample_freq, freq_begin, freq_end, freq_scale,
-                         sigma, dim_f) {
+                         sigma, dim_f, width = coi_width) {
   # frequencies in units of the sampling frequency
   f_rel <- ddu(
     seq2(freq_end, freq_begin, length.out = dim_f, scale = freq_scale) /
@@ -53,13 +70,72 @@ coi_n_slices <- function(dim_t, sample_freq, freq_begin, freq_end, freq_scale,
   )
 
   t <- seq_len(dim_t)
-  vapply(f_rel, function(f) sum(t * f < 2 * sigma), integer(1))
+  vapply(f_rel, function(f) sum(t * f < width * sigma), integer(1))
 }
 
 # invalid time steps on one side of the time series
 # invalid meaning: at least one frequency in that time range has invalid value
-coi_invalid_time_steps <- function(sample_freq, freq_begin, sigma) {
-  as.integer(ddu(floor(2 * sigma * sample_freq / freq_begin)))
+coi_invalid_time_steps <- function(sample_freq, freq_begin, sigma,
+                                   width = coi_width) {
+  as.integer(ddu(floor(width * sigma * sample_freq / freq_begin)))
+}
+
+# Does the scalogram contain phase information (layers)?
+sc_has_phase <- function(x) {
+  length(dim(x)) == 3
+}
+
+# One layer of the scalogram, as a plain matrix
+sc_layer <- function(x, layer = "modulus") {
+  stopifnot(inherits(x, "fcwtr_scalogram"))
+
+  if (sc_has_phase(x)) {
+    stopifnot(layer %in% sc_layer_names)
+    m <- unclass(x)[, , layer]
+  } else {
+    if (layer != "modulus") {
+      stop(
+        "The scalogram does not contain phase information. ",
+        "Use `fcwt(..., phase = TRUE)`.",
+        call. = FALSE
+      )
+    }
+    m <- unclass(x)
+  }
+
+  attributes(m) <- NULL
+  dim(m) <- c(sc_dim_time(x), sc_dim_freq(x))
+  m
+}
+
+# Subset of the data (array without attributes) by time and frequency,
+# keeping all layers
+sc_subset <- function(x, i, j) {
+  a <- unclass(x)
+
+  if (sc_has_phase(x)) {
+    a[i, j, , drop = FALSE]
+  } else {
+    a[i, j, drop = FALSE]
+  }
+}
+
+# Bind (unclassed) scalogram data in time direction
+bind_time <- function(arrs) {
+  if (length(dim(arrs[[1]])) == 2) {
+    return(do.call(rbind, arrs))
+  }
+
+  d <- dim(arrs[[1]])
+  layers <- lapply(seq_len(d[[3]]), function(l) {
+    do.call(rbind, lapply(arrs, function(a) a[, , l]))
+  })
+
+  array(
+    unlist(layers, use.names = FALSE),
+    dim = c(nrow(layers[[1]]), d[[2]], d[[3]]),
+    dimnames = list(NULL, NULL, dimnames(arrs[[1]])[[3]])
+  )
 }
 
 # frequencies of the columns (highest frequency first),
@@ -118,7 +194,7 @@ sc_rm_bdry_time_slices <- function(x, n) {
   }
 
   new_fcwtr_scalogram(
-    unclass(x)[rows_to_keep, , drop = FALSE],
+    sc_subset(x, rows_to_keep, seq_len(sc_dim_freq(x))),
     attr(x, "time_offset") + n / attr(x, "sample_freq"), # new time offset
     attr(x, "sample_freq"),
     attr(x, "freq_begin"), attr(x, "freq_end"),
@@ -132,7 +208,8 @@ sc_rm_coi_time_slices <- function(x) {
 
   dt <-
     coi_invalid_time_steps(
-      attr(x, "sample_freq"), attr(x, "freq_begin"), attr(x, "sigma")
+      attr(x, "sample_freq"), attr(x, "freq_begin"), attr(x, "sigma"),
+      width = if (sc_has_phase(x)) coi_width_coherence else coi_width
     )
 
   sc_rm_bdry_time_slices(x, dt)
@@ -155,6 +232,11 @@ seq2 <- function(from = 1, to = 1, length.out, scale = c("linear", "log")) {
 
 # perform aggregation, if possible.
 # if it's not possible, be identity
+#
+# The modulus is pooled as root mean square (as in the C++ code).
+# Instantaneous frequency and coherence are pooled as means weighted by the
+# energy (squared modulus); this approximates computing them directly from the
+# lag products of the larger window.
 sc_agg <- function(x, wnd) {
   stopifnot(inherits(x, "fcwtr_scalogram"))
 
@@ -166,15 +248,44 @@ sc_agg <- function(x, wnd) {
     return(x)
   }
 
-  x_new <- unclass(x)[1:(poolsize * n), , drop = FALSE]
-  dim(x_new) <- c(poolsize, n, dim(x_new)[[2]])
-  x_new <- colMeans(x_new, dims = 1, na.rm = TRUE)
+  dim_f <- sc_dim_freq(x)
+  rows <- seq_len(poolsize * n)
+
+  # (windowed) mean of a time x frequency matrix, ignoring NA values
+  pool <- function(m) {
+    m <- m[rows, , drop = FALSE]
+    dim(m) <- c(poolsize, n, dim_f)
+    res <- colMeans(m, dims = 1, na.rm = TRUE)
+    dim(res) <- c(n, dim_f)
+    res
+  }
+
+  energy <- sc_layer(x, "modulus")^2
+  modulus <- sqrt(pool(energy))
+
+  x_new <-
+    if (sc_has_phase(x)) {
+      weighted <- function(layer) {
+        v <- sc_layer(x, layer)
+        e <- energy
+        e[is.na(v)] <- NA_real_
+        pool(e * v) / pool(e)
+      }
+
+      array(
+        c(modulus, weighted("inst_freq"), weighted("coherence")),
+        dim = c(n, dim_f, 3L),
+        dimnames = list(NULL, NULL, sc_layer_names)
+      )
+    } else {
+      modulus
+    }
 
   # replace NaN by NA
   x_new[is.nan(x_new)] <- NA_real_
 
   fcwtr_scalogram(
-    unclass(x_new),
+    x_new,
     attr(x, "time_offset"),
     attr(x, "sample_freq") / poolsize,
     attr(x, "freq_begin"), attr(x, "freq_end"),
@@ -239,14 +350,12 @@ rbind.fcwtr_scalogram <- function(...) {
     "Frequency ranges need to be identical." = arg_attr_ident("freq_begin"),
     "Frequency ranges need to be identical." = arg_attr_ident("freq_end"),
     "Frequency scales need to be identical." = arg_attr_ident("freq_scale"),
-    "Sigma parameter needs to be identical." = arg_attr_ident("sigma")
+    "Sigma parameter needs to be identical." = arg_attr_ident("sigma"),
+    "Either all or none of the scalograms need to contain phase information." =
+      length(unique(vapply(args, sc_has_phase, logical(1)))) == 1
   )
 
-  x_new <-
-    do.call(
-      rbind,
-      c(lapply(args, unclass))
-    )
+  x_new <- bind_time(lapply(args, unclass))
 
   new_fcwtr_scalogram(
     x_new,
@@ -274,6 +383,9 @@ print.fcwtr_scalogram <- function(x, ...) {
     sc_dim_freq(x), " )\n",
     sep = ""
   )
+  if (sc_has_phase(x)) {
+    cat("* Layers: ", paste(sc_layer_names, collapse = ", "), "\n", sep = "")
+  }
   cat("* Sampling rate: ", format(attr(x, "sample_freq")), "\n", sep = "")
   cat("* Frequency scale: ", format(attr(x, "freq_begin")), " - ",
     format(attr(x, "freq_end")), ", ", attr(x, "freq_scale"), "\n",
@@ -290,8 +402,15 @@ print.fcwtr_scalogram <- function(x, ...) {
   cat("  o Relative frequency resolution: ",
       format(sigma_freq_res_rel(attr(x, "sigma"))), "\n")
 
-  cat("* Time/frequency matrix summary\n")
-  print(summary(as.vector(as.matrix(x))))
+  if (sc_has_phase(x)) {
+    for (layer in sc_layer_names) {
+      cat("* Time/frequency matrix summary: ", layer, "\n", sep = "")
+      print(summary(as.vector(sc_layer(x, layer))))
+    }
+  } else {
+    cat("* Time/frequency matrix summary\n")
+    print(summary(as.vector(as.matrix(x))))
+  }
 
   invisible(x)
 }
@@ -302,6 +421,8 @@ print.fcwtr_scalogram <- function(x, ...) {
 #' Internally, the scalogram resulting from [fcwt()] is represented by
 #' a numeric [matrix()]. This method converts this matrix into a
 #' [data.frame()] in long format, with one row per matrix entry.
+#' With phase information (`fcwt(..., phase = TRUE)`), the additional
+#' columns `inst_freq` and `coherence` hold the other layers.
 #' Note that this conversion has a significant run time cost.
 #'
 #' @param x
@@ -311,7 +432,8 @@ print.fcwtr_scalogram <- function(x, ...) {
 #'  Additional arguments are ignored.
 #'
 #' @return
-#'  A [data.frame()] object representing the scalogram data with four columns:
+#'  A [data.frame()] object representing the scalogram data with four
+#'  (six, with phase information) columns:
 #' \describe{
 #'   \item{time_index}{An integer index uniquely identifying time slices,
 #'               starting at 0.}
@@ -323,7 +445,11 @@ print.fcwtr_scalogram <- function(x, ...) {
 #'               `units::set_units()`.}
 #'   \item{freq}{The frequency, in the units chosen by the user for the
 #'               `freq_begin` and `freq_end` arguments of [fcwt()].}
-#'   \item{value}{The fCWT result for the particular time-frequency combination.}
+#'   \item{value}{The fCWT result (modulus) for the particular time-frequency
+#'                combination.}
+#'   \item{inst_freq}{Only with phase information: the instantaneous frequency,
+#'                in the same units as `freq`.}
+#'   \item{coherence}{Only with phase information: the phase coherence.}
 #' }
 #'
 #' @examples
@@ -340,15 +466,28 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
   dim_t <- seq_len(sc_dim_time(x))
   dim_f <- sc_freqs(x)
 
-  data.frame(
-    time_index = dim_t[row(x)] - 1,
+  modulus <- sc_layer(x, "modulus")
+  t_idx <- dim_t[row(modulus)] - 1
+
+  df <- data.frame(
+    time_index = t_idx,
     # in a time unit (s, ms, ...) that suits the magnitude of the values
     time = pretty_time(
-      (dim_t[row(x)] - 1) / attr(x, "sample_freq") + attr(x, "time_offset")
+      t_idx / attr(x, "sample_freq") + attr(x, "time_offset")
     ),
-    freq = dim_f[col(x)],
-    value = c(x)
+    freq = dim_f[col(modulus)],
+    value = c(modulus)
   )
+
+  if (sc_has_phase(x)) {
+    # in the same unit as freq
+    df$inst_freq <- conv(
+      u(c(sc_layer(x, "inst_freq")), "Hz"), units::deparse_unit(dim_f)
+    )
+    df$coherence <- c(sc_layer(x, "coherence"))
+  }
+
+  df
 }
 
 #' Convert the scalogram matrix to a tibble
@@ -362,7 +501,8 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #' it simply returns a [tibble::tibble()] instead of a [data.frame()].
 #'
 #' @return
-#'  A [tibble::tibble()] object representing the scalogram data with four columns:
+#'  A [tibble::tibble()] object representing the scalogram data with four
+#'  (six, with phase information) columns:
 #' \describe{
 #'   \item{time_index}{An integer index uniquely identifying time slices,
 #'               starting at 0.}
@@ -374,7 +514,11 @@ as.data.frame.fcwtr_scalogram <- function(x, ...) {
 #'               `units::set_units()`.}
 #'   \item{freq}{The frequency, in the units chosen by the user for the
 #'               `freq_begin` and `freq_end` arguments of [fcwt()].}
-#'   \item{value}{The fCWT result for the particular time-frequency combination.}
+#'   \item{value}{The fCWT result (modulus) for the particular time-frequency
+#'                combination.}
+#'   \item{inst_freq}{Only with phase information: the instantaneous frequency,
+#'                in the same units as `freq`.}
+#'   \item{coherence}{Only with phase information: the phase coherence.}
 #' }
 #'
 #' @inherit as.data.frame.fcwtr_scalogram
@@ -398,7 +542,8 @@ as_tibble.fcwtr_scalogram <- function(x, ...) {
 #' Extract the data matrix from a scalogram
 #'
 #' Strips attributes and class from a scalogram object to retrieve
-#' a pure matrix.
+#' a pure matrix. For a scalogram with phase information
+#' (`fcwt(..., phase = TRUE)`), this is the modulus.
 #'
 #' @param x
 #'  An "fcwtr_scalogram" object resulting from [fcwt()].
@@ -418,13 +563,7 @@ as_tibble.fcwtr_scalogram <- function(x, ...) {
 #'
 #' @export
 as.matrix.fcwtr_scalogram <- function(x, ...) {
-  t <- sc_dim_time(x)
-  f <- sc_dim_freq(x)
-
-  attributes(x) <- NULL
-  dim(x) <- c(t, f)
-
-  x
+  sc_layer(x, "modulus")
 }
 
 #' Extract parts of a scalogram
@@ -463,7 +602,7 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
   freqs <- sc_freqs(x)
 
   new_fcwtr_scalogram(
-    unclass(x)[i, j, drop = FALSE],
+    sc_subset(x, i, j),
     attr(x, "time_offset") + (i[[1]] - 1) / attr(x, "sample_freq"),
     attr(x, "sample_freq"),
     freq_begin = freqs[[j[[length(j)]]]],
@@ -501,8 +640,10 @@ as.matrix.fcwtr_scalogram <- function(x, ...) {
 #'
 #' plot(res, time_unit = "ms")
 plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = NULL, freq_unit = "Hz",
-                                 transf = identity, ...) {
-  print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, transf, ...))
+                                 transf = identity,
+                                 layer = c("modulus", "inst_freq", "coherence"),
+                                 ...) {
+  print(autoplot.fcwtr_scalogram(x, n, time_unit, freq_unit, transf, layer, ...))
 }
 
 #' Create a ggplot object resembling a scalogram
@@ -527,6 +668,14 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = NULL, freq_unit = "Hz"
 #' @param transf
 #'  A function, taking a vector and returning a vector, that is used to
 #'  transform the scalogram values before plotting.
+#' @param layer
+#'  Which quantity to plot: `"modulus"` (default), or, for scalograms with
+#'  phase information (`fcwt(..., phase = TRUE)`), `"inst_freq"` or
+#'  `"coherence"`. The instantaneous frequency is shown as relative deviation
+#'  from the frequency of the band, `inst_freq / freq - 1`.
+#'  Both phase quantities are meaningless where there is (almost) no signal,
+#'  so their tiles are faded out according to the modulus: the opacity is
+#'  `sqrt(modulus / max(modulus))`.
 #' @param ...
 #'  Additional arguments are ignored.
 #' @return
@@ -550,7 +699,18 @@ plot.fcwtr_scalogram <- function(x, n = 1000, time_unit = NULL, freq_unit = "Hz"
 #' @exportS3Method ggplot2::autoplot
 autoplot.fcwtr_scalogram <- function(object, n = 1000,
                                      time_unit = NULL, freq_unit = "Hz",
-                                     transf = identity, ...) {
+                                     transf = identity,
+                                     layer = c("modulus", "inst_freq", "coherence"),
+                                     ...) {
+  layer <- match.arg(layer)
+  if (layer != "modulus" && !sc_has_phase(object)) {
+    stop(
+      "The scalogram does not contain phase information. ",
+      "Use `fcwt(..., phase = TRUE)`.",
+      call. = FALSE
+    )
+  }
+
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
   stopifnot(requireNamespace("viridis", quietly = TRUE))
   stopifnot(requireNamespace("rlang", quietly = TRUE))
@@ -573,13 +733,53 @@ autoplot.fcwtr_scalogram <- function(object, n = 1000,
   # since we cannot really see too much resolution anyways
   df <- as.data.frame(sc_agg(object, wnd_from_target_size(n, object)))
 
+  # opacity of the phase quantities: fade out tiles without signal
+  # (the square root keeps weaker, but real, components visible)
+  df[["opacity"]] <- sqrt(df[["value"]] / max(df[["value"]], na.rm = TRUE))
+
+  df[["value"]] <-
+    switch(layer,
+      modulus = df[["value"]],
+      inst_freq = ddu(df[["inst_freq"]] / df[["freq"]]) - 1,
+      coherence = df[["coherence"]]
+    )
+
   # transform the value if requested
   df[["value"]] <- transf(df[["value"]])
 
+  fill_scale <-
+    switch(layer,
+      modulus = viridis::scale_fill_viridis(discrete = FALSE),
+      inst_freq = {
+        # color range from the tiles with signal (not the faded ones),
+        # symmetric around 0; values beyond are clamped
+        visible <- df[["opacity"]] >= 0.1 & is.finite(df[["value"]])
+        lim <- max(abs(df[["value"]][visible]), 0)
+        if (lim == 0) lim <- 1
+        ggplot2::scale_fill_gradient2(
+          name = "rel. freq.\ndeviation",
+          limits = c(-lim, lim),
+          oob = function(x, range) pmin(pmax(x, range[[1]]), range[[2]])
+        )
+      },
+      # coherent: dark (tiles without signal fade out to the background)
+      coherence = viridis::scale_fill_viridis(
+        discrete = FALSE, name = "coherence", direction = -1
+      )
+    )
+
+  raster <-
+    if (layer == "modulus") {
+      geom_raster()
+    } else {
+      geom_raster(aes(alpha = .data$opacity))
+    }
+
   df |>
     ggplot(aes(x = .data$time, y = .data$freq, fill = .data$value)) +
-    geom_raster() +
-    viridis::scale_fill_viridis(discrete = FALSE) +
+    raster +
+    fill_scale +
+    ggplot2::scale_alpha_identity() +
     # set axis names via labs(), not via the scales' `name` argument:
     # with ggplot2 >= 4.0, units only appends the unit ("[s]") to label titles,
     # an explicit scale name takes precedence and is shown without unit.

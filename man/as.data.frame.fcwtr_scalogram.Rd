@@ -12,7 +12,8 @@
 \item{...}{Additional arguments are ignored.}
 }
 \value{
-A \code{\link[=data.frame]{data.frame()}} object representing the scalogram data with four columns:
+A \code{\link[=data.frame]{data.frame()}} object representing the scalogram data with four
+(six, with phase information) columns:
 \describe{
 \item{time_index}{An integer index uniquely identifying time slices,
 starting at 0.}
@@ -24,13 +25,19 @@ magnitude of the values, and can be converted with
 \code{units::set_units()}.}
 \item{freq}{The frequency, in the units chosen by the user for the
 \code{freq_begin} and \code{freq_end} arguments of \code{\link[=fcwt]{fcwt()}}.}
-\item{value}{The fCWT result for the particular time-frequency combination.}
+\item{value}{The fCWT result (modulus) for the particular time-frequency
+combination.}
+\item{inst_freq}{Only with phase information: the instantaneous frequency,
+in the same units as \code{freq}.}
+\item{coherence}{Only with phase information: the phase coherence.}
 }
 }
 \description{
 Internally, the scalogram resulting from \code{\link[=fcwt]{fcwt()}} is represented by
 a numeric \code{\link[=matrix]{matrix()}}. This method converts this matrix into a
 \code{\link[=data.frame]{data.frame()}} in long format, with one row per matrix entry.
+With phase information (\code{fcwt(..., phase = TRUE)}), the additional
+columns \code{inst_freq} and \code{coherence} hold the other layers.
 Note that this conversion has a significant run time cost.
 }
 \examples{
